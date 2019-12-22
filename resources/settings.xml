@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<settings>
+    <category label="Connection">
+        <setting label="Kodi-IP" type="string" id="SETTINGS_KODI_IP" default="192.168.0.40"/>        
+    </category>
+	<category label="Voice">
+        <setting label="Language" type="string" id="SETTINGS_LANGUAGE" default="de-DE"/>        
+    </category>
+</settings>
