@@ -13,11 +13,11 @@ LISTEN_LANGUAGE= 'de-DE' #["en-US",'de']
 LISTEN_GOOGLEKEY = None
 HTTP_TIMEOUT = 20
 #Todo
-#mehrere keywords für kodi, tannenbaum, chefkoch
+#mehrere keywords fuer kodi, tannenbaum, chefkoch
 #tagesschau aktivieren
 #sprachausgabe
 #dateien auslagern
-#plugins ermöglichen
+#plugins ermoeglichen
 #mixed language support
 #parametetrisieren im header
 #am Raspberry testen
