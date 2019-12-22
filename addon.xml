@@ -4,9 +4,7 @@
        version="1.0.0"
        provider-name="haribertlondon">
   <requires>
-    <import addon="xbmc.python" version="2.1.0"/>
-	<import addon="speech_recognition" />
-	
+    <import addon="xbmc.python" version="2.1.0"/>		
   </requires>
   <extension point="xbmc.service" library="service.py" />
   <extension point="xbmc.addon.metadata">
