@@ -1,4 +1,29 @@
 # -*- coding: utf-8 -*-
+
+#what is needed for raspberry:
+# install raspbian
+#   sudo apt-get install lxde  
+# 	set autologin 
+#   	#sudo raspi-config
+#   	  
+# 	config screen with 
+#		#sudo nano /boot/config.txt 
+#   set fixed IP address with .... or at router
+#   
+#   
+# sudo apt-get install kodi
+# sudo apt-get install kodi-vfs-sftp
+# sudo apt-get install flac
+# sudo apt-get install python-pyaudio
+# sudo apt-get install python-pip
+# pip install SpeechRecognition
+#   set kodi as autostart: 
+#		?????, i did it with sudo apt-get install cron; cron -e; add line-> @reboot sleep 10; kodi --standalone
+# install this package with zip file
+
+
+
+
 import platform
 import sys
 print(sys.version)
@@ -11,7 +36,8 @@ else:
 
 import json
 import difflib
-import resources.lib.speech_recognition as sr
+#import resources.lib.speech_recognition as sr
+import speech_recognition as sr
 
 
 KEYWORD = "kodi"
@@ -82,7 +108,7 @@ def speechInit():
   
   
 def getUrl(command, typeStr, searchStr):    
-    hostname = 'http://192.168.0.40:8080/jsonrpc'
+    hostname = 'http://192.168.0.161:8080/jsonrpc'
     url = hostname	
     post = None
     if command == "search": 
