@@ -1,10 +1,15 @@
+# -*- coding: utf-8 -*-
 import platform
 import sys
 print(sys.version)
 print(platform.architecture())
 
+if (sys.version_info > (3, 0)):
+    import urllib.request as urlrequest
+else:
+    import urllib2 as urlrequest
+
 import json
-import urllib
 import difflib
 import resources.lib.speech_recognition as sr
 
@@ -19,6 +24,8 @@ LISTEN_LANGUAGE= 'de-DE' #["en-US",'de']
 LISTEN_GOOGLEKEY = None
 HTTP_TIMEOUT = 20
 #Todo
+#make script to run on Kodi or on Linux
+#Grammatik systematisch
 #mehrere keywords fuer kodi, tannenbaum, chefkoch
 #tagesschau aktivieren
 #sprachausgabe
@@ -28,6 +35,8 @@ HTTP_TIMEOUT = 20
 #parametetrisieren im header
 #am Raspberry testen
 #listen Befehl: The ``snowboy_configuration`` parameter allows integration with `Snowboy <https://snowboy.kitt.ai/>`__, an offline, high-accuracy, power-efficient hotword recognition engine. When used, this function will pause until Snowboy detects a hotword, after which it will unpause. This parameter should either be ``None`` to turn off Snowboy support, or a tuple of the form ``(SNOWBOY_LOCATION, LIST_OF_HOT_WORD_FILES)``, where ``SNOWBOY_LOCATION`` is the path to the Snowboy root directory, and ``LIST_OF_HOT_WORD_FILES`` is a list of paths to Snowboy hotword configuration files (`*.pmdl` or `*.umdl` format).
+
+
 
 
 def speechListen(recognizer, microphone):   
@@ -74,27 +83,28 @@ def speechInit():
   
 def getUrl(command, typeStr, searchStr):    
     hostname = 'http://192.168.0.40:8080/jsonrpc'
-    url = hostname
+    url = hostname	
     post = None
     if command == "search": 
         if typeStr == "movies":
-            post = b'{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "title", "value": "'+str.encode(searchStr)+b'"}, "properties" : ["dateadded", "lastplayed", "year", "rating", "playcount", "genre"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}'
+            post = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "title", "value": "'+str(searchStr)+'"}, "properties" : ["dateadded", "lastplayed", "year", "rating", "playcount", "genre"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}'
         elif typeStr == "tvshows":
-            post = b'{ "jsonrpc":"2.0", "method":"VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "title", "value": "'+str.encode(searchStr)+b'"}, "properties": ["dateadded", "lastplayed",  "year", "rating", "playcount"],           "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvshows"}'
+            post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "title", "value": "'+str(searchStr)+'"}, "properties": ["dateadded", "lastplayed",  "year", "rating", "playcount"],           "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvshows"}'
     elif command == "play" or command == "pause":
-        post = b'{ "jsonrpc": "2.0", "method": "Player.PlayPause", "params": {"playerid": 1 },"id":1}'        
+        post = '{ "jsonrpc": "2.0", "method": "Player.PlayPause", "params": {"playerid": 1 },"id":1}'        
     elif command == "open":
-        post = b'{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"movieid": '+str.encode(str(searchStr))+ b'} }, "id": 1 }' #geht!!!
-            
+        post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"movieid": '+str(searchStr)+ '} }, "id": 1 }' #geht!!!
+     
+    post = str.encode(post)
     return (url, post)
    
 def downloadBinary(url, post): 
     print(url, post)  
     try:
-        req = urllib.request.Request(url)        
+        req = urlrequest.Request(url)        
         #req.add_header('User-Agent', '')
         req.add_header('Content-Type','application/json')
-        r = urllib.request.urlopen(req, data = post, timeout=HTTP_TIMEOUT)#, headers = {'content-type': 'application/json'})
+        r = urlrequest.urlopen(req, data = post, timeout=HTTP_TIMEOUT)#, headers = {'content-type': 'application/json'})
         html = r.read()
     except Exception as e:
         print(("Error with link "+str(url) + ' Exception: ' + str(e)))        
