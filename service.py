@@ -1,7 +1,13 @@
+import platform
+import sys
+print(sys.version)
+print(platform.architecture())
+
 import json
 import urllib
 import difflib
-import speech_recognition as sr
+import resources.lib.speech_recognition as sr
+
 
 KEYWORD = "kodi"
 LISTEN_CHUNKSIZE = 1024
