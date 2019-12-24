@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settings>
     <category label="Connection">
-        <setting label="Kodi-IP" type="string" id="SETTINGS_KODI_IP" default="192.168.0.40"/>        
+        <setting label="Kodi-IP" type="text" id="HTTP_KODI_IP" default="192.168.0.161"/>        
     </category>
 	<category label="Voice">
-        <setting label="Language" type="string" id="SETTINGS_LANGUAGE" default="de-DE"/>        
+        <setting label="Language" type="text" id="LISTEN_LANGUAGE" default="de-DE"/>        
+        <setting label="Google Key" type="text" id="LISTEN_GOOGLEKEY" default=""/>
+        <setting label="Hotword" type="text" id="LISTEN_HOTWORD" default="kodi"/>
     </category>
 </settings>
