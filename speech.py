@@ -3,10 +3,10 @@ import platform
 print(sys.version)
 print(platform.architecture())
 try:
-    import speech_recognition as sr #check if package is installed
+    import speech_recognition as sr #@UnusedImport #check if package is installed
 except:
     print("No speech_recognition installed on system. Try to use fallback...")
-    import resources.lib.speech_recognition as sr #if not, use the provides ones
+    import resources.lib.speech_recognition as sr #@Reimport #if not, use the provides ones
 import settings  
 
 def speechListen(recognizer, microphone):   

@@ -3,9 +3,9 @@ import json
 import settings
 
 if (sys.version_info > (3, 0)):
-    import urllib.request as urlrequest
+    import urllib.request as urlrequest #@UnusedImport
 else:
-    import urllib2 as urlrequest
+    import urllib2 as urlrequest #@UnresolvedImport @Reimport
    
 def downloadBinary(url, post): 
     print(url, post)  
