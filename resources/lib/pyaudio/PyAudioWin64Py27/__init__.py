@@ -1,0 +1,2 @@
+print("pyaudio cp27")
+
