@@ -40,7 +40,7 @@ import difflib
 import speech_recognition as sr
 
 
-KEYWORD = "kodi"
+HOTWORD = "kodi"
 LISTEN_CHUNKSIZE = 1024
 LISTEN_SAMPLERATE = None 
 LISTEN_MIC_INDEX = None
@@ -91,11 +91,14 @@ def speechListen(recognizer, microphone):
 def speechInit():
     # create recognizer and mic instances
     recognizer = sr.Recognizer()
-    microphone = sr.Microphone(device_index = LISTEN_MIC_INDEX, sample_rate=LISTEN_SAMPLERATE, chunk_size=LISTEN_CHUNKSIZE)
-    
     
     for mic in enumerate(sr.Microphone.list_microphone_names()):
         print(mic) 
+    
+    microphone = sr.Microphone(device_index = LISTEN_MIC_INDEX, sample_rate=LISTEN_SAMPLERATE, chunk_size=LISTEN_CHUNKSIZE)
+    
+    
+
     
     # check that recognizer and microphone arguments are appropriate type
     if not isinstance(recognizer, sr.Recognizer):
@@ -169,7 +172,7 @@ def speechInterprete(guess):
     
     command = guess["transcription"].lower()
     
-    command = command.replace(KEYWORD.lower(),"", 1).strip()
+    command = command.replace(HOTWORD.lower(),"", 1).strip()
     
     if command == "play" or command == "pause":
         (url, post) = getUrl("play", None, None)
@@ -196,7 +199,7 @@ if __name__ == "__main__":
     for i in range(100):
         
         guess = speechListen(recognizer, microphone) 
-        #guess =  {"error": None, "transcription": KEYWORD + " " + "play the beach" }    
+        #guess =  {"error": None, "transcription": HOTWORD + " " + "play the beach" }    
         print(guess)
         speechInterprete(guess)
         
