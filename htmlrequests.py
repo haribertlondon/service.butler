@@ -21,6 +21,8 @@ def downloadBinary(url, post):
         html = ""     
         
     return html
+
+
 def downloadJsonDic(url, post):
     html = downloadBinary(url, post)  
     print(html)
@@ -35,7 +37,7 @@ def downloadStr(url, post):
 def htmlPostRequest(url, post):
     js = downloadJsonDic(url, post)
     
-    if js.get('result','Key-Error') == 'OK' :
-        return { 'result': True,  'message' : 'OK' }
+    if 'result' in js and js['result'] is not None and (js['result'] == 'OK' or isinstance(js['result'],dict) ):  #js.get('result','Key-Error') == 'OK'  :
+        return { 'result': True,  'message' : 'OK', 'data': js['result'] }
     else:   
         return { 'result': False,  'message' : str(js) }

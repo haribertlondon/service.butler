@@ -1,13 +1,15 @@
 import sys
 import platform
-print(sys.version)
-print(platform.architecture())
+import settings
+
 try:
+    print(sys.version)
+    print(platform.architecture())
     import speech_recognition as sr #@UnusedImport #check if package is installed
 except:
     print("No speech_recognition installed on system. Try to use fallback...")
     import resources.lib.speech_recognition as sr #@Reimport #if not, use the provides ones
-import settings  
+  
 
 def speechListen(recognizer, microphone):   
     # adjust the recognizer sensitivity to ambient noise and record audio from the microphone
@@ -16,8 +18,15 @@ def speechListen(recognizer, microphone):
         recognizer.adjust_for_ambient_noise(source)
         print("Listening")
         audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT)
-
+    
     print("Stopped listening")
+    
+    if settings.LISTEN_WRITEWAV is not None and len(settings.LISTEN_WRITEWAV)>0:
+        wavdata = audio.get_wav_data()
+        f = open(settings.LISTEN_WRITEWAV, 'wb')
+        f.write(wavdata)
+        f.close()
+    
     # set up the response object
     response = {"error": None, "transcription": None }
     
