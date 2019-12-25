@@ -21,19 +21,19 @@ def checkMatch(match):
 # Examples Play The Beach
 def speechInterprete(guess, wav):
     
+    result= {'result' : False, 'message': 'Ich habe dich leider nicht verstanden.'}
+    
     if guess["error"] is not None or guess["error"] is not None and len(guess["error"])>0:
         print("Guessed expression not valid "+str(guess))
-        return 
+        return result 
     
     global matchCounter
     matchCounter = 0
     
-    command = guess["transcription"].lower().strip()
-    
     #remove hotword at beginning
+    command = guess["transcription"].lower().strip()        
     command = re.sub("(i?)^"+settings.LISTEN_HOTWORD,"", command).strip()
     
-    result= {'result' : False, 'message': 'Ich habe dich leider nicht verstanden.'}
     
     matches = re.findall("(i?)(Play|Los|Weiter|Continue|Spiele weiter|Spiel weiter|Starte)(den Film)$", command, re.IGNORECASE) #@UndefinedVariable
     if checkMatch(matches):
@@ -42,13 +42,27 @@ def speechInterprete(guess, wav):
     matches = re.findall("(i?)(Pause|Break)", command, re.IGNORECASE) #@UndefinedVariable
     if checkMatch(matches):
         result = pluginKodi.kodiPause()
+        
+    matches = re.findall("(i?)(Stop)", command, re.IGNORECASE) #@UndefinedVariable
+    if checkMatch(matches):
+        result = pluginKodi.kodiStop()
+        
+    matches = re.findall("Spiele letzte Serie( weiter)?", command, re.IGNORECASE)  #@UndefinedVariable  
+    if checkMatch(matches):         
+        result = pluginKodi.kodiPlayLastTvShow()  
+        
+    matches = re.findall("(?:Spiele|Spiel|Play|Starte|Öffne) (?:die Serie )?(.*) weiter", command, re.IGNORECASE)  #@UndefinedVariable  
+    if checkMatch(matches):        
+        result = pluginKodi.kodiPlayTVShowLastEpisodeByName(matches[0])         
     
     matches = re.findall("(?:Spiele|Spiel|Play|Starte|Öffne) (.*)", command, re.IGNORECASE)  #@UndefinedVariable  
     if checkMatch(matches):        
-        result = pluginKodi.kodiOpenMovie(matches[0])
+        result = pluginKodi.kodiPlayMovie(matches[0])
         
     matches = re.findall("(?:Was läuft|Was läuft gerade|Info|Information)", command, re.IGNORECASE)  #@UndefinedVariable  
     if checkMatch(matches):        
-        result = pluginKodi.kodiGetCurrentPlaying()    
+        result = pluginKodi.kodiGetCurrentPlaying()  
+        
+      
         
     return result

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settings>
     <category label="Connection">
-        <setting label="Kodi-IP" type="text" id="HTTP_KODI_IP" default="192.168.0.161"/>        
+        <setting label="Kodi-IP" type="text" id="HTTP_KODI_IP" default="192.168.0.60:8080"/>        
     </category>
 	<category label="Voice">
         <setting label="Language" type="text" id="LISTEN_LANGUAGE" default="de-DE"/>        
