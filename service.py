@@ -66,7 +66,7 @@ if __name__ == "__main__":
         result = ai.speechInterprete(guess, None)
         
         #if not result['result']:
-        print('Voice output: ', result['message'])
+        print('Voice output: ', result)
         if result and isinstance(result, dict) and 'message' in result:
             texttospeech.sayString(textspeech, result['message'])
         else:

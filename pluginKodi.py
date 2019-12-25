@@ -7,7 +7,7 @@ def getKodiUrl(command, typeStr, searchStr):
     url = hostname    
     post = None
     if command == "search": 
-        if typeStr == "movies":
+        if typeStr == "movies" or  typeStr == "movie":
             post = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "title", "value": "'+str(searchStr)+'"}, "properties" : ["dateadded", "lastplayed", "year", "rating", "playcount", "genre"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}'
         elif typeStr == "tvshows":
             post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetTVShows", "params": {                                                                                      "properties": ["dateadded", "lastplayed",  "year", "rating", "playcount"],           "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvshows"}'
@@ -16,7 +16,7 @@ def getKodiUrl(command, typeStr, searchStr):
     elif command == "pause":
         post = '{ "jsonrpc": "2.0", "method": "Player.PlayPause", "params": {"playerid": 1 ,"play":false},"id":1}'
     elif command == "open":
-        if typeStr == 'movies': 
+        if typeStr == 'movies' or  typeStr == "movie": 
             post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"movieid": '+str(searchStr)+ '} }, "id": 1 }'
         elif typeStr == 'tvshows' or typeStr == 'episodes' or typeStr == 'episode': 
             post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"episodeid": '+str(searchStr)+ '} }, "id": 1 }'
@@ -33,6 +33,10 @@ def getKodiUrl(command, typeStr, searchStr):
         post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetTVShows", "params": {  "properties": ["dateadded", "lastplayed",  "year", "rating", "playcount"],           "sort": { "order": "descending", "method": "lastplayed" } }, "id": "libTvshows"}'
     elif command == 'tagesschau':                   
         post = '{ "jsonrpc": "2.0", "method": "Addons.ExecuteAddon","params":{"addonid":"plugin.video.tagesschau","params":{"action":"list_feed","feed":"latest_broadcasts" }}, "id": 1 }'
+    elif command == 'tagesschau2':                   
+        #post = '{ "jsonrpc": "2.0", "method": "Addons.ExecuteAddon","params":{"addonid":"plugin.video.tagesschau","params":{"action":"play_video","feed":"latest_broadcasts", "tsid": "ts-34875" }}, "id": 1 }'
+        post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"file": "plugin://plugin.video.tagesschau/?action=play_video&feed=latest_broadcasts&tsid=ts-34875"  } }, "id": 1 }'
+               
        
     post = str.encode(post) # set to byte array
     return (url, post)
@@ -128,15 +132,18 @@ def kodiPlayLastTvShow():
         return kodiPlayTVShowLastEpisodeById(tvshowid)    
  
 def kodiPlayTagesschau():  
-    result = postKodiRequest("tagesschau", None, None)
+    result = postKodiRequest("tagesschau2", None, None)
+    #result = postKodiRequest("tagesschau2", None, None)
     
-    if 'result' in result and result['result']:
-        result = postKodiRequest("open", "playlist", "1")
-        
-    return result          
+    #result = postKodiRequest("tagesschau", None, None)
+   # 
+   # if 'result' in result and result['result']:
+   #     result = postKodiRequest("open", "playlist", "1")
+   #     
+    #return result          
 
 def kodiPlayMovieId(movieId):
-    result = postKodiRequest("open", None, movieId)   
+    result = postKodiRequest("open", "movie", movieId)   
     if result['result']: 
         result = { 'result': True,  'message' : "Starte " + str(movieId)}
     else:   
@@ -149,7 +156,9 @@ def kodiPlayMovie(movieTitle):
         
     #play item
     if len(item)>0:  
-        result =  kodiPlayMovieId(item["movieid"])     
+        result =  kodiPlayMovieId(item["movieid"])
+        if 'result' in result and result['result']: 
+            result = { 'result': False,  'message' : "Starte den Film " +  item["label"] }   
     else:
         result = { 'result': False,  'message' : "Keinen Film mit Namen " + str(movieTitle) +  " gefunden"}
     return result
