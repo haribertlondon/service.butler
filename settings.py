@@ -9,7 +9,7 @@ LISTEN_WRITEWAV = "speech.wav"
 LISTEN_HOTWORD = "kodi"
 LISTEN_GOOGLEKEY = ""
 LISTEN_LANGUAGE= 'de-DE' #["en-US",'de']
-HTTP_KODI_IP = '192.168.0.60:8080'
+HTTP_KODI_IP = 'localhost:8080'#'192.168.0.60:8080'
 
 
 try:

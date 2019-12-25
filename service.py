@@ -28,8 +28,6 @@ import texttospeech
 
 #------TODO-------
 #durchstich
-#letzte tvshow weiterspielen
-#tagesschau aktivieren
 
 #youtube support
 #echo Befehl implementieren zum Test der Klangqualität
@@ -40,6 +38,8 @@ import texttospeech
 
 #--------DONE---------------
 #Grammatik systematisch
+#letzte tvshow weiterspielen
+#tagesschau aktivieren
 #parametetrisieren im header
 #sprachausgabe
 #make script to run on Kodi !!OR!! on Linux
@@ -55,21 +55,23 @@ if __name__ == "__main__":
     textspeech = texttospeech.init()
 
     
-    for i in range(100):
-        #guess = speech.speechListen(recognizer, microphone) 
+    #for i in range(100):
+    while True:    
+        guess = speech.speechListen(recognizer, microphone) 
         #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele Modern Family weiter" }    
         #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele letzte Serie weiter" }
-        guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele MacGyver weiter" }
+        #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele MacGyver weiter" }
+        #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele die letzte Tagesschau" }
         print(guess)
         result = ai.speechInterprete(guess, None)
         
         #if not result['result']:
         print('Voice output: ', result['message'])
-        if result and isinstance(result, dict) and 'message' in result and False:
+        if result and isinstance(result, dict) and 'message' in result:
             texttospeech.sayString(textspeech, result['message'])
         else:
             texttospeech.sayString(textspeech, 'Sum Sum Sum')
             
-        break
+        
         
     print("Script finished")

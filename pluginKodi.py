@@ -18,18 +18,22 @@ def getKodiUrl(command, typeStr, searchStr):
     elif command == "open":
         if typeStr == 'movies': 
             post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"movieid": '+str(searchStr)+ '} }, "id": 1 }'
-        else:
+        elif typeStr == 'tvshows' or typeStr == 'episodes' or typeStr == 'episode': 
             post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"episodeid": '+str(searchStr)+ '} }, "id": 1 }'
+        else:
+            post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"playlistid": ' +searchStr + '} }, "id": 1 }'
+                                                                
     elif command == 'info':
         post = '{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title", "season", "episode", "showtitle", "rating"], "playerid": 1 }, "id": "VideoGetItem"}'
     elif command == 'stop':
         post = '{ "jsonrpc": "2.0", "method": "Player.Stop", "params": {"playerid": 1 },"id":1}'
     elif command == 'lastepisode':         
         post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetEpisodes", "params": { "tvshowid": '+str(searchStr)+', "properties": ["title", "rating", "season"],  "limits": { "start" : 0, "end": 10 },   "filter": {"and": [{"field": "playcount", "operator": "is", "value": "0"}, {"field": "season", "operator": "greaterthan", "value": "0"}]},    "sort": { "order": "ascending", "method": "episode" } }, "id": "libEpisodes"}'        
-    elif command == 'lasttvshow':
-        #VideoLibrary.GetInProgressTVShows        
+    elif command == 'lasttvshow':            
         post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetTVShows", "params": {  "properties": ["dateadded", "lastplayed",  "year", "rating", "playcount"],           "sort": { "order": "descending", "method": "lastplayed" } }, "id": "libTvshows"}'
-     
+    elif command == 'tagesschau':                   
+        post = '{ "jsonrpc": "2.0", "method": "Addons.ExecuteAddon","params":{"addonid":"plugin.video.tagesschau","params":{"action":"list_feed","feed":"latest_broadcasts" }}, "id": 1 }'
+       
     post = str.encode(post) # set to byte array
     return (url, post)
 
@@ -122,7 +126,14 @@ def kodiPlayLastTvShow():
     else:
         tvshowid = result['data']['tvshows'][0]['tvshowid']
         return kodiPlayTVShowLastEpisodeById(tvshowid)    
-                    
+ 
+def kodiPlayTagesschau():  
+    result = postKodiRequest("tagesschau", None, None)
+    
+    if 'result' in result and result['result']:
+        result = postKodiRequest("open", "playlist", "1")
+        
+    return result          
 
 def kodiPlayMovieId(movieId):
     result = postKodiRequest("open", None, movieId)   
