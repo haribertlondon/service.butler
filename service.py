@@ -62,6 +62,8 @@ if __name__ == "__main__":
         #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele letzte Serie weiter" }
         #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele MacGyver weiter" }
         #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele die letzte Tagesschau" }
+        guess =  {"error": None, "transcription": "KODi weiter" }
+        
         print(guess)
         result = ai.speechInterprete(guess, None)
         

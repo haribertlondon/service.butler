@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import difflib 
 import htmlrequests
 import settings
@@ -7,7 +8,7 @@ def getKodiUrl(command, typeStr, searchStr):
     url = hostname    
     post = None
     if command == "search": 
-        if typeStr == "movies" or  typeStr == "movie":
+        if typeStr == "movies" or typeStr == "movie":
             post = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "title", "value": "'+str(searchStr)+'"}, "properties" : ["dateadded", "lastplayed", "year", "rating", "playcount", "genre"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}'
         elif typeStr == "tvshows":
             post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetTVShows", "params": {                                                                                      "properties": ["dateadded", "lastplayed",  "year", "rating", "playcount"],           "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvshows"}'
@@ -16,12 +17,12 @@ def getKodiUrl(command, typeStr, searchStr):
     elif command == "pause":
         post = '{ "jsonrpc": "2.0", "method": "Player.PlayPause", "params": {"playerid": 1 ,"play":false},"id":1}'
     elif command == "open":
-        if typeStr == 'movies' or  typeStr == "movie": 
+        if typeStr == 'movies' or typeStr == 'movie': 
             post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"movieid": '+str(searchStr)+ '} }, "id": 1 }'
         elif typeStr == 'tvshows' or typeStr == 'episodes' or typeStr == 'episode': 
             post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"episodeid": '+str(searchStr)+ '} }, "id": 1 }'
         else:
-            post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"playlistid": ' +searchStr + '} }, "id": 1 }'
+            post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"playlistid": ' +str(searchStr) + '} }, "id": 1 }'
                                                                 
     elif command == 'info':
         post = '{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title", "season", "episode", "showtitle", "rating"], "playerid": 1 }, "id": "VideoGetItem"}'
@@ -119,7 +120,7 @@ def kodiPlayTVShowLastEpisodeById(tvshowid):
         #result = { 'result': True,  'message' : "Starte " + str(result["data"])}
         return kodiPlayEpisode(result['data']['episodes'][0]['episodeid'])
     else:   
-        result = { 'result': False,  'message' : result['message'] + ' Keine Episode dieser Serie gefunden, die abgespielt werden kann. Grund: ' + str(result["data"]) }        
+        result = { 'result': False,  'message' : result['message'] + ' Keine Episode dieser Serie gefunden, die abgespielt werden kann. Grund: ' + str(result["data"]["error"]["message"]) }        
     
     return result
 

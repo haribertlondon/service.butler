@@ -1,4 +1,8 @@
-import pyttsx3
+soundSupport = True
+try:
+    import pyttsx3    
+except:
+    soundSupport = False
 #print(engine)
 #voices = engine.getProperty('voices')
 #for voice in voices:
@@ -7,10 +11,17 @@ import pyttsx3
 #engine.say('Sally sells seashells by the seashore.')
     
 def init():
-    return pyttsx3.init()
+    if soundSupport:
+        return pyttsx3.init()
+    else:
+        return None
     
 def sayString(engine, s):
-    engine.say(s)
-    engine.runAndWait()
+    if engine: 
+        engine.say(s)
+        engine.runAndWait()
+    else:
+        print("Warning: No audio output. ")
+        print(s)
      
     

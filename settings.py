@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 LISTEN_CHUNKSIZE = 1024
 LISTEN_SAMPLERATE = None 
 LISTEN_MIC_INDEX = None
