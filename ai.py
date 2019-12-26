@@ -36,35 +36,35 @@ def speechInterprete(guess, wav):
     command = re.sub("^"+settings.LISTEN_HOTWORD,"", command, re.IGNORECASE).strip() #@UndefinedVariable
     
     
-    matches = re.findall("(?:Play|Los|Weiter|Continue|Spiele weiter|Spiel weiter|Starte)( den Film)?$", command, re.IGNORECASE) #@UndefinedVariable
+    matches = re.findall("^(?:Play|Los|Weiter|Continue|Spiele weiter|Spiel weiter|Starte)( den Film)?$", command, re.IGNORECASE) #@UndefinedVariable
     if checkMatch(matches):
         result = pluginKodi.kodiPlay()
     
-    matches = re.findall("(Pause|Break)", command, re.IGNORECASE) #@UndefinedVariable
+    matches = re.findall("^(Pause|Break)", command, re.IGNORECASE) #@UndefinedVariable
     if checkMatch(matches):
         result = pluginKodi.kodiPause()
         
-    matches = re.findall("(Stop|Halt)", command, re.IGNORECASE) #@UndefinedVariable
+    matches = re.findall("^(Stop|Halt)", command, re.IGNORECASE) #@UndefinedVariable
     if checkMatch(matches):
         result = pluginKodi.kodiStop()
         
-    matches = re.findall("(?:Spiele|Spiel|Spielt)? (die )?letzte Serie( weiter)?", command, re.IGNORECASE)  #@UndefinedVariable  
+    matches = re.findall("^(?:Spiele|Spiel|Spielt)? (die )?letzte Serie( weiter)?", command, re.IGNORECASE)  #@UndefinedVariable  
     if checkMatch(matches):         
         result = pluginKodi.kodiPlayLastTvShow()
         
-    matches = re.findall("(?:Spiele|Spiel|Spielt)? die (letzte )?Tagesschau", command, re.IGNORECASE)  #@UndefinedVariable  
+    matches = re.findall("^(?:Spiele|Spiel|Spielt)?( die)?( letzte)? Tagesschau", command, re.IGNORECASE)  #@UndefinedVariable  
     if checkMatch(matches):        
         result = pluginKodi.kodiPlayTagesschau()  
         
-    matches = re.findall("(?:Spiele|Spiel|Spielt|Play|Starte|Öffne) (?:die Serie )?(.*) weiter", command, re.IGNORECASE)  #@UndefinedVariable  
+    matches = re.findall("^(?:Spiele|Spiel|Spielt|Play|Starte|Öffne) (?:die Serie )?(.*) weiter", command, re.IGNORECASE)  #@UndefinedVariable  
     if checkMatch(matches):        
         result = pluginKodi.kodiPlayTVShowLastEpisodeByName(matches[0])         
     
-    matches = re.findall("(?:Spiele|Spiel|Spielt|Play|Starte|Öffne) (.*)", command, re.IGNORECASE)  #@UndefinedVariable  
+    matches = re.findall("^(?:Spiele|Spiel|Spielt|Play|Starte|Öffne) (.*)", command, re.IGNORECASE)  #@UndefinedVariable  
     if checkMatch(matches):        
         result = pluginKodi.kodiPlayMovie(matches[0])
         
-    matches = re.findall("(?:Was läuft|Was läuft gerade|Info|Information)", command, re.IGNORECASE)  #@UndefinedVariable  
+    matches = re.findall("^(?:Was läuft|Was läuft gerade|Info|Information)", command, re.IGNORECASE)  #@UndefinedVariable  
     if checkMatch(matches):        
         result = pluginKodi.kodiGetCurrentPlaying()  
         
