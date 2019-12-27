@@ -16,23 +16,28 @@ def downloadBinary(url, post):
         req.add_header('Content-Type','application/json')
         r = urlrequest.urlopen(req, data = post, timeout=settings.HTTP_TIMEOUT)#, headers = {'content-type': 'application/json'})
         html = r.read()
+        error = ""
         print("Received html response: ", str(html))
     except Exception as e:
-        print(("Error with link "+str(url) + ' Exception: ' + str(e)))        
+        error = "Error with link "+str(url) + ' Exception: ' + str(e)
+        print(error)        
         html = ""     
         
-    return html
+    return (html, error)
 
 
 def downloadJsonDic(url, post):
-    html = downloadBinary(url, post)  
+    (html, error) = downloadBinary(url, post)  
     print(html)
-    js = json.loads(html)
+    if html and not error:
+        js = json.loads(html)
+    else:
+        js = {'result' : False, 'message': error}
     print(js)
     return js
 
 def downloadStr(url, post):
-    html = downloadBinary(url, post)    
+    (html, _ )  = downloadBinary(url, post)    
     return html.decode('utf-8')
 
 def htmlPostRequest(url, post):
@@ -41,4 +46,6 @@ def htmlPostRequest(url, post):
     if 'result' in js and js['result'] is not None and (js['result'] == 'OK' or isinstance(js['result'],dict) ):  #js.get('result','Key-Error') == 'OK'  :
         return { 'result': True,  'message' : 'OK', 'data': js['result'] }
     else:   
-        return { 'result': False,  'message' : str(js) }
+        #return { 'result': False,  'message' : str(js) }
+        js['result'] = False
+        return js

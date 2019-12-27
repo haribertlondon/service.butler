@@ -14,11 +14,19 @@ except:
 
 def speechListen(recognizer, microphone):   
     # adjust the recognizer sensitivity to ambient noise and record audio from the microphone
+    print(microphone.SAMPLE_RATE)
+    print(microphone.SAMPLE_WIDTH)
     with microphone as source:
         print("Adjust silence")
         recognizer.adjust_for_ambient_noise(source)
         print("Listening")
-        audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT)
+        #snowboy: 7d3401448303897331bd7490798dd69a213625a0
+        
+        try:
+            audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=( './resources/lib/snowboyrpi8/', ['./resources/lib/snowboyrpi8/kodi.pmdl', './resources/lib/snowboyrpi8/jarvis.pmdl']   ) )
+        except Exception as e:
+            print("Warning. Could not load snowboy. Now using fallback. Error ", str(e))
+            audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=None   ) 
     
     print("Stopped listening")
     
@@ -35,17 +43,17 @@ def speechListen(recognizer, microphone):
         if settings.LISTEN_LANGUAGE == "":
             settings.LISTEN_LANGUAGE = None
             
-        response["transcription"] = recognizer.recognize_google(audio, key=None, language=settings.LISTEN_LANGUAGE)
+        #response["transcription"] = recognizer.recognize_google(audio, key=None, language=settings.LISTEN_LANGUAGE)
         #response["transcription"] = recognizer.recognize_wit(audio, key='6PKAY4NP4U4VJPBJAEHSWV7JS5HWTSQE')
         #response["transcription"] = recognizer.recognize_wit(audio, key='6PKAY4NP4U4VJPBJAEHSWV7JS5HWTSQE')
         #response["transcription"] = recognizer.recognize_bing(audio, key='912b8cb579f74a01aba54691b1d9c671')#, language=settings.LISTEN_LANGUAGE)
-        #response["transcription"] = recognizer.recognize_sphinx(audio, language='en-US')#settings.LISTEN_LANGUAGE)#, language=settings.LISTEN_LANGUAGE)
+        response["transcription"] = recognizer.recognize_sphinx(audio, language='de-DE') #settings.LISTEN_LANGUAGE)#, language=settings.LISTEN_LANGUAGE)
         
         
         
-    except sr.RequestError:
+    except sr.RequestError as e:
         # API was unreachable or unresponsive        
-        response["error"] = "API unavailable"
+        response["error"] = "API unavailable " +  str(e)
     except sr.UnknownValueError:
         # speech was unintelligible
         response["error"] = "Unable to recognize speech"

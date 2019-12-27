@@ -1,4 +1,7 @@
 eclipse.preferences.version=1
 encoding/ai.py=utf-8
+encoding/htmlrequests.py=utf-8
 encoding/pluginKodi.py=utf-8
 encoding/service.py=utf-8
+encoding/settings.py=utf-8
+encoding/speech.py=utf-8

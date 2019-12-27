@@ -32,10 +32,9 @@ def getKodiUrl(command, typeStr, searchStr):
         post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetEpisodes", "params": { "tvshowid": '+str(searchStr)+', "properties": ["title", "rating", "season"],  "limits": { "start" : 0, "end": 10 },   "filter": {"and": [{"field": "playcount", "operator": "is", "value": "0"}, {"field": "season", "operator": "greaterthan", "value": "0"}]},    "sort": { "order": "ascending", "method": "episode" } }, "id": "libEpisodes"}'        
     elif command == 'lasttvshow':            
         post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetTVShows", "params": {  "properties": ["dateadded", "lastplayed",  "year", "rating", "playcount"],           "sort": { "order": "descending", "method": "lastplayed" } }, "id": "libTvshows"}'
+    #elif command == 'tagesschau':                   
+    #    post = '{ "jsonrpc": "2.0", "method": "Addons.ExecuteAddon","params":{"addonid":"plugin.video.tagesschau","params":{"action":"list_feed","feed":"latest_broadcasts" }}, "id": 1 }'
     elif command == 'tagesschau':                   
-        post = '{ "jsonrpc": "2.0", "method": "Addons.ExecuteAddon","params":{"addonid":"plugin.video.tagesschau","params":{"action":"list_feed","feed":"latest_broadcasts" }}, "id": 1 }'
-    elif command == 'tagesschau2':                   
-        #post = '{ "jsonrpc": "2.0", "method": "Addons.ExecuteAddon","params":{"addonid":"plugin.video.tagesschau","params":{"action":"play_video","feed":"latest_broadcasts", "tsid": "ts-34875" }}, "id": 1 }'
         post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"file": "plugin://plugin.video.tagesschau/?action=play_video&feed=latest_broadcasts&tsid=ts-34875"  } }, "id": 1 }'
                
        
@@ -67,7 +66,7 @@ def postKodiRequest_Internal(url, post):
     if result['result']: 
         return result
     else:   
-        return { 'result': False,  'message' : 'Fehlgeschlagen. Grund: ' + str(result['message']) }
+        return { 'result': False,  'message' : 'Fehlgeschlagen. Grund: ' + getErrorMessage(result) }
     
 def postKodiRequest(command, typeStr, searchStr):
     (url, post) = getKodiUrl(command, typeStr, searchStr) 
@@ -120,7 +119,7 @@ def kodiPlayTVShowLastEpisodeById(tvshowid):
         #result = { 'result': True,  'message' : "Starte " + str(result["data"])}
         return kodiPlayEpisode(result['data']['episodes'][0]['episodeid'])
     else:   
-        result = { 'result': False,  'message' : result['message'] + ' Keine Episode dieser Serie gefunden, die abgespielt werden kann. Grund: ' + str(result["data"]["error"]["message"]) }        
+        result = { 'result': False,  'message' : result['message'] + ' Keine Episode dieser Serie gefunden, die abgespielt werden kann. Grund: ' +getErrorMessage(result)  }        
     
     return result
 
@@ -133,22 +132,28 @@ def kodiPlayLastTvShow():
         return kodiPlayTVShowLastEpisodeById(tvshowid)    
  
 def kodiPlayTagesschau():  
-    result = postKodiRequest("tagesschau2", None, None)
-    #result = postKodiRequest("tagesschau2", None, None)
+    result = postKodiRequest("tagesschau", None, None)
+    return result
     
-    #result = postKodiRequest("tagesschau", None, None)
-   # 
-   # if 'result' in result and result['result']:
-   #     result = postKodiRequest("open", "playlist", "1")
-   #     
-    #return result          
+def getErrorMessage(dic):    
+    try:
+        return dic["data"]["error"]["message"]
+    except:
+        try:
+            return dic['message']['message']        
+        except:
+            try:
+                return dic['message']
+            except:
+                return "Unbekannt"
+
 
 def kodiPlayMovieId(movieId):
     result = postKodiRequest("open", "movie", movieId)   
     if result['result']: 
         result = { 'result': True,  'message' : "Starte " + str(movieId)}
     else:   
-        result = { 'result': False,  'message' : 'Konnte Film nicht starten Grund' + str(result['message']) }
+        result = { 'result': False,  'message' : 'Konnte Film nicht starten. Grund: ' + getErrorMessage(result) }
     return result  
     
 def kodiPlayMovie(movieTitle):    

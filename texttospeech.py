@@ -12,12 +12,20 @@ except:
     
 def init():
     if soundSupport:
-        return pyttsx3.init()
+        engine = pyttsx3.init()
+        try:
+            engine.setProperty('voice','german')
+        except: 
+            print("Could not set texttospeech language to german. Using default")
+        engine.setProperty('volume', 1.0) 
+        
+        return engine
     else:
         return None
     
-def sayString(engine, s):
+def sayString(engine, s):    
     if engine: 
+        print(s)
         engine.say(s)
         engine.runAndWait()
     else:
