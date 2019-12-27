@@ -137,10 +137,16 @@ def kodiPlayTagesschau(showStr):
         xx = htmlrequests.downloadJsonDic('http://www.tagesschau.de/api/multimedia/sendung/letztesendungen100.json',b'')    
         print(xx)
         ts = [x for x in xx['latestBroadcastsPerType'] if x['title']==showStr][0]['sophoraId'] 
-     
         print(ts)
+        try:
+            strts = ts.encode('utf-8') #python 2
+        except:
+            strts = str(ts, 'utf-8')
+            
+        print(strts)
         
-        result = postKodiRequest("tagesschau", None, ts)
+        
+        result = postKodiRequest("tagesschau", None, strts)
     except Exception as e:
         result = {'result': False, 'message' : 'Tagesschau kann nicht gestartet werden '+str(e)}
     return result

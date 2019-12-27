@@ -4,8 +4,12 @@ import platform
 import time
 import settings
 #import speech_recognition
-from resources.lib.snowboyrpi8 import snowboydetect
-from resources.lib.snowboyrpi8 import snowboydecoder
+try:
+    from resources.lib.snowboyrpi8 import snowboydetect
+    from resources.lib.snowboyrpi8 import snowboydecoder
+except:
+    pass
+
 import os
 import audioop
 import math
