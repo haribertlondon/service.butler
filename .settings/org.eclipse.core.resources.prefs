@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//resources/lib/__init__.py=utf-8
 encoding/ai.py=utf-8
 encoding/htmlrequests.py=utf-8
 encoding/pluginKodi.py=utf-8
