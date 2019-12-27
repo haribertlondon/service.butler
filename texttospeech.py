@@ -23,13 +23,12 @@ def init():
     else:
         return None
     
-def sayString(engine, s):    
-    if engine: 
-        print(s)
+def sayString(engine, s):
+    print("Voice output", s)
+    if engine:
         engine.say(s)
         engine.runAndWait()
     else:
         print("Warning: No audio output. ")
-        print(s)
      
     
