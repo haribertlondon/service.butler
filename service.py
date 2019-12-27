@@ -84,15 +84,15 @@ if __name__ == "__main__":
             texttospeech.sayString(textspeech, 'Sum Sum Sum')
             
         
-        try:    
-            #from playsound import playsound 
-            #playsound(settings.LISTEN_WRITEWAV)
-            from pydub import AudioSegment
-            from pydub.playback import play
+        #try:    
+        #    #from playsound import playsound 
+        #    #playsound(settings.LISTEN_WRITEWAV)
+        #    from pydub import AudioSegment
+        #    from pydub.playback import play##
 
-            song = AudioSegment.from_wav(settings.LISTEN_WRITEWAV)
-            play(song)
-        except:
-            pass
+        #    song = AudioSegment.from_wav(settings.LISTEN_WRITEWAV)
+        #    play(song)
+        #except:
+        #    pass
         
     print("Script finished")
