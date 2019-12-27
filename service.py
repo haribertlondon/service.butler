@@ -63,7 +63,7 @@ if __name__ == "__main__":
     #for i in range(100):
     while True:
         
-        if False:    
+        if True:    
             guess = speech.speechListen(recognizer, microphone)
         else: 
             #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele Modern Family weiter" }    
