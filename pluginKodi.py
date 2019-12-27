@@ -35,8 +35,9 @@ def getKodiUrl(command, typeStr, searchStr):
     #elif command == 'tagesschau':                   
     #    post = '{ "jsonrpc": "2.0", "method": "Addons.ExecuteAddon","params":{"addonid":"plugin.video.tagesschau","params":{"action":"list_feed","feed":"latest_broadcasts" }}, "id": 1 }'
     elif command == 'tagesschau':                   
-        post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"file": "plugin://plugin.video.tagesschau/?action=play_video&feed=latest_broadcasts&tsid=ts-34875"  } }, "id": 1 }'
-               
+        post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"file": "plugin://plugin.video.tagesschau/?action=play_video&feed=latest_broadcasts&tsid='+searchStr+'"  } }, "id": 1 }'
+    #elif command == 'getplaylist':
+    #    post = '{"jsonrpc": "2.0", "method": "Playlist.GetItems", "params": { "properties": [ "runtime", "showtitle", "season", "title", "artist", "file" ], "playlistid": 1}, "id": 1}'           
        
     post = str.encode(post) # set to byte array
     return (url, post)
@@ -131,8 +132,17 @@ def kodiPlayLastTvShow():
         tvshowid = result['data']['tvshows'][0]['tvshowid']
         return kodiPlayTVShowLastEpisodeById(tvshowid)    
  
-def kodiPlayTagesschau():  
-    result = postKodiRequest("tagesschau", None, None)
+def kodiPlayTagesschau(showStr):
+    try:
+        xx = htmlrequests.downloadJsonDic('http://www.tagesschau.de/api/multimedia/sendung/letztesendungen100.json',b'')    
+        print(xx)
+        ts = [x for x in xx['latestBroadcastsPerType'] if x['title']==showStr][0]['sophoraId'] 
+     
+        print(ts)
+        
+        result = postKodiRequest("tagesschau", None, ts)
+    except Exception as e:
+        result = {'result': False, 'message' : 'Tagesschau kann nicht gestartet werden '+str(e)}
     return result
     
 def getErrorMessage(dic):    
