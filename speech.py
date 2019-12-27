@@ -19,11 +19,15 @@ def speechListen(recognizer, microphone):
     with microphone as source:
         print("Adjust silence")
         recognizer.adjust_for_ambient_noise(source)
-        print("Listening")
+        print("Listening with snowboy")
         #snowboy: 7d3401448303897331bd7490798dd69a213625a0
         
         try:
-            audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=( './resources/lib/snowboyrpi8/', ['./resources/lib/snowboyrpi8/kodi.pmdl', './resources/lib/snowboyrpi8/jarvis.pmdl']   ) )
+            try:
+                audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=( './resources/lib/snowboyrpi8/', ['./resources/lib/snowboyrpi8/kodi.pmdl', './resources/lib/snowboyrpi8/jarvis.pmdl']   ) )
+            except:                                
+                audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=( '/home/pi/.kodi/addons/service.butler/resources/lib/snowboyrpi8/', ['/home/pi/.kodi/addons/service.butler/resources/lib/snowboyrpi8/kodi.pmdl', '/home/pi/.kodi/addons/service.butler/resources/lib/snowboyrpi8/jarvis.pmdl']   ) )
+                
         except Exception as e:
             print("Warning. Could not load snowboy. Now using fallback. Error ", str(e))
             audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=None   ) 

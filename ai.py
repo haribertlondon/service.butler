@@ -32,8 +32,13 @@ def speechInterprete(guess, wav):
     matchCounter = 0
     
     #remove hotword at beginning
-    command = guess["transcription"].lower().strip()        
-    command = re.sub("^"+settings.LISTEN_HOTWORD,"", command, re.IGNORECASE).strip() #@UndefinedVariable
+    command = guess["transcription"].lower().strip()   
+    
+    if isinstance(settings.LISTEN_HOTWORD, str):
+        settings.LISTEN_HOTWORD = [settings.LISTEN_HOTWORD]
+        
+    for hotword in settings.LISTEN_HOTWORD:     
+        command = re.sub("^"+hotword,"", command, re.IGNORECASE).strip() #@UndefinedVariable
     
     
     matches = re.findall("^(?:Play|Los|Weiter|Continue|Spiele weiter|Spiel weiter|Starte)( den Film)?$", command, re.IGNORECASE) #@UndefinedVariable
