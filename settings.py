@@ -14,6 +14,7 @@ LISTEN_HOTWORD = ["kodi", "jarvis"]
 LISTEN_GOOGLEKEY = ""
 LISTEN_LANGUAGE= 'de-DE' #["en-US",'de']
 HTTP_KODI_IP = 'localhost:8080'#'192.168.0.60:8080'
+LISTEN_SNOWBOY = ( './resources/lib/snowboyrpi8/', ['./resources/lib/snowboyrpi8/kodi.pmdl']   )
 
 def hasSnowboy():
     s = socket.gethostname() 

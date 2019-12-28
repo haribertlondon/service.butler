@@ -193,19 +193,16 @@ def speechListen(recognizer, microphone):
     print(microphone.SAMPLE_WIDTH)
     global audio
     with microphone as source:
-        print("Adjust silence")
+        print("Adjusting silence...")
         recognizer.adjust_for_ambient_noise(source)
-        print("Listening with snowboy")
-        #snowboy: 7d3401448303897331bd7490798dd69a213625a0
-        
+                        
         try:           
             if settings.hasSnowboy():
-                audio = recognizer.listen_mod(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=( './resources/lib/snowboyrpi8/', ['./resources/lib/snowboyrpi8/kodi.pmdl']   ) )
+                print("Listening with snowboy")
+                audio = recognizer.listen_mod(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=settings.LISTEN_SNOWBOY )
             else:
+                print("Listening WITHOUT snowboy")
                 audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT )
-                
-            #except:                                
-            #    audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=( '/home/pi/.kodi/addons/service.butler/resources/lib/snowboyrpi8/', ['/home/pi/.kodi/addons/service.butler/resources/lib/snowboyrpi8/kodi.pmdl']  ) )
                 
         except Exception as e:
             print("Warning. Could not load snowboy. Now using fallback. Error was ", str(e))
@@ -220,8 +217,10 @@ def speechListen(recognizer, microphone):
     try:
         if settings.LISTEN_LANGUAGE == "":
             settings.LISTEN_LANGUAGE = None
+        
+        print("Starting speech recognition...")
             
-        response["transcription"] = recognizer.recognize_google(audio, key=None, language=settings.LISTEN_LANGUAGE)
+        response["transcription"] = recognizer.recognize_google(audio, key=None, language=settings.LISTEN_LANGUAGE)        
         #response["transcription"] = recognizer.recognize_wit(audio, key='6PKAY4NP4U4VJPBJAEHSWV7JS5HWTSQE')
         #response["transcription"] = recognizer.recognize_wit(audio, key='6PKAY4NP4U4VJPBJAEHSWV7JS5HWTSQE')
         #response["transcription"] = recognizer.recognize_bing(audio, key='912b8cb579f74a01aba54691b1d9c671')#, language=settings.LISTEN_LANGUAGE)
@@ -235,6 +234,8 @@ def speechListen(recognizer, microphone):
     except sr.UnknownValueError:
         # speech was unintelligible
         response["error"] = "Unable to recognize speech"
+        
+    print("Speech recognition finished")
 
     return response
 
