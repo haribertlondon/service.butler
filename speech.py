@@ -1,15 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import platform
-import time
 import settings
-#import speech_recognition
-try:
-    from resources.lib.snowboyrpi8 import snowboydetect
-    from resources.lib.snowboyrpi8 import snowboydecoder
-except:
-    pass
-
 import os
 import audioop
 import math
@@ -22,14 +14,20 @@ try:
 except:
     print("No speech_recognition installed on system. Try to use fallback...")
     import resources.lib.speech_recognition as sr #@Reimport #if not, use the provides ones
-    
-    
-#import snowboydecoder
-import sys
-import signal
+     
+try:    
+    from resources.lib.snowboyrpi8 import snowboydecoder
+except Exception as e:
+    print("Warning: Could not import resources.lib.snowboyrpi8", str(e))     
 
+
+#lobal varuables
 interrupted = False
+audio = None
 
+def getAudioData():
+    global audio
+    return audio
 
 def found_callback():
     global interrupted    
@@ -38,16 +36,14 @@ def found_callback():
 
 
 def check_callback():
-    global interrupted
-    #print("Check callback", interrupted)
-    #interrupted = True
+    global interrupted    
     return interrupted
 
 
 class MyRecognizer(sr.Recognizer): 
     
     
-    def listen(self, source, timeout=None, phrase_time_limit=None, snowboy_configuration=None):        
+    def listen_mod(self, source, timeout=None, phrase_time_limit=None, snowboy_configuration=None):        
         """
         Records a single phrase from ``source`` (an ``AudioSource`` instance) into an ``AudioData`` instance, which it returns.
 
@@ -148,7 +144,7 @@ class MyRecognizer(sr.Recognizer):
                 print("Expression was too short. Starting all over again", phrase_count,  phrase_buffer_count, len(buffer))
 
         # obtain frame data
-        for i in range(pause_count - non_speaking_buffer_count): frames.pop()  # remove extra non-speaking frames at the end
+        for _ in range(pause_count - non_speaking_buffer_count): frames.pop()  # remove extra non-speaking frames at the end
         frame_data = b"".join(frames)
 
         print("Collected all data. Finished listening", len(buffer))
@@ -168,9 +164,6 @@ class MyRecognizer(sr.Recognizer):
         interrupted = False
         
         model = snowboy_hot_word_files
-
-        # capture SIGINT signal, e.g., Ctrl+C
-        #signal.signal(signal.SIGINT, signal_handler)
 
         detector = snowboydecoder.HotwordDetector(model, sensitivity=0.5)
         print('Listening... Press Ctrl+C to exit')
@@ -192,67 +185,25 @@ class MyRecognizer(sr.Recognizer):
         
         return b"".join(buffer), elapsed_time   #add dummy buffer
 
-        #detector = snowboydetect.SnowboyDetect(
-        #    resource_filename=os.path.join(snowboy_location, "resources", "common.res").encode(),
-        #    model_str=",".join(snowboy_hot_word_files).encode()
-        #)
-        #detector.SetAudioGain(1.0)
-        #detector.SetSensitivity(",".join(["0.4"] * len(snowboy_hot_word_files)).encode())
-        #snowboy_sample_rate = detector.SampleRate()#
 
-        #elapsed_time = 0
-        #seconds_per_buffer = float(source.CHUNK) / source.SAMPLE_RATE
-        #resampling_state = None
-
-        # buffers capable of holding 5 seconds of original and resampled audio
-        #five_seconds_buffer_count = int(math.ceil(5 / seconds_per_buffer))
-        #frames = collections.deque(maxlen=five_seconds_buffer_count)
-        #resampled_frames = collections.deque(maxlen=five_seconds_buffer_count)
-        #while True:
-        #    elapsed_time += seconds_per_buffer
-        #    if timeout and elapsed_time > timeout:
-        #        raise Exception("listening timed out while waiting for hotword to be said")
-
-        #   buffer = source.stream.read(source.CHUNK)
-            
-        #    print("Buffer: ", buffer)
-            
-        #    if len(buffer) == 0:
-        #        print("Sleep")
-        #        time.sleep(sleep)
-        #        continue
-            
-        #    if len(buffer) == 0: break  # reached end of the stream
-            
-            
-            
-        #    frames.append(buffer)
-            
-
-            # resample audio to the required sample rate
-        #    resampled_buffer, resampling_state = audioop.ratecv(buffer, source.SAMPLE_WIDTH, 1, source.SAMPLE_RATE, snowboy_sample_rate, resampling_state)
-        #    resampled_frames.append(resampled_buffer)
-
-            # run Snowboy on the resampled audio
-         #   snowboy_result = detector.RunDetection(b"".join(resampled_frames))
-         #   assert snowboy_result != -1, "Error initializing streams or reading audio data"
-         #   if snowboy_result > 0: break  # wake word found
-
-        #return b"".join(frames), elapsed_time
 
 def speechListen(recognizer, microphone):   
     # adjust the recognizer sensitivity to ambient noise and record audio from the microphone
     print(microphone.SAMPLE_RATE)
     print(microphone.SAMPLE_WIDTH)
+    global audio
     with microphone as source:
         print("Adjust silence")
         recognizer.adjust_for_ambient_noise(source)
         print("Listening with snowboy")
         #snowboy: 7d3401448303897331bd7490798dd69a213625a0
         
-        try:
-            #try:
-            audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=( './resources/lib/snowboyrpi8/', ['./resources/lib/snowboyrpi8/kodi.pmdl']   ) )
+        try:           
+            if settings.hasSnowboy():
+                audio = recognizer.listen_mod(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=( './resources/lib/snowboyrpi8/', ['./resources/lib/snowboyrpi8/kodi.pmdl']   ) )
+            else:
+                audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT )
+                
             #except:                                
             #    audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=( '/home/pi/.kodi/addons/service.butler/resources/lib/snowboyrpi8/', ['/home/pi/.kodi/addons/service.butler/resources/lib/snowboyrpi8/kodi.pmdl']  ) )
                 
@@ -262,11 +213,6 @@ def speechListen(recognizer, microphone):
     
     print("Stopped listening")
     
-    if settings.LISTEN_WRITEWAV is not None and len(settings.LISTEN_WRITEWAV)>0:
-        wavdata = audio.get_wav_data()
-        f = open(settings.LISTEN_WRITEWAV, 'wb')
-        f.write(wavdata)
-        f.close()
     
     # set up the response object
     response = {"error": None, "transcription": None }
@@ -295,9 +241,6 @@ def speechListen(recognizer, microphone):
 def speechInit():
     # create recognizer and mic instances
     recognizer = MyRecognizer()#sr.Recognizer()
-    #test = MyRecognizer()
-    
-    
     
     
     for mic in enumerate(sr.Microphone.list_microphone_names()):

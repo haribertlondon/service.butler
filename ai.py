@@ -2,7 +2,7 @@
 import re
 import settings
 import pluginKodi
-
+import pluginEcho
 
 def checkMatch(match):    
     global matchCounter
@@ -17,7 +17,9 @@ def checkMatch(match):
             return False
     else:
         return False
-    
+
+def checkResult(result):
+    return (result is not None and isinstance(result, dict) and 'result' in result and result['result'])     
 
 # Examples Play The Beach
 def speechInterprete(guess, wav):
@@ -39,11 +41,10 @@ def speechInterprete(guess, wav):
         
     for hotword in settings.LISTEN_HOTWORD:     
         command = re.sub("^"+hotword,"", command, re.IGNORECASE).strip() #@UndefinedVariable
-    
-    
-    matches = re.findall("^(?:Play|Los|Weiter|Continue|Spiele weiter|Spiel weiter|Starte)( den Film)?$", command, re.IGNORECASE) #@UndefinedVariable
+        
+    matches = re.findall("^(?:Echo).*", command, re.IGNORECASE) #@UndefinedVariable
     if checkMatch(matches):
-        result = pluginKodi.kodiPlay()
+        result = pluginEcho.echoEcho()       
     
     matches = re.findall("^(Pause|Break)", command, re.IGNORECASE) #@UndefinedVariable
     if checkMatch(matches):
@@ -80,5 +81,10 @@ def speechInterprete(guess, wav):
     matches = re.findall("^(?:Was läuft|Was läuft gerade|Info|Information)", command, re.IGNORECASE)  #@UndefinedVariable  
     if checkMatch(matches):        
         result = pluginKodi.kodiGetCurrentPlaying()  
+        
+    matches = re.findall("^(?:Play|Los|Weiter|Continue|Spiele weiter|Spiel weiter)( den Film)?$", command, re.IGNORECASE) #@UndefinedVariable
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlay()
+
         
     return result

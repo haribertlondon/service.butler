@@ -1,17 +1,26 @@
 # -*- coding: utf-8 -*-
+
+import socket
+
 LISTEN_CHUNKSIZE = 1024
 LISTEN_SAMPLERATE = 44100
 LISTEN_MIC_INDEX = None
 LISTEN_TIMEOUT = None
-LISTEN_PHRASETIMEOUT = 0
+LISTEN_PHRASETIMEOUT = None
 HTTP_TIMEOUT = 20
 
-LISTEN_WRITEWAV = None
+LISTEN_WRITEWAV = "speech.wav"
 LISTEN_HOTWORD = ["kodi", "jarvis"]
 LISTEN_GOOGLEKEY = ""
 LISTEN_LANGUAGE= 'de-DE' #["en-US",'de']
 HTTP_KODI_IP = 'localhost:8080'#'192.168.0.60:8080'
 
+def hasSnowboy():
+    s = socket.gethostname() 
+    return s != "Ankermann"
+
+def isDebug():
+    return socket.gethostname() == "Ankermann"
 
 try:
     import xbmcaddon    
