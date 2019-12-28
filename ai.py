@@ -53,7 +53,11 @@ def speechInterprete(guess, wav):
     if checkMatch(matches):
         result = pluginKodi.kodiStop()
         
-    matches = re.findall("^(?:Spiele|Spiel|Spielt)? (die )?letzte Serie( weiter)?", command, re.IGNORECASE)  #@UndefinedVariable  
+    matches = re.findall("^(?:Spiele|Spiel|Spielt|Play|Starte|Öffne)?(?: )?Youtube(?: mit)? (?:dem|der|den|die|das)?(.*)", command, re.IGNORECASE)  #@UndefinedVariable  
+    if checkMatch(matches):        
+        result = pluginKodi.kodiPlayYoutube(matches[0])
+        
+    matches = re.findall("^(?:Spiele|Spiel|Spielt|Starte)? (die )?letzte Serie( weiter)?", command, re.IGNORECASE)  #@UndefinedVariable  
     if checkMatch(matches):         
         result = pluginKodi.kodiPlayLastTvShow()
         

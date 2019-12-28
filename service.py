@@ -29,9 +29,6 @@ import ai
 import texttospeech
 
 #------TODO-------
-#listen Befehl: The ``snowboy_configuration`` parameter allows integration with `Snowboy <https://snowboy.kitt.ai/>`__, an offline, high-accuracy, power-efficient hotword recognition engine. When used, this function will pause until Snowboy detects a hotword, after which it will unpause. This parameter should either be ``None`` to turn off Snowboy support, or a tuple of the form ``(SNOWBOY_LOCATION, LIST_OF_HOT_WORD_FILES)``, where ``SNOWBOY_LOCATION`` is the path to the Snowboy root directory, and ``LIST_OF_HOT_WORD_FILES`` is a list of paths to Snowboy hotword configuration files (`*.pmdl` or `*.umdl` format).
-
-#youtube support
 #Ringpuffer für Aufnahmen
 #echo Befehl implementieren zum Test der Klangqualität
 #mehrere keywords fuer kodi, tannenbaum, chefkoch
@@ -39,6 +36,8 @@ import texttospeech
 
 
 #--------DONE---------------
+#youtube support: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=30&order=relevance&q=trailer%2Bgerman&key=AIzaSyDCgSFYMKR4IJsIM-BkZXMuqaVHkqRjXzI
+#listen Befehl: The ``snowboy_configuration`` parameter allows integration with `Snowboy <https://snowboy.kitt.ai/>`__, an offline, high-accuracy, power-efficient hotword recognition engine. When used, this function will pause until Snowboy detects a hotword, after which it will unpause. This parameter should either be ``None`` to turn off Snowboy support, or a tuple of the form ``(SNOWBOY_LOCATION, LIST_OF_HOT_WORD_FILES)``, where ``SNOWBOY_LOCATION`` is the path to the Snowboy root directory, and ``LIST_OF_HOT_WORD_FILES`` is a list of paths to Snowboy hotword configuration files (`*.pmdl` or `*.umdl` format).
 # Bug: "Spiele letzte Serie weiter"
 # Bug: "Spiele letzte Tagesschau"
 #durchstich
@@ -71,7 +70,8 @@ if __name__ == "__main__":
             #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele MacGyver weiter" }
             #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele die letzte Tagesschau" }
             #guess =  {"error": None, "transcription": "KODi weiter" }
-            guess =  {"error": None, "transcription": "Kodi Spiele letzte Serie weiter" }
+            #guess =  {"error": None, "transcription": "Kodi Starte die letzten Tagesthemen" }
+            guess =  {"error": None, "transcription": "Kodi Youtube mit Trailer Deutsch" }
             
         
         print(guess)

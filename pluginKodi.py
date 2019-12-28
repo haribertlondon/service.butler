@@ -31,11 +31,13 @@ def getKodiUrl(command, typeStr, searchStr):
     elif command == 'lastepisode':         
         post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetEpisodes", "params": { "tvshowid": '+str(searchStr)+', "properties": ["title", "rating", "season"],  "limits": { "start" : 0, "end": 10 },   "filter": {"and": [{"field": "playcount", "operator": "is", "value": "0"}, {"field": "season", "operator": "greaterthan", "value": "0"}]},    "sort": { "order": "ascending", "method": "episode" } }, "id": "libEpisodes"}'        
     elif command == 'lasttvshow':            
-        post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetTVShows", "params": {  "properties": ["dateadded", "lastplayed",  "year", "rating", "playcount"],           "sort": { "order": "descending", "method": "lastplayed" } }, "id": "libTvshows"}'
-    #elif command == 'tagesschau':                   
-    #    post = '{ "jsonrpc": "2.0", "method": "Addons.ExecuteAddon","params":{"addonid":"plugin.video.tagesschau","params":{"action":"list_feed","feed":"latest_broadcasts" }}, "id": 1 }'
+        post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetTVShows", "params": {  "properties": ["dateadded", "lastplayed",  "year", "rating", "playcount"],           "sort": { "order": "descending", "method": "lastplayed" } }, "id": "libTvshows"}'    
     elif command == 'tagesschau':                   
         post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"file": "plugin://plugin.video.tagesschau/?action=play_video&feed=latest_broadcasts&tsid='+searchStr+'"  } }, "id": 1 }'
+    elif command == 'youtube':
+        post = '{"jsonrpc":"2.0","method":"Player.Open","params":{"item":{"file":"plugin://plugin.video.youtube/play/?video_id='+searchStr+'"}},"id":"1"}'    
+    #elif command == 'tagesschau':                   
+    #    post = '{ "jsonrpc": "2.0", "method": "Addons.ExecuteAddon","params":{"addonid":"plugin.video.tagesschau","params":{"action":"list_feed","feed":"latest_broadcasts" }}, "id": 1 }'
     #elif command == 'getplaylist':
     #    post = '{"jsonrpc": "2.0", "method": "Playlist.GetItems", "params": { "properties": [ "runtime", "showtitle", "season", "title", "artist", "file" ], "playlistid": 1}, "id": 1}'           
        
@@ -132,11 +134,23 @@ def kodiPlayLastTvShow():
         tvshowid = result['data']['tvshows'][0]['tvshowid']
         return kodiPlayTVShowLastEpisodeById(tvshowid)    
  
+def kodiPlayYoutube(searchStr):    
+    searchStr = searchStr.replace(" ","+")
+    try:
+        url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=30&order=relevance&q='+searchStr+'&key=AIzaSyDCgSFYMKR4IJsIM-BkZXMuqaVHkqRjXzI'
+        js = htmlrequests.downloadJsonDic(url,None)
+        videoId = js['items'][0]['id']['videoId']
+        result = postKodiRequest("youtube", None, videoId)
+    except Exception as e:
+        result = {'result': False, 'message' : 'Youtube kann nicht gestartet werden '+str(e)}
+    print(js)
+    return result
+ 
 def kodiPlayTagesschau(showStr):
     try:
-        xx = htmlrequests.downloadJsonDic('http://www.tagesschau.de/api/multimedia/sendung/letztesendungen100.json',b'')    
-        print(xx)
-        ts = [x for x in xx['latestBroadcastsPerType'] if x['title']==showStr][0]['sophoraId'] 
+        js = htmlrequests.downloadJsonDic('http://www.tagesschau.de/api/multimedia/sendung/letztesendungen100.json',b'')    
+        print(js)
+        ts = [x for x in js['latestBroadcastsPerType'] if x['title']==showStr][0]['sophoraId'] 
         print(ts)
         try:
             strts = ts.encode('utf-8') #python 2
