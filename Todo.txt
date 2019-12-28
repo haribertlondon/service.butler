@@ -1,0 +1,22 @@
+#------TODO-------
+#Ringpuffer für Aufnahmen
+#echo Befehl implementieren zum Test der Klangqualität
+#mehrere keywords fuer kodi, tannenbaum, chefkoch
+#plugins ermoeglichen
+
+
+#--------DONE---------------
+#youtube support: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=30&order=relevance&q=trailer%2Bgerman&key=AIzaSyDCgSFYMKR4IJsIM-BkZXMuqaVHkqRjXzI
+#listen Befehl: The ``snowboy_configuration`` parameter allows integration with `Snowboy <https://snowboy.kitt.ai/>`__, an offline, high-accuracy, power-efficient hotword recognition engine. When used, this function will pause until Snowboy detects a hotword, after which it will unpause. This parameter should either be ``None`` to turn off Snowboy support, or a tuple of the form ``(SNOWBOY_LOCATION, LIST_OF_HOT_WORD_FILES)``, where ``SNOWBOY_LOCATION`` is the path to the Snowboy root directory, and ``LIST_OF_HOT_WORD_FILES`` is a list of paths to Snowboy hotword configuration files (`*.pmdl` or `*.umdl` format).
+# Bug: "Spiele letzte Serie weiter"
+# Bug: "Spiele letzte Tagesschau"
+#durchstich
+#Grammatik systematisch
+#letzte tvshow weiterspielen
+#tagesschau aktivieren
+#parametetrisieren im header
+#sprachausgabe
+#make script to run on Kodi !!OR!! on Linux
+#am Raspberry testen
+#mixed language support
+#dateien auslagern

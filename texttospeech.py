@@ -10,8 +10,8 @@
 #    print(voice, voice.id)
 #engine.say('Sally sells seashells by the seashore.')
     
-import subprocess
-import sys
+import os
+    
 try:
     from urllib import quote  # Python 2.X
 except ImportError:
@@ -40,15 +40,13 @@ def sayString(engine, s):
     try:          
         cleanStr = quote(str(s))        
         print("Output by google", cleanStr)
-        import os
-        #os.system('local IFS=+;/usr/bin/mplayer -ao alsa -really-quiet -noconsolecontrols "http://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q='+str(cleanStr)+'&tl=de";')
+                
         a = os.system('/usr/bin/mplayer -ao alsa -really-quiet -noconsolecontrols "http://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q='+str(cleanStr)+'&tl=de";')
         if a is not 0:
-            raise Exception("No outputput with google")
-        #print(a)
-        #subprocess.call('mplayer -ao alsa -really-quiet -noconsolecontrols "http://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q='+str(cleanStr)+'&tl=de";')
+            raise Exception("No output with google possible")
+        
     except Exception as e:
-        print(e)
+        print("Error during google output. Try fallback. Reason was ", str(e))
         if engine:
             engine.say(s)
             engine.runAndWait()
