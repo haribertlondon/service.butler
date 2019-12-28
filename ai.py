@@ -69,6 +69,10 @@ def speechInterprete(guess, wav):
     matches = re.findall("^(?:Spiele|Spiel|Spielt|Starte|Start)?( die)?( letzten)? Tagesthemen", command, re.IGNORECASE)  #@UndefinedVariable  
     if checkMatch(matches):        
         result = pluginKodi.kodiPlayTagesschau('tagesthemen')
+
+    matches = re.findall("^(?:Spiele|Spiel|Spielt|Starte|Start|Radio|Radiosender)? (SWR[ 0-9]+|RPR[ 0-9]+|Big[ ]*FM|Antenne[ ]*K.*|Deutschland[ ]*funk)", command, re.IGNORECASE)  #@UndefinedVariable  
+    if checkMatch(matches):        
+        result = pluginKodi.kodiPlayRadio(matches[0])
         
     matches = re.findall("^(?:Spiele|Spiel|Spielt|Play|Starte|Öffne) (?:die Serie )?(.*) weiter", command, re.IGNORECASE)  #@UndefinedVariable  
     if checkMatch(matches):        

@@ -35,7 +35,10 @@ def getKodiUrl(command, typeStr, searchStr):
     elif command == 'tagesschau':                   
         post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"file": "plugin://plugin.video.tagesschau/?action=play_video&feed=latest_broadcasts&tsid='+searchStr+'"  } }, "id": 1 }'
     elif command == 'youtube':
-        post = '{"jsonrpc":"2.0","method":"Player.Open","params":{"item":{"file":"plugin://plugin.video.youtube/play/?video_id='+searchStr+'"}},"id":"1"}'    
+        post = '{"jsonrpc":"2.0","method":"Player.Open","params":{"item":{"file":"plugin://plugin.video.youtube/play/?video_id='+searchStr+'"}},"id":"1"}'
+    elif command == 'radio':
+        post = '{"jsonrpc":"2.0","method":"Player.Open","params":{"item":{"file":"plugin://plugin.audio.radio_de/station/'+searchStr+'"}},"id":"1"}'
+            
     #elif command == 'tagesschau':                   
     #    post = '{ "jsonrpc": "2.0", "method": "Addons.ExecuteAddon","params":{"addonid":"plugin.video.tagesschau","params":{"action":"list_feed","feed":"latest_broadcasts" }}, "id": 1 }'
     #elif command == 'getplaylist':
@@ -145,6 +148,26 @@ def kodiPlayYoutube(searchStr):
         result = {'result': False, 'message' : 'Youtube kann nicht gestartet werden '+str(e)}
     print(js)
     return result
+
+def kodiPlayRadio(channel):   
+    channel = channel.lower()
+     
+    if channel == 'deutschlandfunk': 
+        return postKodiRequest("radio", None, '1521')
+    elif channel == 'bigfm' or channel == 'big fm':
+        return postKodiRequest("radio", None, '1445')
+    elif channel == 'antennekl'or channel == 'antenne' or channel == 'antenne kl' or channel == 'antenne kaiserslautern':
+        return postKodiRequest("radio", None, '8367')
+    elif channel == 'rpr1' or channel == 'rpr 1':
+        return postKodiRequest("radio", None, '107229')
+    elif channel == 'swr2' or channel == 'swr 2':
+        return postKodiRequest("radio", None, '2414')
+    elif channel == 'swr3' or channel == 'swr 3':
+        return postKodiRequest("radio", None, '2275')
+    else:
+        return {'result': False, 'message': 'Channel nicht gefunden'}
+    
+    
  
 def kodiPlayTagesschau(showStr):
     try:

@@ -46,7 +46,8 @@ if __name__ == "__main__":
             #guess =  {"error": None, "transcription": "KODi weiter" }
             #guess =  {"error": None, "transcription": "Kodi Starte die letzten Tagesthemen" }
             #guess =  {"error": None, "transcription": "Kodi Youtube mit Trailer Deutsch" }
-            guess =  {"error": None, "transcription": "Kodi Echo Hallo Kristina" }
+            #guess =  {"error": None, "transcription": "Kodi Echo Hallo Kristina" }
+            guess =  {"error": None, "transcription": "Kodi Spiele SWR3" }
             
         
         print(guess)
