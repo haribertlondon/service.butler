@@ -8,7 +8,7 @@ LISTEN_MIC_INDEX = None
 
 LISTEN_TIMEOUT = None
 LISTEN_PHRASETIMEOUT = 5.0 #makes sense with snowboy hotword detection
-LISTEN_PURE_PHRASE_TIME = 0.6 #short expression, like for "Play"
+LISTEN_PURE_PHRASE_TIME = 0.4 #short expression, like for "Play"
 LISTEN_PAUSE_THRESHOLD = 0.5 #pause after phrase
 LISTEN_PHRASE_MIN_TIME = 1.5
 LISTEN_ENERGY_THRESHOLD = 300 #will be modified dynamically. This is the start value

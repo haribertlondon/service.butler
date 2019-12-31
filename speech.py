@@ -60,6 +60,11 @@ class MyRecognizer(sr.Recognizer):
 
         This operation will always complete within ``timeout + phrase_timeout`` seconds if both are numbers, either by returning the audio data, or by raising a ``speech_recognition.WaitTimeoutError`` exception.
         """
+        
+        self.phrase_threshold = settings.LISTEN_PURE_PHRASE_TIME    
+        self.pause_threshold = settings.LISTEN_PAUSE_THRESHOLD    
+        self.phrase_min_time = settings.LISTEN_PHRASE_MIN_TIME  
+        
         assert isinstance(source, sr.AudioSource), "Source must be an audio source"
         assert source.stream is not None, "Audio source must be entered before listening, see documentation for ``AudioSource``; are you using ``source`` outside of a ``with`` statement?"
         assert self.pause_threshold >= self.non_speaking_duration >= 0
@@ -68,6 +73,7 @@ class MyRecognizer(sr.Recognizer):
             for hot_word_file in snowboy_configuration[1]:
                 assert os.path.isfile(hot_word_file), "``snowboy_configuration[1]`` must be a list of Snowboy hot word configuration files"
 
+        
         seconds_per_buffer = float(source.CHUNK) / source.SAMPLE_RATE
         #pause_buffer_count = int(math.ceil(self.pause_threshold / seconds_per_buffer))  # number of buffers of non-speaking audio during a phrase, before the phrase should be considered complete
         #phrase_buffer_count = int(math.ceil(self.phrase_threshold / seconds_per_buffer))  # minimum number of buffers of speaking audio before we consider the speaking audio a phrase
@@ -142,6 +148,11 @@ class MyRecognizer(sr.Recognizer):
                 # handle phrase being too long by cutting off the audio
                 elapsed_time += seconds_per_buffer                
 
+
+                #x = -(time.time() - startTime_for_tictoc - seconds_per_buffer*i)
+                #print("Sleep",x)
+                #if x>0:
+                #    time.sleep(x)
                 buffer = source.stream.read(source.CHUNK)
                 if len(buffer) == 0:
                     print("-------------------------REACHED END--------------------")
@@ -298,9 +309,7 @@ def speechInit():
     for mic in enumerate(sr.Microphone.list_microphone_names()):
         print(mic)
         
-    recognizer.phrase_threshold = settings.LISTEN_PURE_PHRASE_TIME    
-    recognizer.pause_threshold = settings.LISTEN_PAUSE_THRESHOLD    
-    recognizer.phrase_min_time = settings.LISTEN_PHRASE_MIN_TIME  
+    
     
     microphone = sr.Microphone(device_index = settings.LISTEN_MIC_INDEX, sample_rate=settings.LISTEN_SAMPLERATE, chunk_size=settings.LISTEN_CHUNKSIZE)
     
