@@ -6,6 +6,7 @@ import os
 import audioop
 import math
 import collections 
+import datetime
 
 try:
     print(sys.version)
@@ -36,6 +37,7 @@ def found_callback():
 
 
 def check_callback():
+    #print("Check callback")
     global interrupted    
     return interrupted
 
@@ -103,7 +105,7 @@ class MyRecognizer(sr.Recognizer):
             else:
                 # read audio input until the hotword is said
                 snowboy_location, snowboy_hot_word_files = snowboy_configuration
-                buffer, delta_time = self.snowboy_wait_for_hot_word(snowboy_location, snowboy_hot_word_files, source, timeout)
+                buffer, delta_time = self.snowboy_wait_for_hot_word_mod(snowboy_location, snowboy_hot_word_files, source, timeout)
                 elapsed_time += delta_time
                 if len(buffer) == 0: break  # reached end of the stream
                 frames.append(buffer)
@@ -112,32 +114,64 @@ class MyRecognizer(sr.Recognizer):
             pause_count, phrase_count = 0, 0
             phrase_start_time = elapsed_time
             print("Start second loop", len(buffer))
+            frames.clear()
+            phrase_start_time = 0
+            elapsed_time = 0
+            phrase_buffer_count = 200
+            pause_buffer_count = 35
+            pause_time = 0.0
+            phrase_time = 0.0
+            phrase_ok = False
+            print("Seconds per buffer: ", seconds_per_buffer)
+            seconds_per_buffer = 0.023 
             while True:
                 # handle phrase being too long by cutting off the audio
                 elapsed_time += seconds_per_buffer
-                if phrase_time_limit and elapsed_time - phrase_start_time > phrase_time_limit:
-                    print("MinTimeLimit reached")
+                
+                if (elapsed_time > 5.0):
+                    print("MaxTimeLimit reached", elapsed_time)
+                    phrase_ok = False
                     break
 
                 buffer = source.stream.read(source.CHUNK)
-                if len(buffer) == 0: break  # reached end of the stream
+                if len(buffer) == 0:
+                    print("-------------------------REACHED END--------------------")
+                    break  # reached end of the stream
                 frames.append(buffer)
                 phrase_count += 1
 
                 # check if speaking has stopped for longer than the pause threshold on the audio input
                 energy = audioop.rms(buffer, source.SAMPLE_WIDTH)  # unit energy of the audio signal within the buffer
                 if energy > self.energy_threshold:
+                    phrase_time += seconds_per_buffer
                     pause_count = 0
                 else:
                     pause_count += 1
-                if pause_count > pause_buffer_count and phrase_count-pause_count > phrase_buffer_count:  # end of the phrase
-                    print("Debugging: ", pause_count, pause_buffer_count, phrase_count, phrase_buffer_count)
-                    break
+                    pause_time += seconds_per_buffer
+
+
+                #phrase ok and pause ok
+                #if pause_count > pause_buffer_count and phrase_count-pause_count > phrase_buffer_count:  # end of the phrase
+                #    break
+                
+                #if pause_time>0.5 and elapsed_time > 3:
+                #    if phrase_time>0.4:
+                #        phrase_ok = True
+                #        print("Pause ok and Phrase ok", pause_time, phrase_time)
+                #    else:
+                #        phrase_ok = False
+                #        print("Pause ok, Phrase not Ok", pause_time, phrase_time)
+                #    break
+
+
+                #print("Debugging: ", datetime.now().strftime("%H:%M:%S"), round(elapsed_time,2), round(pause_time,2), round(phrase_time,2) )
+
 
             print("Ended second loop", len(buffer))
             # check how long the detected phrase is, and retry listening if the phrase is too short
             phrase_count -= pause_count  # exclude the buffers for the pause before the phrase
-            if phrase_count >= phrase_buffer_count or len(buffer) == 0:
+            #if phrase_count >= phrase_buffer_count or len(buffer) == 0:
+            if phrase_ok:
                 print("Reached end of phrase", len(buffer))
                 break  # phrase is long enough or we've reached the end of the stream, so stop listening
             else: 
@@ -150,7 +184,7 @@ class MyRecognizer(sr.Recognizer):
         print("Collected all data. Finished listening", len(buffer))
         return sr.AudioData(frame_data, source.SAMPLE_RATE, source.SAMPLE_WIDTH)
     
-    def snowboy_wait_for_hot_word(self, snowboy_location, snowboy_hot_word_files, source, timeout=None):
+    def snowboy_wait_for_hot_word_mod(self, snowboy_location, snowboy_hot_word_files, source, timeout=None):
         # load snowboy library (NOT THREAD SAFE)
         sys.path.append(snowboy_location)
 
@@ -158,14 +192,12 @@ class MyRecognizer(sr.Recognizer):
         
         print("My Snowboy Wait")   
         global interrupted
-
-        self.phrase_threshold = 0.3
         
         interrupted = False
         
         model = snowboy_hot_word_files
 
-        detector = snowboydecoder.HotwordDetector(model, sensitivity=0.5)
+        detector = snowboydecoder.HotwordDetector(model, sensitivity=0.9)
         print('Listening... Press Ctrl+C to exit')
 
         # main loop
@@ -202,10 +234,10 @@ def speechListen(recognizer, microphone):
                 audio = recognizer.listen_mod(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=settings.LISTEN_SNOWBOY )
             else:
                 print("Listening WITHOUT snowboy")
-                audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT )
+                audio = recognizer.listen_mod(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT )
                 
         except Exception as e:
-            print("Warning. Could not load snowboy. Now using fallback. Error was ", str(e))
+            print("Listening failed: ", str(e))
             #audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=None   ) 
     
     print("Stopped listening")
@@ -226,7 +258,7 @@ def speechListen(recognizer, microphone):
         #response["transcription"] = recognizer.recognize_bing(audio, key='912b8cb579f74a01aba54691b1d9c671')#, language=settings.LISTEN_LANGUAGE)
         #response["transcription"] = recognizer.recognize_sphinx(audio, language='de-DE') #settings.LISTEN_LANGUAGE)#, language=settings.LISTEN_LANGUAGE)
         
-        
+        print("Detected: ", response["transcription"])
         
     except sr.RequestError as e:
         # API was unreachable or unresponsive        
@@ -242,10 +274,13 @@ def speechListen(recognizer, microphone):
 def speechInit():
     # create recognizer and mic instances
     recognizer = MyRecognizer()#sr.Recognizer()
-    
-    
+
     for mic in enumerate(sr.Microphone.list_microphone_names()):
-        print(mic) 
+        print(mic)
+        
+    recognizer.phrase_threshold = 0.3
+    recognizer.non_speaking_duration = 0.5
+    recognizer.pause_threshold = 0.8        
     
     microphone = sr.Microphone(device_index = settings.LISTEN_MIC_INDEX, sample_rate=settings.LISTEN_SAMPLERATE, chunk_size=settings.LISTEN_CHUNKSIZE)
     

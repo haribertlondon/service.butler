@@ -38,13 +38,19 @@ def getKodiUrl(command, typeStr, searchStr):
         post = '{"jsonrpc":"2.0","method":"Player.Open","params":{"item":{"file":"plugin://plugin.video.youtube/play/?video_id='+searchStr+'"}},"id":"1"}'
     elif command == 'radio':
         post = '{"jsonrpc":"2.0","method":"Player.Open","params":{"item":{"file":"plugin://plugin.audio.radio_de/station/'+searchStr+'"}},"id":"1"}'
-            
+    elif command == 'showmessage':
+        post = '{"jsonrpc": "2.0", "method": "GUI.ShowNotification", "params": {"title": "Info", "message": "' + searchStr + '"}, "id": 1}'
+    else:
+        print('Command not found', command)
     #elif command == 'tagesschau':                   
     #    post = '{ "jsonrpc": "2.0", "method": "Addons.ExecuteAddon","params":{"addonid":"plugin.video.tagesschau","params":{"action":"list_feed","feed":"latest_broadcasts" }}, "id": 1 }'
     #elif command == 'getplaylist':
     #    post = '{"jsonrpc": "2.0", "method": "Playlist.GetItems", "params": { "properties": [ "runtime", "showtitle", "season", "title", "artist", "file" ], "playlistid": 1}, "id": 1}'           
-       
-    post = str.encode(post) # set to byte array
+    
+    try:   
+        post = str.encode(post) # set to byte array
+    except:
+        post = post.encode("utf-8")
     return (url, post)
 
 def getPlayableItems(typeStr, searchStr):
@@ -72,7 +78,7 @@ def postKodiRequest_Internal(url, post):
     if result['result']: 
         return result
     else:   
-        return { 'result': False,  'message' : 'Fehlgeschlagen. Grund: ' + getErrorMessage(result) }
+        return { 'result': False,  'message' : 'Fehlgeschlagen. '} # + getErrorMessage(result) }
     
 def postKodiRequest(command, typeStr, searchStr):
     (url, post) = getKodiUrl(command, typeStr, searchStr) 

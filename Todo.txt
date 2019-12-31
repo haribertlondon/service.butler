@@ -5,6 +5,9 @@
 #wecker 
 #kochbuch
 #30 sek vorspulen
+#witze erzählen
+#geschichte erzählen
+#schalte den TV aus
 #nächster Film: curl -g --data-binary '{ "jsonrpc": "2.0", "method": "Player.GoTo", "id": 1, "params": { "playerid": 0, "to":"next"} }' --header 'content-type: application/json;' http://192.168.deine.IP:Port/jsonrpc
 #Gui Notification: curl -g --data-binary '{"jsonrpc": "2.0", "method": "GUI.ShowNotification", "params": {"title": "Hallo!", "message": "Viele Grüße von OSMC"}, "id": 1}' --header "Content-Type: application/json" http://192.168.deine.IP:Port/jsonrpc
 #bessere Filmsuche (sucht nach "contain" und filtert den besten Wert raus) 

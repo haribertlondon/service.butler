@@ -24,14 +24,19 @@ def checkResult(result):
 # Examples Play The Beach
 def speechInterprete(guess, wav):
     
-    result= {'result' : False, 'message': 'Ich habe dich leider nicht verstanden.'}
+    result= {'result' : False, 'message': 'Ich habe dich leider nicht verstanden.'}    
     
     if guess["error"] is not None or guess["error"] is not None and len(guess["error"])>0:
         print("Guessed expression not valid "+str(guess))
-        return result 
+        #return result
+        return {'result': False, 'message': 'Silence!'}
+ 
     
     global matchCounter
     matchCounter = 0
+    
+    a = pluginKodi.postKodiRequest("showmessage", "", guess["transcription"])
+    print(a)
     
     #remove hotword at beginning
     command = guess["transcription"].lower().strip()   
@@ -39,8 +44,17 @@ def speechInterprete(guess, wav):
     if isinstance(settings.LISTEN_HOTWORD, str):
         settings.LISTEN_HOTWORD = [settings.LISTEN_HOTWORD]
         
+    hotword_found = False
     for hotword in settings.LISTEN_HOTWORD:     
-        command = re.sub("^"+hotword,"", command, re.IGNORECASE).strip() #@UndefinedVariable
+        (command, n) = re.subn("^"+hotword,"", command, re.IGNORECASE).strip() #@UndefinedVariable
+        if n>0:
+            hotword_found = True
+
+    if not hotword_found:
+        return {'result': False, 'message': 'Silence!'}
+
+    a = pluginKodi.postKodiRequest("showmessage", "", guess["transcription"])
+    print(a)
         
     matches = re.findall("^(?:Echo).*", command, re.IGNORECASE) #@UndefinedVariable
     if checkMatch(matches):
@@ -62,11 +76,11 @@ def speechInterprete(guess, wav):
     if checkMatch(matches):         
         result = pluginKodi.kodiPlayLastTvShow()
         
-    matches = re.findall("^(?:Spiele|Spiel|Spielt|Starte|Start)?( die)?( letzte)? Tagesschau", command, re.IGNORECASE)  #@UndefinedVariable  
+    matches = re.findall("^(?:Spiele |Spiel |Spielt |Starte |Start )?(die )?(letzte )?Tagesschau", command, re.IGNORECASE)  #@UndefinedVariable  
     if checkMatch(matches):        
         result = pluginKodi.kodiPlayTagesschau('tagesschau')  
         
-    matches = re.findall("^(?:Spiele|Spiel|Spielt|Starte|Start)?( die)?( letzten)? Tagesthemen", command, re.IGNORECASE)  #@UndefinedVariable  
+    matches = re.findall("^(?:Spiele |Spiel |Spielt |Starte |Start )?(die )?(letzten |letzte )?Tagesthemen", command, re.IGNORECASE)  #@UndefinedVariable  
     if checkMatch(matches):        
         result = pluginKodi.kodiPlayTagesschau('tagesthemen')
 

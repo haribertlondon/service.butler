@@ -35,7 +35,7 @@ def init():
         return None
     
 def sayString(engine, s):
-    s="Hallo "+s
+    #s="Hallo "+s
     print("Voice output", s)
     try:          
         cleanStr = quote(str(s))        
