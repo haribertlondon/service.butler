@@ -90,7 +90,6 @@ class MyRecognizer(sr.Recognizer):
         i = 0
         buffer = b""  # an empty buffer means that the stream has ended and there is no data left to read
         while True:
-            print("energy_threshold: ", self.energy_threshold)
             frames = collections.deque()
 
             if snowboy_configuration is None:
@@ -128,7 +127,7 @@ class MyRecognizer(sr.Recognizer):
             pause_count, phrase_count = 0, 0
             #phrase_start_time = elapsed_time
             print("Start second loop", len(buffer))
-            
+            print("energy_threshold: ", self.energy_threshold)
                   
             startTime_for_tictoc = time.time()        
 
@@ -155,12 +154,13 @@ class MyRecognizer(sr.Recognizer):
                 if energy > self.energy_threshold:
                     phrase_time += seconds_per_buffer
                     pause_count = 0
+                    pause_time = 0.0
                 else:
                     pause_count += 1
                     pause_time += seconds_per_buffer            
                 i = i+1
                 if i % 4 == 0:
-                    print("Debugging: ", str(round(energy,2)), str(round(time.time() - startTime_for_tictoc,1)), 'Elapsed: ', round(elapsed_time,2), 'Pause: ', round(pause_time,2), 'Phrase: ', round(phrase_time,2) )
+                    print("Debugging: ", str(round(energy,2)), '>', str(round(self.energy_threshold,2)), 'Time: ',str(round(time.time() - startTime_for_tictoc,1)), 'Elapsed: ', round(elapsed_time,2), 'Pause: ', round(pause_time,2), 'Phrase: ', round(phrase_time,2) )
                 
                 if elapsed_time > self.phrase_min_time: #reached min time
                     if phrase_time_limit is not None and elapsed_time > phrase_time_limit: #reached max time
@@ -245,7 +245,7 @@ def speechListen(recognizer, microphone):
         with microphone as source:
             print("Adjusting silence...")
             recognizer.energy_threshold = settings.LISTEN_ENERGY_THRESHOLD #reset dynamic limit
-            recognizer.adjust_for_ambient_noise(source, duration = 1)
+            recognizer.adjust_for_ambient_noise(source, duration = 1.5)
                             
             try:           
                 if settings.hasSnowboy():
