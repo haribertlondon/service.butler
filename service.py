@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
     while True:
         
-        if not settings.isDebug() or False:
+        if not settings.isDebug() or True:
             guess = speech.speechListen(recognizer, microphone)
         else: 
             #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele Modern Family weiter" }    
@@ -51,7 +51,7 @@ if __name__ == "__main__":
             
         
         print(guess)
-        result = ai.speechInterprete(guess, None)
+        result = ai.speechInterprete(guess)
                 
         print('Result=', result)
         if result and isinstance(result, dict) and 'message' in result:

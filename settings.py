@@ -5,8 +5,14 @@ import socket
 LISTEN_CHUNKSIZE = 1024
 LISTEN_SAMPLERATE = 44100
 LISTEN_MIC_INDEX = None
+
 LISTEN_TIMEOUT = None
-LISTEN_PHRASETIMEOUT = 5.0
+LISTEN_PHRASETIMEOUT = 5.0 #makes sense with snowboy hotword detection
+LISTEN_PURE_PHRASE_TIME = 0.6 #short expression, like for "Play"
+LISTEN_PAUSE_THRESHOLD = 0.8 #after phrase
+LISTEN_PHRASE_MIN_TIME = 1.0
+LISTEN_ENERGY_THRESHOLD = 300 #will be modified dynamically. This is the start value
+
 HTTP_TIMEOUT = 20
 
 LISTEN_WRITEWAV = "speech.wav"

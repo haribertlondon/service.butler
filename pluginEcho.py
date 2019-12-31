@@ -24,6 +24,7 @@ def echoStoreWav():
 def echoPlayWav():
     try:
         song = AudioSegment.from_wav(settings.LISTEN_WRITEWAV)
+        print("Playing recorded file")
         play(song)
     except Exception as e:
         return {'result': False, 'message': 'Kann echo nicht wiedergeben. Grund: '+ str(e)}

@@ -22,7 +22,7 @@ def checkResult(result):
     return (result is not None and isinstance(result, dict) and 'result' in result and result['result'])     
 
 # Examples Play The Beach
-def speechInterprete(guess, wav):
+def speechInterprete(guess):
     
     result= {'result' : False, 'message': 'Ich habe dich leider nicht verstanden.'}    
     
@@ -46,9 +46,11 @@ def speechInterprete(guess, wav):
         
     hotword_found = False
     for hotword in settings.LISTEN_HOTWORD:     
-        (command, n) = re.subn("^"+hotword,"", command, re.IGNORECASE).strip() #@UndefinedVariable
+        (command, n) = re.subn("^"+hotword,"", command, re.IGNORECASE) #@UndefinedVariable
         if n>0:
+            command = command.strip() 
             hotword_found = True
+            
 
     if not hotword_found:
         return {'result': False, 'message': 'Silence!'}

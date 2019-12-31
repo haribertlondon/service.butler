@@ -6,7 +6,8 @@ import os
 import audioop
 import math
 import collections 
-import datetime
+import time
+import pluginEcho
 
 try:
     print(sys.version)
@@ -68,15 +69,28 @@ class MyRecognizer(sr.Recognizer):
                 assert os.path.isfile(hot_word_file), "``snowboy_configuration[1]`` must be a list of Snowboy hot word configuration files"
 
         seconds_per_buffer = float(source.CHUNK) / source.SAMPLE_RATE
-        pause_buffer_count = int(math.ceil(self.pause_threshold / seconds_per_buffer))  # number of buffers of non-speaking audio during a phrase, before the phrase should be considered complete
-        phrase_buffer_count = int(math.ceil(self.phrase_threshold / seconds_per_buffer))  # minimum number of buffers of speaking audio before we consider the speaking audio a phrase
+        #pause_buffer_count = int(math.ceil(self.pause_threshold / seconds_per_buffer))  # number of buffers of non-speaking audio during a phrase, before the phrase should be considered complete
+        #phrase_buffer_count = int(math.ceil(self.phrase_threshold / seconds_per_buffer))  # minimum number of buffers of speaking audio before we consider the speaking audio a phrase
         non_speaking_buffer_count = int(math.ceil(self.non_speaking_duration / seconds_per_buffer))  # maximum number of buffers of non-speaking audio to retain before and after a phrase
 
-        print("MyListen")
+        print("MyListen: ")
+        print("----------")
+        print("pause_threshold: ", self.pause_threshold)
+        print("phrase_threshold: ", self.phrase_threshold)        
+        print("phrase_min_time: ", self.phrase_min_time)
+        print("phrase_max_limit: ", phrase_time_limit)            
+        print("----------")        
+        #print("seconds_per_buffer: ", seconds_per_buffer)
+        #print("pause_buffer_count: ", pause_buffer_count)
+        #print("phrase_buffer_count: ", phrase_buffer_count)
+        #print("non_speaking_buffer_count: ", non_speaking_buffer_count)
+        #print("----------")
         # read audio input for phrases until there is a phrase that is long enough
         elapsed_time = 0  # number of seconds of audio read
+        i = 0
         buffer = b""  # an empty buffer means that the stream has ended and there is no data left to read
         while True:
+            print("energy_threshold: ", self.energy_threshold)
             frames = collections.deque()
 
             if snowboy_configuration is None:
@@ -112,26 +126,22 @@ class MyRecognizer(sr.Recognizer):
 
             # read audio input until the phrase ends
             pause_count, phrase_count = 0, 0
-            phrase_start_time = elapsed_time
+            #phrase_start_time = elapsed_time
             print("Start second loop", len(buffer))
+            
+                  
+            startTime_for_tictoc = time.time()        
+
             frames.clear()
-            phrase_start_time = 0
-            elapsed_time = 0
-            phrase_buffer_count = 200
-            pause_buffer_count = 35
-            pause_time = 0.0
-            phrase_time = 0.0
+            #phrase_start_time = 0
+            elapsed_time = 0            
+            phrase_time = 0.0     
+            pause_time = 0.0       
             phrase_ok = False
             print("Seconds per buffer: ", seconds_per_buffer)
-            seconds_per_buffer = 0.023 
             while True:
                 # handle phrase being too long by cutting off the audio
-                elapsed_time += seconds_per_buffer
-                
-                if (elapsed_time > 5.0):
-                    print("MaxTimeLimit reached", elapsed_time)
-                    phrase_ok = False
-                    break
+                elapsed_time += seconds_per_buffer                
 
                 buffer = source.stream.read(source.CHUNK)
                 if len(buffer) == 0:
@@ -147,25 +157,31 @@ class MyRecognizer(sr.Recognizer):
                     pause_count = 0
                 else:
                     pause_count += 1
-                    pause_time += seconds_per_buffer
-
-
-                #phrase ok and pause ok
-                #if pause_count > pause_buffer_count and phrase_count-pause_count > phrase_buffer_count:  # end of the phrase
-                #    break
+                    pause_time += seconds_per_buffer            
+                i = i+1
+                if i % 4 == 0:
+                    print("Debugging: ", str(round(energy,2)), str(round(time.time() - startTime_for_tictoc,1)), 'Elapsed: ', round(elapsed_time,2), 'Pause: ', round(pause_time,2), 'Phrase: ', round(phrase_time,2) )
                 
-                #if pause_time>0.5 and elapsed_time > 3:
-                #    if phrase_time>0.4:
-                #        phrase_ok = True
-                #        print("Pause ok and Phrase ok", pause_time, phrase_time)
-                #    else:
-                #        phrase_ok = False
-                #        print("Pause ok, Phrase not Ok", pause_time, phrase_time)
-                #    break
-
-
-                #print("Debugging: ", datetime.now().strftime("%H:%M:%S"), round(elapsed_time,2), round(pause_time,2), round(phrase_time,2) )
-
+                if elapsed_time > self.phrase_min_time: #reached min time
+                    if phrase_time_limit is not None and elapsed_time > phrase_time_limit: #reached max time
+                        print("MaxTimeLimit reached", elapsed_time)
+                        phrase_ok = False
+                        break
+                    else:
+                        if pause_time > self.pause_threshold: #wait for pause at the end
+                            if phrase_time > self.phrase_threshold:
+                                phrase_ok = True
+                                print("Pause ok and Phrase ok", pause_time, phrase_time)
+                                break
+                            else:
+                                phrase_ok = False
+                                print("Pause ok, Phrase not Ok", pause_time, phrase_time)    
+                                return None    
+                        else:
+                            pass # wait for more pause at the end of phrase
+                else:
+                    pass #still waiting for min time                
+ 
 
             print("Ended second loop", len(buffer))
             # check how long the detected phrase is, and retry listening if the phrase is too short
@@ -175,7 +191,7 @@ class MyRecognizer(sr.Recognizer):
                 print("Reached end of phrase", len(buffer))
                 break  # phrase is long enough or we've reached the end of the stream, so stop listening
             else: 
-                print("Expression was too short. Starting all over again", phrase_count,  phrase_buffer_count, len(buffer))
+                print("Expression was too short. Starting all over again")
 
         # obtain frame data
         for _ in range(pause_count - non_speaking_buffer_count): frames.pop()  # remove extra non-speaking frames at the end
@@ -184,6 +200,7 @@ class MyRecognizer(sr.Recognizer):
         print("Collected all data. Finished listening", len(buffer))
         return sr.AudioData(frame_data, source.SAMPLE_RATE, source.SAMPLE_WIDTH)
     
+
     def snowboy_wait_for_hot_word_mod(self, snowboy_location, snowboy_hot_word_files, source, timeout=None):
         # load snowboy library (NOT THREAD SAFE)
         sys.path.append(snowboy_location)
@@ -224,25 +241,28 @@ def speechListen(recognizer, microphone):
     print(microphone.SAMPLE_RATE)
     print(microphone.SAMPLE_WIDTH)
     global audio
-    with microphone as source:
-        print("Adjusting silence...")
-        recognizer.adjust_for_ambient_noise(source)
-                        
-        try:           
-            if settings.hasSnowboy():
-                print("Listening with snowboy")
-                audio = recognizer.listen_mod(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=settings.LISTEN_SNOWBOY )
-            else:
-                print("Listening WITHOUT snowboy")
-                audio = recognizer.listen_mod(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT )
-                
-        except Exception as e:
-            print("Listening failed: ", str(e))
-            #audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=None   ) 
+    while audio is None:
+        with microphone as source:
+            print("Adjusting silence...")
+            recognizer.energy_threshold = settings.LISTEN_ENERGY_THRESHOLD #reset dynamic limit
+            recognizer.adjust_for_ambient_noise(source, duration = 1)
+                            
+            try:           
+                if settings.hasSnowboy():
+                    print("Listening with snowboy")
+                    audio = recognizer.listen_mod(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=settings.LISTEN_SNOWBOY )
+                else:
+                    print("Listening WITHOUT snowboy")
+                    audio = recognizer.listen_mod(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT )
+                    
+            except Exception as e:
+                print("Listening failed: ", str(e))
+                #audio = recognizer.listen(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=None   ) 
     
     print("Stopped listening")
-    
-    
+    #pluginEcho.echoEcho()
+    #print("exit")
+    #sys.exit()
     # set up the response object
     response = {"error": None, "transcription": None }
     
@@ -278,9 +298,9 @@ def speechInit():
     for mic in enumerate(sr.Microphone.list_microphone_names()):
         print(mic)
         
-    recognizer.phrase_threshold = 0.3
-    recognizer.non_speaking_duration = 0.5
-    recognizer.pause_threshold = 0.8        
+    recognizer.phrase_threshold = settings.LISTEN_PURE_PHRASE_TIME    
+    recognizer.pause_threshold = settings.LISTEN_PAUSE_THRESHOLD    
+    recognizer.phrase_min_time = settings.LISTEN_PHRASE_MIN_TIME  
     
     microphone = sr.Microphone(device_index = settings.LISTEN_MIC_INDEX, sample_rate=settings.LISTEN_SAMPLERATE, chunk_size=settings.LISTEN_CHUNKSIZE)
     
