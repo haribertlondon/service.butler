@@ -124,7 +124,7 @@ class MyRecognizer(sr.Recognizer):
             else:
                 # read audio input until the hotword is said
                 snowboy_location, snowboy_hot_word_files = snowboy_configuration
-                buffer, delta_time = self.snowboy_wait_for_hot_word_mod(snowboy_location, snowboy_hot_word_files, source, timeout)
+                buffer, delta_time = self.snowboy_wait_for_hot_word_mod2(snowboy_location, snowboy_hot_word_files, source, timeout)
                 elapsed_time += delta_time
                 if len(buffer) == 0: break  # reached end of the stream
                 frames.append(buffer)
@@ -211,6 +211,54 @@ class MyRecognizer(sr.Recognizer):
         print("Collected all data. Finished listening", len(buffer))
         return sr.AudioData(frame_data, source.SAMPLE_RATE, source.SAMPLE_WIDTH)
     
+    
+    
+    def snowboy_wait_for_hot_word_mod2(self, snowboy_location, snowboy_hot_word_files, source, timeout=None):
+        # load snowboy library (NOT THREAD SAFE)        
+        sys.path.append(snowboy_location)
+        import snowboydetect 
+        sys.path.pop()
+
+        detector = snowboydetect.SnowboyDetect(
+            resource_filename=os.path.join(snowboy_location, "resources", "common.res").encode(),
+            model_str=",".join(snowboy_hot_word_files).encode()
+        )
+        detector.SetAudioGain(1.0)
+        detector.SetSensitivity(",".join([settings.LISTEN_SENSITIVITY] * len(snowboy_hot_word_files)).encode())
+        snowboy_sample_rate = detector.SampleRate()
+        print("Snowboy sample rate:  ", snowboy_sample_rate)
+        print("Source  sample rate:  ", source.SAMPLE_RATE)
+        print("Source  sample width: ", source.SAMPLE_WIDTH)
+        elapsed_time = 0
+        seconds_per_buffer = float(source.CHUNK) / source.SAMPLE_RATE
+        resampling_state = None
+
+        # buffers capable of holding 5 seconds of original and resampled audio
+        five_seconds_buffer_count = int(math.ceil(5 / seconds_per_buffer))
+        frames = collections.deque(maxlen=five_seconds_buffer_count)
+        resampled_frames = collections.deque(maxlen=five_seconds_buffer_count)
+        while True:
+            elapsed_time += seconds_per_buffer
+            if timeout and elapsed_time > timeout:
+                raise self.WaitTimeoutError("listening timed out while waiting for hotword to be said")
+
+            buffer = source.stream.read(source.CHUNK)
+            if len(buffer) == 0:
+                print("----------Buffer is empty------------") 
+                break  # reached end of the stream
+            
+            frames.append(buffer)
+
+            # resample audio to the required sample rate
+            resampled_buffer, resampling_state = audioop.ratecv(buffer, source.SAMPLE_WIDTH, 1, source.SAMPLE_RATE, snowboy_sample_rate, resampling_state)
+            resampled_frames.append(resampled_buffer)
+
+            # run Snowboy on the resampled audio
+            snowboy_result = detector.RunDetection(b"".join(resampled_frames))
+            assert snowboy_result != -1, "Error initializing streams or reading audio data"
+            if snowboy_result > 0: break  # wake word found
+
+        return b"".join(frames), elapsed_time
 
     def snowboy_wait_for_hot_word_mod(self, snowboy_location, snowboy_hot_word_files, source, timeout=None):
         # load snowboy library (NOT THREAD SAFE)
@@ -244,8 +292,7 @@ class MyRecognizer(sr.Recognizer):
         #print(buffer)
         
         return b"".join(buffer), elapsed_time   #add dummy buffer
-
-
+  
 
 def speechListen(recognizer, microphone):   
     # adjust the recognizer sensitivity to ambient noise and record audio from the microphone

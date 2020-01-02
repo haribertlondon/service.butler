@@ -3,14 +3,21 @@
 
 import collections
 import pyaudio
+import time
 import audioop
+import sys
 import settings
 import pluginEcho
+try:    
+    import speech_recognition as sr #@UnusedImport #check if package is installed
+except:
+    print("No speech_recognition installed on system. Try to use fallback...")
+    import resources.lib.speech_recognition as sr #@Reimport #if not, use the provides ones
 try:
-    import snowboydetect
+    import snowboydetect #@UnresolvedImport
 except:
     print("Could not load snowboy")
-import time
+
 
 
 class RingBuffer(object):    
@@ -72,8 +79,13 @@ class HotwordDetector(object):
         if energy > settings.LISTEN_ENERGY_THRESHOLD:
             self.phrase_time += self.seconds_per_buffer 
             self.pause_time = 0                       
-        else:            
-            self.pause_time += self.seconds_per_buffer            
+        else: 
+            if self.phrase_time  > 0:           #only count if something was said before
+                self.pause_time += self.seconds_per_buffer 
+            else:
+                minN = round(0.5/self.seconds_per_buffer) #keeps some time 0.5sec before the phrase                
+                if len(frames) > minN:
+                    frames = frames[-minN:] #keep last N frames       
         
         self.elapsed_time += self.seconds_per_buffer
         
@@ -85,19 +97,21 @@ class HotwordDetector(object):
             if settings.LISTEN_PHRASETIMEOUT is not None and self.elapsed_time > settings.LISTEN_PHRASETIMEOUT: #reached max time
                 print("MaxTimeLimit reached", self.elapsed_time) 
                 frames.clear()               
-                return "init"
+                return ("init", None)
             else:
                 if self.pause_time > settings.LISTEN_PAUSE_THRESHOLD: #wait for pause at the end
                     if self.phrase_time > settings.LISTEN_PURE_PHRASE_TIME:
                         print("Pause ok and Phrase ok", self.pause_time, self.phrase_time)
-                        return "recognition"
+                        frame_data = b"".join(frames)
+                        audio = sr.AudioData(frame_data, self.sample_rate, self.sample_width)
+                        return ("recognition", audio)
                     else:
                         print("Pause ok, Phrase not Ok", self.pause_time, self.phrase_time)    
-                        return "init"    
+                        return ("init", None)    
                 else:
-                    return "phrase" # wait for more pause at the end of phrase
+                    return ("phrase", None) # wait for more pause at the end of phrase
         else:
-            return "phrase" #still waiting for min time           
+            return ("phrase", None) #still waiting for min time           
         
     def state_snowboy(self, data, frames):
         print("State-Snowboy")
@@ -131,29 +145,46 @@ class HotwordDetector(object):
         print("State-Calibrate")
         return "snowboy"
     
-    def state_recognition(self, frames):
-        print("State-Recognition")
-        frame_data = b"".join(frames)
-        
-        try:    
-            import speech_recognition as sr #@UnusedImport #check if package is installed
-        except:
-            print("No speech_recognition installed on system. Try to use fallback...")
-            import resources.lib.speech_recognition as sr #@Reimport #if not, use the provides ones
-        
-        audio = sr.AudioData(frame_data, self.sample_rate, self.sample_width)
+    def state_storeWav(self, audio):
         pluginEcho.echoStoreWav(audio)
+        return "end"
+    
+    def state_recognition(self, audio, detected_callback):
+        print("State-Recognition")        
+        
+        response = {"error": None, "transcription": None }
+    
+        try:
+            if settings.LISTEN_LANGUAGE == "":
+                settings.LISTEN_LANGUAGE = None
             
-              
-        return "recognition"
+            print("Starting speech recognition...")
+            
+            recognizer = sr.Recognizer()    
+            response["transcription"] = recognizer.recognize_google(audio, key=None, language=settings.LISTEN_LANGUAGE)        
+            #response["transcription"] = recognizer.recognize_wit(audio, key='6PKAY4NP4U4VJPBJAEHSWV7JS5HWTSQE')
+            #response["transcription"] = recognizer.recognize_wit(audio, key='6PKAY4NP4U4VJPBJAEHSWV7JS5HWTSQE')
+            #response["transcription"] = recognizer.recognize_bing(audio, key='912b8cb579f74a01aba54691b1d9c671')#, language=settings.LISTEN_LANGUAGE)
+            #response["transcription"] = recognizer.recognize_sphinx(audio, language='de-DE') #settings.LISTEN_LANGUAGE)#, language=settings.LISTEN_LANGUAGE)
+            
+            print("Detected: ", response["transcription"])
+            
+        except sr.RequestError as e:
+            # API was unreachable or unresponsive        
+            response["error"] = "API unavailable " +  str(e)
+        except sr.UnknownValueError:
+            # speech was unintelligible
+            response["error"] = "Unable to recognize speech"     
+            
+        if detected_callback:
+            detected_callback(response, audio)  
 
-    def start(self, detected_callback=None, interrupt_check=lambda: False, sleep_time=0.03):
-        if interrupt_check is not None and interrupt_check():
-            print("detect voice return")
-            return        
+        return "wav"
 
+    def start(self, detected_callback=None, interrupt_check=lambda: False, sleep_time=0.03):       
         state = "init"
         frames = []
+        audio = None
         while True:            
                         
             data = self.ring_buffer.get()
@@ -170,11 +201,16 @@ class HotwordDetector(object):
             elif state == "snowboy":
                 state = self.state_snowboy(data, frames)
             elif state ==  "phrase":
-                state = self.state_phrase(data, frames, energy)
+                (state, audio) = self.state_phrase(data, frames, energy)
             elif state == "recognition":
-                state = self.state_recognition(frames)
+                state = self.state_recognition(audio, detected_callback)
+            elif state == "wav":
+                state = self.state_storeWav(audio)
+            elif state == "end":
+                state = "init" #start all over again
             else:
                 print("Unknown state ", state)
+                sys.exit()
 
         print("finished.")
 
@@ -183,11 +219,10 @@ class HotwordDetector(object):
         self.stream_in.close()
         self.audio.terminate()
 
-
-def run(model = "resources/lib/snowboyrpi8/", sensitivity=0.5, sleep = 0.03, interrupt_check = None, audio_gain = 1.0):    
-    detector = HotwordDetector(model, sensitivity=sensitivity, audio_gain = audio_gain)
+def run(sensitivity=0.5, sleep = 0.03, detected_callback = None, audio_gain = 1.0):    
+    detector = HotwordDetector(decoder_model = settings.LISTEN_SNOWBOY_MODELS, resource = settings.LISTEN_SNOWBOY_RESOURCE, sensitivity=sensitivity, audio_gain = audio_gain)
     print('Listening... ')    
-    detector.start(detected_callback=None, interrupt_check=interrupt_check, sleep_time=sleep)
+    detector.start(detected_callback=detected_callback, interrupt_check=None, sleep_time=sleep)
     detector.terminate()
 
 if __name__ == '__main__': 
