@@ -12,6 +12,8 @@ LISTEN_PURE_PHRASE_TIME = 0.4 #short expression, like for "Play"
 LISTEN_PAUSE_THRESHOLD = 0.5 #pause after phrase
 LISTEN_PHRASE_MIN_TIME = 1.5
 LISTEN_ENERGY_THRESHOLD = 300 #will be modified dynamically. This is the start value
+LISTEN_SENSITIVITY = "0.9" # was "0.4" in the example
+
 
 HTTP_TIMEOUT = 20
 
