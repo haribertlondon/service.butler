@@ -33,7 +33,7 @@ class RingBuffer(object):
 
 
 class HotwordDetector(object):   
-    def __init__(self, decoder_model, resource=".", sensitivity=[], audio_gain=1.0):
+    def __init__(self, decoder_model, sensitivity=[], audio_gain=1.0):
 
         def audio_callback(in_data, frame_count, time_info, status):
             self.ring_buffer.extend(in_data)
@@ -47,12 +47,11 @@ class HotwordDetector(object):
         model_str = ",".join(decoder_model)
         
         try:    
-            self.detector = snowboydetect.SnowboyDetect(resource_filename=resource, model_str=model_str)
+            self.detector = snowboydetect.SnowboyDetect(model_str=model_str)
             self.detector.SetAudioGain(audio_gain)
             self.num_hotwords = self.detector.NumHotwords()
             self.num_channels = self.detector.NumChannels()
-            self.sample_rate = self.detector.SampleRate()
-            self.bit_per_sample = self.detector.BitsPerSample()
+            self.sample_rate = self.detector.SampleRate()            
     
             if len(decoder_model) > 1 and len(sensitivity) == 1:
                 sensitivity = sensitivity*self.num_hotwords
@@ -85,7 +84,7 @@ class HotwordDetector(object):
         self.energy_threshold = settings.LISTEN_ENERGY_THRESHOLD 
         self.stream_in = self.audio.open( input=True,  output=False, input_device_index=settings.LISTEN_MIC_INDEX, format= self.audio_format, channels=self.num_channels, rate=self.sample_rate, frames_per_buffer=self.chunksize, stream_callback=audio_callback)
 
-    def state_phrase(self, data, frames, energy):        
+    def state_phrase(self, data, energy):        
         if energy > settings.LISTEN_ENERGY_THRESHOLD:
             self.phrase_time += self.seconds_per_buffer 
             self.pause_time = 0                       
@@ -95,18 +94,17 @@ class HotwordDetector(object):
         
         self.elapsed_time += self.seconds_per_buffer        
             
-        frames.append(data)
+        self.frames.append(data)
             
         if self.elapsed_time > settings.LISTEN_PHRASE_MIN_TIME: #reached min time
             if settings.LISTEN_PHRASE_TOTALTIMEOUT is not None and self.elapsed_time > settings.LISTEN_PHRASE_TOTALTIMEOUT: #reached max time
-                print("MaxTimeLimit reached", self.elapsed_time) 
-                frames.clear()               
+                print("MaxTimeLimit reached", self.elapsed_time)
                 return ("init", None)
             else:
                 if self.pause_time > settings.LISTEN_PHRASE_PAUSE_THRESHOLD: #wait for pause at the end
                     if self.phrase_time > settings.LISTEN_PHRASE_PUREPHRASETIME:
                         print("Pause ok and Phrase ok", self.pause_time, self.phrase_time)
-                        frame_data = b"".join(frames)
+                        frame_data = b"".join(self.frames)
                         audio = sr.AudioData(frame_data, self.sample_rate, self.sample_width)
                         return ("recognition", audio)
                     else:
@@ -117,7 +115,7 @@ class HotwordDetector(object):
         else:
             return ("phrase", None) #still waiting for min time           
         
-    def state_snowboy(self, data, frames, energy):
+    def state_snowboy(self, data, energy):
             
         if energy > settings.LISTEN_ENERGY_THRESHOLD:
             self.phrase_time += self.seconds_per_buffer 
@@ -127,13 +125,13 @@ class HotwordDetector(object):
                 self.pause_time += self.seconds_per_buffer 
             else:
                 minN = round(0.5/self.seconds_per_buffer) #keeps some time 0.5sec before the phrase                
-                if len(frames) > minN:
-                    frames = frames[-minN:] #keep last N frames                    
+                if len(self.frames) > minN:
+                    self.frames = self.frames[-minN:] #keep last N frames                    
         
-        frames.append(data)  
+        self.frames.append(data)  
         
         try:
-            ans = self.detector.RunDetection(data)                
+            ans = self.detector.RunDetection(data)    #TODO: ++++++++++++++++++++++maybe not data but whole buffer?++++++++++++++++++++++            
         except Exception as e:      
             if self.elapsed_time == 0:
                 print("Failed to run snowboy. Wait for start of phrase by energy", e)      
@@ -152,15 +150,14 @@ class HotwordDetector(object):
             self.pause_time = 0.0
             self.elapsed_time = 0.0
             self.phrase_time = 0.0    
-            self.startTime_for_tictoc = time.time()                   
+            self.startTime_for_tictoc = time.time()
             return "phrase"
         else:
-            frames.clear() #remove unwanted buffer        
             return "snowboy"
 
-    def state_init(self, frames):    
+    def state_init(self):    
         print("State-Init")    
-        frames.clear()        
+        self.frames[:]=[]
         self.elapsed_time = 0
         self.startTime_for_tictoc = time.time()
         return "silence"
@@ -169,7 +166,7 @@ class HotwordDetector(object):
         # adjust energy threshold until a phrase starts       
         self.elapsed_time += self.seconds_per_buffer
         if self.elapsed_time > settings.LISTEN_ADJUSTSILENCE_DURATION:
-            print("Found silence threshold ", self.energy_threshold)
+            print("Defined silence threshold ", self.energy_threshold)
             self.startTime_for_tictoc = time.time() 
             self.elapsed_time = 0
             return "snowboy"
@@ -181,11 +178,10 @@ class HotwordDetector(object):
             return "silence"
     
     def state_storeWav(self, audio):
-        pluginEcho.echoStoreWav(audio)
+        #pluginEcho.echoStoreWav(audio)
         return "end"
     
     def state_recognition(self, audio, detected_callback):
-        print("State-Recognition")        
         
         response = {"error": None, "transcription": None }
     
@@ -216,7 +212,7 @@ class HotwordDetector(object):
  
     def start(self, detected_callback=None):       
         state = "init"
-        frames = []        
+        self.frames = []
         lastTime = 0        
         self.startTime_for_tictoc = time.time()
         self.phrase_time = 0
@@ -230,14 +226,16 @@ class HotwordDetector(object):
             
             energy = audioop.rms(data, self.sample_width) 
             
+            lastState = state
+            
             if state == "init":
-                state = self.state_init(frames)
+                state = self.state_init()
             elif state == "silence":
                 state = self.state_adjustSilence(energy)
             elif state == "snowboy":
-                state = self.state_snowboy(data, frames, energy)
+                state = self.state_snowboy(data, energy)
             elif state ==  "phrase":
-                (state, audio) = self.state_phrase(data, frames, energy)
+                (state, audio) = self.state_phrase(data, energy)
             elif state == "recognition":
                 state = self.state_recognition(audio, detected_callback)
             elif state == "wav":
@@ -245,12 +243,12 @@ class HotwordDetector(object):
             elif state == "end":
                 state = "init" #start all over again
             else:
-                print("Unknown state ", state)
-                sys.exit()
+                raise Exception("Unknown state ", state)
                 
-            if abs(self.elapsed_time-lastTime)>settings.LISTEN_VERBOSE_TIMEOUT:
+                
+            if lastState != state or abs(self.elapsed_time-lastTime)>settings.LISTEN_VERBOSE_TIMEOUT:
                 lastTime = self.elapsed_time
-                print('    Current state', state, "Buffer: ", len(frames), ' Energy:', str(round(energy,2)), '>', str(round(self.energy_threshold,2)), 'Time: ',str(round(time.time() - self.startTime_for_tictoc,1)), 'Elapsed: ', round(self.elapsed_time,2), 'Pause: ', round(self.pause_time,2), 'Phrase: ', round(self.phrase_time,2) )
+                print('    Current state', state, "Buffer: ", len(self.frames), ' Energy:', str(round(energy,2)), '>', str(round(self.energy_threshold,2)), 'Time: ',str(round(time.time() - self.startTime_for_tictoc,1)), 'Elapsed: ', round(self.elapsed_time,2), 'Pause: ', round(self.pause_time,2), 'Phrase: ', round(self.phrase_time,2) )
 
         print("finished.")
 
@@ -260,7 +258,7 @@ class HotwordDetector(object):
         self.audio.terminate()
 
 def run(sensitivity=0.5, detected_callback = None, audio_gain = 1.0):    
-    detector = HotwordDetector(decoder_model = settings.LISTEN_SNOWBOY_MODELS, resource = settings.LISTEN_SNOWBOY_RESOURCE, sensitivity=sensitivity, audio_gain = audio_gain)
+    detector = HotwordDetector(decoder_model = settings.LISTEN_SNOWBOY_MODELS, sensitivity=sensitivity, audio_gain = audio_gain)
     print('Listening... ')    
     detector.start(detected_callback=detected_callback)
     detector.terminate()
