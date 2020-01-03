@@ -119,11 +119,8 @@ class HotwordDetector(object):
             
         if energy > settings.LISTEN_ENERGY_THRESHOLD:
             self.phrase_time += self.seconds_per_buffer 
-            self.pause_time = 0                       
         else: 
-            if self.phrase_time  > 0:           #only count if something was said before
-                self.pause_time += self.seconds_per_buffer 
-            else:
+            if self.phrase_time  == 0:           #only count if something was said before                
                 minN = round(0.5/self.seconds_per_buffer) #keeps some time 0.5sec before the phrase                
                 if len(self.frames) > minN:
                     self.frames = self.frames[-minN:] #keep last N frames                    
@@ -169,6 +166,7 @@ class HotwordDetector(object):
             print("Defined silence threshold ", self.energy_threshold)
             self.startTime_for_tictoc = time.time() 
             self.elapsed_time = 0
+            self.phrase_time = 0
             return "snowboy"
         else:
             # dynamically adjust the energy threshold using asymmetric weighted average
@@ -178,7 +176,11 @@ class HotwordDetector(object):
             return "silence"
     
     def state_storeWav(self, audio):
-        #pluginEcho.echoStoreWav(audio)
+        
+        if settings.isDebug():
+            pluginEcho.echoStoreWav(audio)
+            pluginEcho.echoPlayWav()
+        
         return "end"
     
     def state_recognition(self, audio, detected_callback):
@@ -192,7 +194,7 @@ class HotwordDetector(object):
             print("Starting speech recognition...")
             
             recognizer = sr.Recognizer()    
-            response["transcription"] = recognizer.recognize_google(audio, key=None, language=settings.LISTEN_LANGUAGE)        
+            #response["transcription"] = recognizer.recognize_google(audio, key=None, language=settings.LISTEN_LANGUAGE)        
             #response["transcription"] = recognizer.recognize_wit(audio, key='6PKAY4NP4U4VJPBJAEHSWV7JS5HWTSQE')            
             #response["transcription"] = recognizer.recognize_bing(audio, key='912b8cb579f74a01aba54691b1d9c671')#, language=settings.LISTEN_LANGUAGE)            
             
@@ -205,7 +207,7 @@ class HotwordDetector(object):
             # speech was unintelligible
             response["error"] = "Unable to recognize speech"     
             
-        if detected_callback:
+        if detected_callback and not settings.isDebug():
             detected_callback(response, audio)  
 
         return "wav"
