@@ -23,7 +23,7 @@
 #		?????, i did it with sudo apt-get install cron; cron -e; add line-> @reboot sleep 10; kodi --standalone
 # install this package with zip file
 
-import speech
+#import speech
 import sys
 #import settings
 import ai

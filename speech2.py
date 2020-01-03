@@ -14,9 +14,9 @@ except:
     print("No speech_recognition installed on system. Try to use fallback...")
     import resources.lib.speech_recognition as sr #@Reimport #if not, use the provides ones
 try:
-    import snowboydetect #@UnresolvedImport
-except:
-    print("Could not load snowboy")
+    from resources.lib.snowboyrpi8 import snowboydetect as snowboydetect#@UnresolvedImport
+except Exception as e:
+    print("Could not load snowboy", e)
 
 
 class RingBuffer(object):    
@@ -27,7 +27,11 @@ class RingBuffer(object):
         self._buf.extend(data)
 
     def get(self):
-        tmp = bytearray(self._buf)
+#        tmp = bytearray(self._buf)
+        if (sys.version_info > (3, 0)):
+            tmp = bytearray(self._buf)
+        else:
+            tmp = b"".join(self._buf)
         self._buf.clear()
         return tmp
 
@@ -60,7 +64,8 @@ class HotwordDetector(object):
             sensitivity_str = ",".join([str(t) for t in sensitivity])
             if len(sensitivity) != 0:
                 self.detector.SetSensitivity(sensitivity_str);
-        except:
+        except Exception as e:
+            print("Error while loading Snowboy: ", e)
             self.num_channels = 1
             self.sample_rate = settings.LISTEN_SAMPLERATE
             self.num_hotwords = len(settings.LISTEN_SNOWBOY_MODELS)            
@@ -121,7 +126,8 @@ class HotwordDetector(object):
             self.phrase_time += self.seconds_per_buffer 
         else: 
             if self.phrase_time  == 0:           #only count if something was said before                
-                minN = round(0.5/self.seconds_per_buffer) #keeps some time 0.5sec before the phrase                
+                minN = (int)(0.5/self.seconds_per_buffer) #keeps some time 0.5sec before the phrase                
+                #print("minN", minN)
                 if len(self.frames) > minN:
                     self.frames = self.frames[-minN:] #keep last N frames                    
         
