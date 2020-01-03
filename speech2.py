@@ -90,7 +90,7 @@ class HotwordDetector(object):
         self.stream_in = self.audio.open( input=True,  output=False, input_device_index=settings.LISTEN_MIC_INDEX, format= self.audio_format, channels=self.num_channels, rate=self.sample_rate, frames_per_buffer=self.chunksize, stream_callback=audio_callback)
 
     def state_phrase(self, data, energy):        
-        if energy > settings.LISTEN_ENERGY_THRESHOLD:
+        if energy > self.energy_threshold:
             self.phrase_time += self.seconds_per_buffer 
             self.pause_time = 0                       
         else: 
@@ -122,20 +122,15 @@ class HotwordDetector(object):
         
     def state_snowboy(self, data, energy):
             
-        if energy > settings.LISTEN_ENERGY_THRESHOLD:
-            self.phrase_time += self.seconds_per_buffer 
-        else: 
-            if self.phrase_time  == 0:           #only count if something was said before                
-                minN = (int)(0.5/self.seconds_per_buffer) #keeps some time 0.5sec before the phrase                
-                #print("minN", minN)
-                if len(self.frames) > minN:
-                    self.frames = self.frames[-minN:] #keep last N frames                    
+        minN = (int)(0.8/self.seconds_per_buffer) #keeps some time 0.5sec before the phrase
+        if len(self.frames) > minN:
+            self.frames = self.frames[-minN:] #keep last N frames                    
         
         self.frames.append(data)  
         
         try:
             ans = self.detector.RunDetection(data)    #TODO: ++++++++++++++++++++++maybe not data but whole buffer?++++++++++++++++++++++            
-        except Exception as e:      
+        except Exception as e:
             if self.elapsed_time == 0:
                 print("Failed to run snowboy. Wait for start of phrase by energy", e)      
             if self.phrase_time > 0:                
@@ -200,7 +195,7 @@ class HotwordDetector(object):
             print("Starting speech recognition...")
             
             recognizer = sr.Recognizer()    
-            #response["transcription"] = recognizer.recognize_google(audio, key=None, language=settings.LISTEN_LANGUAGE)        
+            response["transcription"] = recognizer.recognize_google(audio, key=None, language=settings.LISTEN_LANGUAGE)        
             #response["transcription"] = recognizer.recognize_wit(audio, key='6PKAY4NP4U4VJPBJAEHSWV7JS5HWTSQE')            
             #response["transcription"] = recognizer.recognize_bing(audio, key='912b8cb579f74a01aba54691b1d9c671')#, language=settings.LISTEN_LANGUAGE)            
             
