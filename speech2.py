@@ -51,7 +51,7 @@ class HotwordDetector(object):
         model_str = ",".join(decoder_model)
         
         try:    
-            self.detector = snowboydetect.SnowboyDetect(model_str=model_str)
+            self.detector = snowboydetect.SnowboyDetect(resource_filename=settings.LISTEN_SNOWBOY_RESOURCE, model_str=model_str)
             self.detector.SetAudioGain(audio_gain)
             self.num_hotwords = self.detector.NumHotwords()
             self.num_channels = self.detector.NumChannels()
