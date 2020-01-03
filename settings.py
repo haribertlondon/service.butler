@@ -7,13 +7,19 @@ LISTEN_SAMPLERATE = 44100
 LISTEN_MIC_INDEX = None
 
 LISTEN_TIMEOUT = None
-LISTEN_PHRASETIMEOUT = 5.0 #makes sense with snowboy hotword detection
-LISTEN_PURE_PHRASE_TIME = 0.4 #short expression, like for "Play"
-LISTEN_PAUSE_THRESHOLD = 0.5 #pause after phrase
+LISTEN_PHRASE_TOTALTIMEOUT = 5.0 #makes sense with snowboy hotword detection
+LISTEN_PHRASE_PUREPHRASETIME = 0.4 #short expression, like for "Play"
+LISTEN_PHRASE_PAUSE_THRESHOLD = 0.5 #pause after phrase
 LISTEN_PHRASE_MIN_TIME = 1.5
-LISTEN_ENERGY_THRESHOLD = 300 #will be modified dynamically. This is the start value
-LISTEN_SENSITIVITY = "0.9" # was "0.4" in the example
 
+LISTEN_ADJUSTSILENCE_DURATION = 1.0
+LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_RATIO = 1.5
+LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING = 0.15
+
+LISTEN_ENERGY_THRESHOLD = 300 #will be modified dynamically. This is the start value
+LISTEN_SNOWBOY_SENSITIVITY = "0.9" # was "0.4" in the example
+LISTEN_VERBOSE_TIMEOUT = 0.5
+LISTEN_AUDIO_GAIN = 1.0
 
 HTTP_TIMEOUT = 20
 

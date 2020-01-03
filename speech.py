@@ -61,8 +61,8 @@ class MyRecognizer(sr.Recognizer):
         This operation will always complete within ``timeout + phrase_timeout`` seconds if both are numbers, either by returning the audio data, or by raising a ``speech_recognition.WaitTimeoutError`` exception.
         """
         
-        self.phrase_threshold = settings.LISTEN_PURE_PHRASE_TIME    
-        self.pause_threshold = settings.LISTEN_PAUSE_THRESHOLD    
+        self.phrase_threshold = settings.LISTEN_PHRASE_PUREPHRASETIME    
+        self.pause_threshold = settings.LISTEN_PHRASE_PAUSE_THRESHOLD    
         self.phrase_min_time = settings.LISTEN_PHRASE_MIN_TIME  
         
         assert isinstance(source, sr.AudioSource), "Source must be an audio source"
@@ -224,7 +224,7 @@ class MyRecognizer(sr.Recognizer):
             model_str=",".join(snowboy_hot_word_files).encode()
         )
         detector.SetAudioGain(1.0)
-        detector.SetSensitivity(",".join([settings.LISTEN_SENSITIVITY] * len(snowboy_hot_word_files)).encode())
+        detector.SetSensitivity(",".join([settings.LISTEN_SNOWBOY_SENSITIVITY] * len(snowboy_hot_word_files)).encode())
         snowboy_sample_rate = detector.SampleRate()
         print("Snowboy sample rate:  ", snowboy_sample_rate)
         print("Source  sample rate:  ", source.SAMPLE_RATE)
@@ -308,10 +308,10 @@ def speechListen(recognizer, microphone):
             try:           
                 if settings.hasSnowboy():
                     print("Listening with snowboy")
-                    audio = recognizer.listen_mod(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT, snowboy_configuration=settings.LISTEN_SNOWBOY )
+                    audio = recognizer.listen_mod(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASE_TOTALTIMEOUT, snowboy_configuration=settings.LISTEN_SNOWBOY )
                 else:
                     print("Listening WITHOUT snowboy")
-                    audio = recognizer.listen_mod(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASETIMEOUT )
+                    audio = recognizer.listen_mod(source, timeout=settings.LISTEN_TIMEOUT, phrase_time_limit=settings.LISTEN_PHRASE_TOTALTIMEOUT )
                     
             except Exception as e:
                 print("Listening failed: ", str(e))
@@ -354,9 +354,7 @@ def speechInit():
     recognizer = MyRecognizer()#sr.Recognizer()
 
     for mic in enumerate(sr.Microphone.list_microphone_names()):
-        print(mic)
-        
-    
+        print(mic)    
     
     microphone = sr.Microphone(device_index = settings.LISTEN_MIC_INDEX, sample_rate=settings.LISTEN_SAMPLERATE, chunk_size=settings.LISTEN_CHUNKSIZE)
     

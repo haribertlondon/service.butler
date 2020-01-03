@@ -46,10 +46,10 @@ def detected_callback(response, audio):
         texttospeech.sayString(textspeech, 'Sum Sum Sum')
 
 if __name__ == "__main__":    
-    (recognizer, microphone) = speech.speechInit()
+    #(recognizer, microphone) = speech.speechInit()
     textspeech = texttospeech.init()
     
-    speech2.run(sensitivity=0.5, sleep = 0.03, detected_callback = detected_callback, audio_gain = 1.0)
+    speech2.run(sensitivity=settings.LISTEN_SNOWBOY_SENSITIVITY, detected_callback = detected_callback, audio_gain = settings.LISTEN_AUDIO_GAIN)
     sys.exit()
 
 #    while True:
