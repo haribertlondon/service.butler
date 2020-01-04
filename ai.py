@@ -66,7 +66,7 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPause()
         
-    matches = re.findall("^(Stop|Halt)", command, re.IGNORECASE) #@UndefinedVariable
+    matches = re.findall("^(Stop|Halt|Stopp)", command, re.IGNORECASE) #@UndefinedVariable
     if checkMatch(matches):
         result = pluginKodi.kodiStop()
         

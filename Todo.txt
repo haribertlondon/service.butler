@@ -1,4 +1,9 @@
 #------TODO-------
+Spiel modern Family soll nicht nur Filme durchsuchen
+Manchmal wird keyword nicht erkannt. Dann nach Spiele, Öffne etc suchen
+Spiele letzte Tagessachu und nicht die letzte um 20-15
+#lauter leiser spulen
+#Stop bei Tagesschau geht nicht
 #Ringpuffer für Aufnahmen
 #mehrere keywords fuer kodi, tannenbaum, chefkoch
 #lauter, leiser

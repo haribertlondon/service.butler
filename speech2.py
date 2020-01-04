@@ -103,7 +103,7 @@ class HotwordDetector(object):
             
         if self.elapsed_time > settings.LISTEN_PHRASE_MIN_TIME: #reached min time
             if settings.LISTEN_PHRASE_TOTALTIMEOUT is not None and self.elapsed_time > settings.LISTEN_PHRASE_TOTALTIMEOUT: #reached max time
-                print("MaxTimeLimit reached", self.elapsed_time)
+                print("MaxTimeLimit reached", self.elapsed_time, 'Phrase', self.phrase_time, 'Pause: ', self.pause_time)
                 return ("init", None)
             else:
                 if self.pause_time > settings.LISTEN_PHRASE_PAUSE_THRESHOLD: #wait for pause at the end
@@ -122,7 +122,7 @@ class HotwordDetector(object):
         
     def state_snowboy(self, data, energy):
             
-        minN = (int)(0.8/self.seconds_per_buffer) #keeps some time 0.5sec before the phrase
+        minN = (int)(1.5/self.seconds_per_buffer) #keeps some time 0.5sec before the phrase
         if len(self.frames) > minN:
             self.frames = self.frames[-minN:] #keep last N frames                    
         
@@ -130,6 +130,14 @@ class HotwordDetector(object):
         
         try:
             ans = self.detector.RunDetection(data)    #TODO: ++++++++++++++++++++++maybe not data but whole buffer?++++++++++++++++++++++            
+        
+
+            #dynamic adjustment
+            damping = settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW ** self.seconds_per_buffer  # account for different chunk sizes and rates
+            target_energy = energy * settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_RATIO
+            #print(damping)
+            self.energy_threshold = self.energy_threshold * damping + target_energy * (1.0 - damping)
+
         except Exception as e:
             if self.elapsed_time == 0:
                 print("Failed to run snowboy. Wait for start of phrase by energy", e)      
@@ -180,7 +188,7 @@ class HotwordDetector(object):
         
         if settings.isDebug():
             pluginEcho.echoStoreWav(audio)
-            pluginEcho.echoPlayWav()
+            #pluginEcho.echoPlayWav()
         
         return "end"
     
@@ -208,7 +216,7 @@ class HotwordDetector(object):
             # speech was unintelligible
             response["error"] = "Unable to recognize speech"     
             
-        if detected_callback and not settings.isDebug():
+        if detected_callback: #and not settings.isDebug():
             detected_callback(response, audio)  
 
         return "wav"

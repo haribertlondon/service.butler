@@ -8,23 +8,24 @@ LISTEN_MIC_INDEX = None
 
 LISTEN_TIMEOUT = None
 LISTEN_PHRASE_TOTALTIMEOUT = 5.0 #makes sense with snowboy hotword detection
-LISTEN_PHRASE_PUREPHRASETIME = 0.01 #short expression, like for "Play"
+LISTEN_PHRASE_PUREPHRASETIME = 0.09 #short expression, like for "Play"
 LISTEN_PHRASE_PAUSE_THRESHOLD = 0.8 #pause after phrase
 LISTEN_PHRASE_MIN_TIME = LISTEN_PHRASE_PUREPHRASETIME + LISTEN_PHRASE_PAUSE_THRESHOLD
 
 LISTEN_ADJUSTSILENCE_DURATION = 1.0
 LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_RATIO = 1.5
 LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING = 0.15
+LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW = 1 #1=deactivated
 
 LISTEN_ENERGY_THRESHOLD = 300 #will be modified dynamically. This is the start value
-LISTEN_SNOWBOY_SENSITIVITY = "0.7" # was "0.4" in the example
-LISTEN_VERBOSE_TIMEOUT = 0.5
-LISTEN_AUDIO_GAIN = 1.0
+LISTEN_SNOWBOY_SENSITIVITY = "0.55" # was "0.4" in the example
+LISTEN_VERBOSE_TIMEOUT = 10.3
+LISTEN_AUDIO_GAIN = 2.0
 
 HTTP_TIMEOUT = 20
 
 LISTEN_WRITEWAV = "speech.wav"
-LISTEN_HOTWORD = ["kodi", "jarvis"]
+LISTEN_HOTWORD = ["kodi", "jarvis", "corrin", "gaudi", "audi", "tony", "rowdy"]
 LISTEN_GOOGLEKEY = ""
 LISTEN_LANGUAGE= 'de-DE' #["en-US",'de']
 HTTP_KODI_IP = 'localhost:8080'#'192.168.0.60:8080'
@@ -38,7 +39,7 @@ def hasSnowboy():
     return s != "Ankermann"
 
 def isDebug():
-    return socket.gethostname() == "Ankermann"
+    return True or socket.gethostname() == "Ankermann"
 
 try:
     import xbmcaddon    
