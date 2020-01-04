@@ -1,23 +1,24 @@
 #------TODO-------
+#lauter leiser 
+#spulen #30 sek vorspulen
 Spiel modern Family soll nicht nur Filme durchsuchen
-AdjustSilence während Snowboy State
-Manchmal wird keyword von Google nicht erkannt. Dann nach Spiele, Öffne etc suchen
-#lauter leiser spulen
+#bessere Filmsuche (sucht nach "contain" und filtert den besten Wert raus)
+#autostart
+#witze erzählen
+#als kodi plugin laufen lassen (dann kann man besser beenden, starten)
 #Stop bei Tagesschau geht nicht
+AdjustSilence während Snowboy State
 #Ringpuffer für Aufnahmen
 #mehrere keywords fuer kodi, tannenbaum, chefkoch
-#lauter, leiser
 #wecker 
 #kochbuch
-#30 sek vorspulen
-#witze erzählen
 #geschichte erzählen
 #schalte den TV aus
 #nächster Film: curl -g --data-binary '{ "jsonrpc": "2.0", "method": "Player.GoTo", "id": 1, "params": { "playerid": 0, "to":"next"} }' --header 'content-type: application/json;' http://192.168.deine.IP:Port/jsonrpc
-#Gui Notification: curl -g --data-binary '{"jsonrpc": "2.0", "method": "GUI.ShowNotification", "params": {"title": "Hallo!", "message": "Viele Grüße von OSMC"}, "id": 1}' --header "Content-Type: application/json" http://192.168.deine.IP:Port/jsonrpc
-#bessere Filmsuche (sucht nach "contain" und filtert den besten Wert raus) 
 
 #--------DONE---------------
+#Gui Notification: curl -g --data-binary '{"jsonrpc": "2.0", "method": "GUI.ShowNotification", "params": {"title": "Hallo!", "message": "Viele Grüße von OSMC"}, "id": 1}' --header "Content-Type: application/json" http://192.168.deine.IP:Port/jsonrpc
+Manchmal wird keyword von Google nicht erkannt. Dann nach Spiele, Öffne etc suchen
 #spiel radio
 Spiele letzte Tagessachu und nicht die letzte um 20-15
    <favourite name="Deutschlandfunk" thumb="http://static.rad.io/images/broadcasts/25/3f/1521/2/t100.png">PlayMedia(&quot;plugin://plugin.audio.radio_de/station/1521&quot;)</favourite>

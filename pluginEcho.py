@@ -1,4 +1,3 @@
-#import speech
 import settings
 from pydub import AudioSegment
 from pydub.playback import play##
@@ -6,10 +5,7 @@ from pydub.playback import play##
 def echoStoreWav(audio=None):
     try:
         if settings.LISTEN_WRITEWAV is not None and len(settings.LISTEN_WRITEWAV)>0:
-            
-            #if audio is None:
-            #    audio = speech.getAudioData()
-            
+                       
             if audio is not None:
                 wavdata = audio.get_wav_data()
                 f = open(settings.LISTEN_WRITEWAV, 'wb')
