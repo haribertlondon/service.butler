@@ -2,6 +2,7 @@
 import difflib 
 import htmlrequests
 import settings
+import sys
 
 def getKodiUrl(command, typeStr, searchStr):    
     hostname = 'http://' + settings.HTTP_KODI_IP + '/jsonrpc'
@@ -177,17 +178,17 @@ def kodiPlayRadio(channel):
  
 def kodiPlayTagesschau(showStr):
     try:
-        js = htmlrequests.downloadJsonDic('http://www.tagesschau.de/api/multimedia/sendung/letztesendungen100.json',b'')    
-        print(js)
-        ts = [x for x in js['latestBroadcastsPerType'] if x['title']==showStr][0]['sophoraId'] 
+        js = htmlrequests.downloadJsonDic('http://www.tagesschau.de/api/multimedia/sendung/letztesendungen100.json',b'')            
+        if showStr == "tagesschau": #show latest tagesschau
+            ts = js['latestBroadcast']['sophoraId']
+        else:
+            ts = [x for x in js['latestBroadcastsPerType'] if x['title']==showStr][0]['sophoraId'] 
         print(ts)
-        try:
+                
+        if (sys.version_info > (3, 0)):
+            strts = ts #str(ts, 'utf-8')
+        else:
             strts = ts.encode('utf-8') #python 2
-        except:
-            strts = str(ts, 'utf-8')
-            
-        print(strts)
-        
         
         result = postKodiRequest("tagesschau", None, strts)
     except Exception as e:
@@ -227,3 +228,6 @@ def kodiPlayMovie(movieTitle):
     else:
         result = { 'result': False,  'message' : "Keinen Film mit Namen " + str(movieTitle) +  " gefunden"}
     return result
+
+if __name__ == "__main__":
+    kodiPlayTagesschau("tagesthemen")

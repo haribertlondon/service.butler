@@ -28,7 +28,7 @@ def downloadBinary(url, post):
 
 def downloadJsonDic(url, post):
     (html, error) = downloadBinary(url, post)  
-    print(html)
+
     if html and not error:
         js = json.loads(html)
     else:

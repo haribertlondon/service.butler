@@ -1,7 +1,7 @@
 #------TODO-------
 Spiel modern Family soll nicht nur Filme durchsuchen
-Manchmal wird keyword nicht erkannt. Dann nach Spiele, Öffne etc suchen
-Spiele letzte Tagessachu und nicht die letzte um 20-15
+AdjustSilence während Snowboy State
+Manchmal wird keyword von Google nicht erkannt. Dann nach Spiele, Öffne etc suchen
 #lauter leiser spulen
 #Stop bei Tagesschau geht nicht
 #Ringpuffer für Aufnahmen
@@ -19,6 +19,7 @@ Spiele letzte Tagessachu und nicht die letzte um 20-15
 
 #--------DONE---------------
 #spiel radio
+Spiele letzte Tagessachu und nicht die letzte um 20-15
    <favourite name="Deutschlandfunk" thumb="http://static.rad.io/images/broadcasts/25/3f/1521/2/t100.png">PlayMedia(&quot;plugin://plugin.audio.radio_de/station/1521&quot;)</favourite>
     <favourite name="bigFM Saarland" thumb="http://static.rad.io/images/broadcasts/b2/65/1445/2/t100.png">PlayMedia(&quot;plugin://plugin.audio.radio_de/station/1445&quot;)</favourite>
     <favourite name="ANTENNE KAISERSLAUTERN 96.9" thumb="http://static.rad.io/images/broadcasts/51/fd/8367/t100.png">PlayMedia(&quot;plugin://plugin.audio.radio_de/station/8367&quot;)</favourite>
