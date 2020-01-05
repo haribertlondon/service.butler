@@ -1,0 +1,42 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides: noip
+# Required-Start: $syslog
+# Required-Stop: $syslog
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: noip server
+# Description:
+### END INIT INFO
+
+#Als nächstes weisen wir die benötigten Rechte zu (Lesen & Schreiben)
+#sudo chmod 755 /etc/init.d/NameDesSkripts
+#und testen das Skript indem wir es starten
+#sudo /etc/init.d/NameDesSkripts start
+#und gleich wieder stoppen:
+#sudo /etc/init.d/NameDesSkripts stop
+#Damit das Skript beim booten auch aufgerufen wird, führen wir folgendes aus:
+#sudo update-rc.d NameDesSkripts defaults
+#Nun sollte das Programm bei starten auch ausgeführt werden. Solltest du eines Tages dich umentscheiden und das Programm aus dem Autostart nehmen wollen, kannst du dies mit:
+#sudo update-rc.d -f  NameDesSkripts remove
+
+case "$1" in
+    start)
+        echo "noip wird gestartet"
+        # Starte Programm
+        cd /home/pi/service.butler/
+        python service.py
+        ;;
+    stop)
+        echo "noip wird beendet"
+        # Beende Programm
+        #killall kodi
+        pkill -f service.py
+        ;;
+    *)
+        echo "Benutzt: /etc/init.d/myautostart {start|stop}"
+        exit 1
+        ;;
+esac
+ 
+exit 0
