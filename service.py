@@ -31,31 +31,24 @@ import speech2
          
          
 def detected_callback(response, audio):
-    result = ai.speechInterprete(response)
+    try:
+        result = ai.speechInterprete(response)
                 
-    print('Result=', result)
-    if result and isinstance(result, dict) and 'message' in result:
-        if result['message'] != 'Silence!':
-            texttospeech.sayString(textspeech, result['message'])
-        else: 
-            #silence
-            print(result['message'])
-    else:
-        texttospeech.sayString(textspeech, 'Sum Sum Sum')
+        print('Result=', result)
+        if result and isinstance(result, dict) and 'message' in result:
+            if result['message'] != 'Silence!':
+                texttospeech.sayString(textspeech, result['message'])
+            else: 
+                #silence
+                print(result['message'])
+        else:
+            texttospeech.sayString(textspeech, 'Sum Sum Sum')
+    
+    except Exception as e:
+        print("Fatal error in ai.callback: ", e)
 
 if __name__ == "__main__":
     textspeech = texttospeech.init()
     
     speech2.run(sensitivity=settings.LISTEN_SNOWBOY_SENSITIVITY, detected_callback = detected_callback, audio_gain = settings.LISTEN_AUDIO_GAIN)
     sys.exit()
-
-
-#            #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele Modern Family weiter" }    
-#            #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele letzte Serie weiter" }
-#            #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele MacGyver weiter" }
-#            #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele die letzte Tagesschau" }
-#            #guess =  {"error": None, "transcription": "KODi weiter" }
-#            #guess =  {"error": None, "transcription": "Kodi Starte die letzten Tagesthemen" }
-#            #guess =  {"error": None, "transcription": "Kodi Youtube mit Trailer Deutsch" }
-#            #guess =  {"error": None, "transcription": "Kodi Echo Hallo Kristina" }
-#            guess =  {"error": None, "transcription": "Kodi Spiele SWR3" }

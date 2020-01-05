@@ -4,19 +4,23 @@ import htmlrequests
 import settings
 import sys
 
-def getKodiUrl(command, typeStr, searchStr):    
+def getKodiUrl(command, typeStr, searchStr, playerID= None):    
     hostname = 'http://' + settings.HTTP_KODI_IP + '/jsonrpc'
     url = hostname    
     post = None
+    
+    if playerID is None:
+        playerID = 1
+    
     if command == "search": 
         if typeStr == "movies" or typeStr == "movie":
             post = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "title", "value": "'+str(searchStr)+'"}, "properties" : ["dateadded", "lastplayed", "year", "rating", "playcount", "genre"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}'
         elif typeStr == "tvshows":
             post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetTVShows", "params": {                                                                                      "properties": ["dateadded", "lastplayed",  "year", "rating", "playcount"],           "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvshows"}'
     elif command == "play":
-        post = '{ "jsonrpc": "2.0", "method": "Player.PlayPause", "params": {"playerid": 1, "play":true },"id":1}'        
+        post = '{ "jsonrpc": "2.0", "method": "Player.PlayPause", "params": {"playerid": '+str(playerID)+', "play":true },"id":1}'        
     elif command == "pause":
-        post = '{ "jsonrpc": "2.0", "method": "Player.PlayPause", "params": {"playerid": 1 ,"play":false},"id":1}'
+        post = '{ "jsonrpc": "2.0", "method": "Player.PlayPause", "params": {"playerid": '+str(playerID)+' ,"play":false},"id":1}'
     elif command == "open":
         if typeStr == 'movies' or typeStr == 'movie': 
             post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"movieid": '+str(searchStr)+ '} }, "id": 1 }'
@@ -26,9 +30,9 @@ def getKodiUrl(command, typeStr, searchStr):
             post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"playlistid": ' +str(searchStr) + '} }, "id": 1 }'
                                                                 
     elif command == 'info':
-        post = '{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title", "season", "episode", "showtitle", "rating"], "playerid": 1 }, "id": "VideoGetItem"}'
+        post = '{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title", "season", "episode", "showtitle", "rating"], "playerid": '+str(playerID)+' }, "id": "VideoGetItem"}'
     elif command == 'stop':
-        post = '{ "jsonrpc": "2.0", "method": "Player.Stop", "params": {"playerid": 1 },"id":1}'
+        post = '{ "jsonrpc": "2.0", "method": "Player.Stop", "params": {"playerid": '+str(playerID)+' },"id":1}'
     elif command == 'lastepisode':         
         post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetEpisodes", "params": { "tvshowid": '+str(searchStr)+', "properties": ["title", "rating", "season"],  "limits": { "start" : 0, "end": 10 },   "filter": {"and": [{"field": "playcount", "operator": "is", "value": "0"}, {"field": "season", "operator": "greaterthan", "value": "0"}]},    "sort": { "order": "ascending", "method": "episode" } }, "id": "libEpisodes"}'        
     elif command == 'lasttvshow':            
@@ -41,6 +45,16 @@ def getKodiUrl(command, typeStr, searchStr):
         post = '{"jsonrpc":"2.0","method":"Player.Open","params":{"item":{"file":"plugin://plugin.audio.radio_de/station/'+searchStr+'"}},"id":"1"}'
     elif command == 'showmessage':
         post = '{"jsonrpc": "2.0", "method": "GUI.ShowNotification", "params": {"title": "Info", "message": "' + searchStr + '"}, "id": 1}'
+    elif command == 'playerID':
+        post = '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 1}'
+    elif command == 'volumeup':
+        post = '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": "increment" }, "id": 1 }'
+    elif command == 'volumedown':
+        post = '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": "decrement" }, "id": 1 }'
+    elif command == 'getVolume':
+        post = '{ "jsonrpc": "2.0", "method": "Application.GetProperties", "params" : { "properties" : [ "volume", "muted" ] }, "id" : 1 }'
+    elif command == 'setVolume':
+        post = '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": '+searchStr+' }, "id": 1 }'
     else:
         print('Command not found', command)
     #elif command == 'tagesschau':                   
@@ -81,25 +95,47 @@ def postKodiRequest_Internal(url, post):
     else:   
         return { 'result': False,  'message' : 'Fehlgeschlagen. '} # + getErrorMessage(result) }
     
-def postKodiRequest(command, typeStr, searchStr):
-    (url, post) = getKodiUrl(command, typeStr, searchStr) 
+def getActivePlayerID():
+    response = postKodiRequest("playerID", None, None)
+    try:
+        return response["data"][0]["playerid"]
+    except Exception as e:
+        print(e)
+        return 1 #it seems in my case, that 1 is the default playerID
+    
+def postKodiRequest(command, typeStr, searchStr, playerID = None):
+    (url, post) = getKodiUrl(command, typeStr, searchStr, playerID) 
     return postKodiRequest_Internal(url, post)
+
+def kodiChangeVolume(change):
+    response = postKodiRequest("getVolume", None, None)
+    try:        
+        return postKodiRequest("setVolume", None, str(response['data']['volume']+change))
+    except Exception as e:
+        print(e)
+        return response
+
+def kodiVolumeDown():
+    return kodiChangeVolume(-10)
+
+def kodiVolumeUp():
+    return kodiChangeVolume(+10)
     
 def kodiPlay():
-    return postKodiRequest("play", None, None)   
+    return postKodiRequest("play", None, None, getActivePlayerID())   
 
 def kodiPause():    
-    return postKodiRequest("pause", None, None)  
+    return postKodiRequest("pause", None, None, getActivePlayerID())  
 
 def kodiStop():  
-    return postKodiRequest("stop", None, None) 
+    return postKodiRequest("stop", None, None, getActivePlayerID()) 
 
 def getLastEpisode(tvshowid):        
     return postKodiRequest("lastepisode", None, tvshowid)
 
 def kodiGetCurrentPlaying():
     #(url, post) = getKodiUrl("info", None, None)
-    result = postKodiRequest("info", None, None)
+    result = postKodiRequest("info", None, None, getActivePlayerID())
     info = 'Spiele gerade ' + result['data']['item']['title'] 
     try:
         info = info + ' mit ' + str(round(result['data']['item']['rating'],1)).replace(".",",") + ' Sternen'
@@ -230,4 +266,9 @@ def kodiPlayMovie(movieTitle):
     return result
 
 if __name__ == "__main__":
-    kodiPlayTagesschau("tagesthemen")
+    #kodiPlayTagesschau("tagesthemen")
+    #idx = getActivePlayerID()
+    #kodiGetCurrentPlaying()
+    #kodiStop()
+    a=kodiVolumeDown()
+    print(a)

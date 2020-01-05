@@ -1,12 +1,11 @@
 #------TODO-------
-#lauter leiser 
+#autostart
+umlaute in der Google response: Öffne
 #spulen #30 sek vorspulen
 Spiel modern Family soll nicht nur Filme durchsuchen
 #bessere Filmsuche (sucht nach "contain" und filtert den besten Wert raus)
-#autostart
 #witze erzählen
 #als kodi plugin laufen lassen (dann kann man besser beenden, starten)
-#Stop bei Tagesschau geht nicht
 AdjustSilence während Snowboy State
 #Ringpuffer für Aufnahmen
 #mehrere keywords fuer kodi, tannenbaum, chefkoch
@@ -17,6 +16,8 @@ AdjustSilence während Snowboy State
 #nächster Film: curl -g --data-binary '{ "jsonrpc": "2.0", "method": "Player.GoTo", "id": 1, "params": { "playerid": 0, "to":"next"} }' --header 'content-type: application/json;' http://192.168.deine.IP:Port/jsonrpc
 
 #--------DONE---------------
+#lauter leiser
+#Stop bei Tagesschau geht nicht
 #Gui Notification: curl -g --data-binary '{"jsonrpc": "2.0", "method": "GUI.ShowNotification", "params": {"title": "Hallo!", "message": "Viele Grüße von OSMC"}, "id": 1}' --header "Content-Type: application/json" http://192.168.deine.IP:Port/jsonrpc
 Manchmal wird keyword von Google nicht erkannt. Dann nach Spiele, Öffne etc suchen
 #spiel radio

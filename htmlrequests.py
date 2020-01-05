@@ -43,7 +43,7 @@ def downloadStr(url, post):
 def htmlPostRequest(url, post):
     js = downloadJsonDic(url, post)
     
-    if 'result' in js and js['result'] is not None and (js['result'] == 'OK' or isinstance(js['result'],dict) ):  #js.get('result','Key-Error') == 'OK'  :
+    if 'result' in js and js['result'] is not None and (js['result'] == 'OK' or isinstance(js['result'],dict) or isinstance(js['result'],list)  or isinstance(js['result'],int) ):  #js.get('result','Key-Error') == 'OK'  :
         return { 'result': True,  'message' : 'OK', 'data': js['result'] }
     else:   
         #return { 'result': False,  'message' : str(js) }

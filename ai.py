@@ -109,6 +109,27 @@ def speechInterprete(guess):
     matches = re.findall("^(?:Play|Los|Weiter|Continue|Spiele weiter|Spiel weiter)( den Film)?$", command, re.IGNORECASE) 
     if checkMatch(matches):
         result = pluginKodi.kodiPlay()
+        
+    matches = re.findall("^(?:Mache |Mach )?Leiser$", command, re.IGNORECASE) 
+    if checkMatch(matches):
+        result = pluginKodi.kodiVolumeDown()
+        
+    matches = re.findall("^(?:Mache |Mach )?Lauter$", command, re.IGNORECASE) 
+    if checkMatch(matches):
+        result = pluginKodi.kodiVolumeUp()
 
         
     return result
+
+if __name__ == "__main__":
+    #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele Modern Family weiter" }    
+    #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele letzte Serie weiter" }
+    #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele MacGyver weiter" }
+    #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele die letzte Tagesschau" }
+    #guess =  {"error": None, "transcription": "KODi weiter" }
+    #guess =  {"error": None, "transcription": "Kodi Starte die letzten Tagesthemen" }
+    #guess =  {"error": None, "transcription": "Kodi Youtube mit Trailer Deutsch" }
+    #guess =  {"error": None, "transcription": "Kodi Echo Hallo Kristina" }
+    #guess =  {"error": None, "transcription": "Kodi Spiele SWR3" }
+    guess =  {"error": None, "transcription": "Kodi Leiser" }
+    speechInterprete(guess)
