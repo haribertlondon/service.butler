@@ -18,14 +18,14 @@ LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING = 0.15
 LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW = 1 #1=deactivated
 
 LISTEN_ENERGY_THRESHOLD = 300 #will be modified dynamically. This is the start value
-LISTEN_SNOWBOY_SENSITIVITY = "0.55" # was "0.4" in the example
+LISTEN_SNOWBOY_SENSITIVITY = "0.54" # was "0.4" in the example
 LISTEN_VERBOSE_TIMEOUT = 10.3
 LISTEN_AUDIO_GAIN = 2.0
 
 HTTP_TIMEOUT = 20
 
 LISTEN_WRITEWAV = "speech.wav"
-LISTEN_HOTWORD = ["kodi", "jarvis", "corrin", "gaudi", "audi", "tony", "rowdy"]
+LISTEN_HOTWORD = ["kodi", "jarvis", "corrin", "gaudi", "audi", "tony", "rowdy", "godi", "tonie", "toni", "gorie", "gori","(k|g|p|h)(au|o|ow)(l|d|r|rr|n)(i|y|ie)", "pauli", "howdy"]
 LISTEN_GOOGLEKEY = ""
 LISTEN_LANGUAGE= 'de-DE' #["en-US",'de']
 HTTP_KODI_IP = 'localhost:8080'#'192.168.0.60:8080'

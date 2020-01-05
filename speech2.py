@@ -8,6 +8,7 @@ import audioop
 import sys
 import settings
 import pluginEcho
+import pluginKodi
 try:    
     import speech_recognition as sr #@UnusedImport #check if package is installed
 except:
@@ -153,6 +154,8 @@ class HotwordDetector(object):
             return "error"
         elif ans > 0:                
             print("Keyword " + str(ans) + " detected at time: "+ time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())))
+            pluginKodi.kodiShowMessage("Listening...")
+
             self.pause_time = 0.0
             self.elapsed_time = 0.0
             self.phrase_time = 0.0    
@@ -208,6 +211,12 @@ class HotwordDetector(object):
             #response["transcription"] = recognizer.recognize_bing(audio, key='912b8cb579f74a01aba54691b1d9c671')#, language=settings.LISTEN_LANGUAGE)            
             
             print("Detected: ", response["transcription"])
+            try:
+                print("Print as utf8 in python 2")
+                print(response["transcription"].encode("utf8"))
+            except Exception as e:
+                print(e)
+
             
         except sr.RequestError as e:
             # API was unreachable or unresponsive        

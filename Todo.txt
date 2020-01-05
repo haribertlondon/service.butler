@@ -1,5 +1,7 @@
 #------TODO-------
 #autostart
+bei serien die komplette playlist reinladen und nicht nur die aktuelle episode
+Filme die schon angefangen sind, aber der letzten Position weiterspielen
 umlaute in der Google response: Öffne
 #spulen #30 sek vorspulen
 Spiel modern Family soll nicht nur Filme durchsuchen

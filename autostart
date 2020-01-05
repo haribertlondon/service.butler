@@ -1,0 +1,22 @@
+if pgrep kodi.*bin.* > /dev/null
+then
+    echo Found
+else
+    echo NotFound
+    kodi --standalone &
+    echo KodiStarted
+fi
+
+if pgrep -f [^g].*python.*service.* > /dev/null
+then
+    echo ServiceFound
+else
+    echo StartinService
+    screen -d -m "cd /home/pi/service.butler; python service.py"
+    cd /home/pi/service.butler; 
+#    python service.py &
+    screen -d -m python service.py
+    cd /home/pi
+fi
+
+ 

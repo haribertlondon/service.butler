@@ -110,7 +110,12 @@ def postKodiRequest(command, typeStr, searchStr, playerID = None):
 def kodiChangeVolume(change):
     response = postKodiRequest("getVolume", None, None)
     try:        
-        return postKodiRequest("setVolume", None, str(response['data']['volume']+change))
+        x = response['data']['volume']+change
+        if x < 0:
+            x = 0
+        elif x >100:
+            x = 100
+        return postKodiRequest("setVolume", None, str(x))
     except Exception as e:
         print(e)
         return response
@@ -120,7 +125,11 @@ def kodiVolumeDown():
 
 def kodiVolumeUp():
     return kodiChangeVolume(+10)
-    
+
+
+def kodiShowMessage(s):
+    return postKodiRequest("showmessage", None, s, None)   
+
 def kodiPlay():
     return postKodiRequest("play", None, None, getActivePlayerID())   
 

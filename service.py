@@ -36,7 +36,7 @@ def detected_callback(response, audio):
                 
         print('Result=', result)
         if result and isinstance(result, dict) and 'message' in result:
-            if result['message'] != 'Silence!':
+            if result['message'] != 'Silence!' and result['message'] != 'OK':
                 texttospeech.sayString(textspeech, result['message'])
             else: 
                 #silence
