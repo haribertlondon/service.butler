@@ -1,5 +1,8 @@
 #------TODO-------
 #autostart
+anderes hotword
+#erinnerungen als mail verschicken
+#amazon smart plug unterstützung
 bei serien die komplette playlist reinladen und nicht nur die aktuelle episode
 Filme die schon angefangen sind, aber der letzten Position weiterspielen
 umlaute in der Google response: Öffne
