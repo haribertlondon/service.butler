@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import re
+import sys
 import settings
 import pluginKodi
 import pluginEcho
+import pluginMail
 
 def checkMatch(match):    
     global matchCounter
@@ -109,6 +111,23 @@ def speechInterprete(guess):
     matches = re.findall("^(?:Play|Los|Weiter|Continue|Spiele weiter|Spiel weiter)( den Film)?$", command, re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlay()
+    
+    matches = re.findall("^(Gute Nacht|Schlaf gut|Geh schlafen|Auf wiedersehen|Tschüss|Ruhe|Halts maul)$", command, re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPause()
+        result = pluginKodi.kodiStartScreensaver()
+        
+    matches = re.findall("^Stelle Empfindlichkeit auf (.*)$", command, re.IGNORECASE)
+    if checkMatch(matches):
+        result = settings.setSensitivity(matches[0])
+        
+    matches = re.findall("^Beende dich selbst$", command, re.IGNORECASE)
+    if checkMatch(matches):
+        sys.exit()
+        
+    matches = re.findall("^(?:Schicke |Sende )?(?:Mail |Erinnerung |eMail |Erinnere mich )(?:an |mit )?(.*)$", command, re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginMail.sendMail(matches[0], "", 'mail.jpg')
 
     matches = re.findall("^(?:Mache |Mach )?Leiser$", command, re.IGNORECASE)
     if checkMatch(matches):

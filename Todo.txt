@@ -1,11 +1,10 @@
 #------TODO-------
-#autostart
 anderes hotword
-#erinnerungen als mail verschicken
+#Lautstärke-Regelung an Fernbedienung
 #amazon smart plug unterstützung
 bei serien die komplette playlist reinladen und nicht nur die aktuelle episode
 Filme die schon angefangen sind, aber der letzten Position weiterspielen
-umlaute in der Google response: Öffne
+umlaute in der Google response: Öffne, evtl Python 2 Problem
 #spulen #30 sek vorspulen
 Spiel modern Family soll nicht nur Filme durchsuchen
 #bessere Filmsuche (sucht nach "contain" und filtert den besten Wert raus)
@@ -17,10 +16,16 @@ AdjustSilence während Snowboy State
 #wecker 
 #kochbuch
 #geschichte erzählen
-#schalte den TV aus
 #nächster Film: curl -g --data-binary '{ "jsonrpc": "2.0", "method": "Player.GoTo", "id": 1, "params": { "playerid": 0, "to":"next"} }' --header 'content-type: application/json;' http://192.168.deine.IP:Port/jsonrpc
 
 #--------DONE---------------
+#schalte den TV aus
+#Gute Nacht
+#autostart
+#CEC im Wohnzimmer fixen
+#Setze snowboy sensitivity 
+#beende dich selbst
+#erinnerungen als mail verschicken
 #lauter leiser
 #Stop bei Tagesschau geht nicht
 #Gui Notification: curl -g --data-binary '{"jsonrpc": "2.0", "method": "GUI.ShowNotification", "params": {"title": "Hallo!", "message": "Viele Grüße von OSMC"}, "id": 1}' --header "Content-Type: application/json" http://192.168.deine.IP:Port/jsonrpc

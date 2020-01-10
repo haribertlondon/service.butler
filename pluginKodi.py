@@ -55,6 +55,8 @@ def getKodiUrl(command, typeStr, searchStr, playerID= None):
         post = '{ "jsonrpc": "2.0", "method": "Application.GetProperties", "params" : { "properties" : [ "volume", "muted" ] }, "id" : 1 }'
     elif command == 'setVolume':
         post = '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": '+searchStr+' }, "id": 1 }'
+    elif command == 'screensaver':
+        post = '{"jsonrpc":"2.0","method":"GUI.ActivateWindow","id":1,"params":{"window":"screensaver"}}'
     else:
         print('Command not found', command)
     #elif command == 'tagesschau':                   
@@ -129,6 +131,9 @@ def kodiVolumeUp():
 
 def kodiShowMessage(s):
     return postKodiRequest("showmessage", None, s, None)   
+
+def kodiStartScreensaver():
+    return postKodiRequest("screensaver", None, None, getActivePlayerID())  
 
 def kodiPlay():
     return postKodiRequest("play", None, None, getActivePlayerID())   

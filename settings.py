@@ -33,6 +33,26 @@ LISTEN_SNOWBOY_RESOURCE = './resources/lib/snowboyrpi8/resources/common.res'
 LISTEN_SNOWBOY_MODELS = ['./resources/lib/snowboyrpi8/kodi.pmdl']
 LISTEN_SNOWBOY = ( LISTEN_SNOWBOY_RESOURCE , LISTEN_SNOWBOY_MODELS   )
 
+def setSensitivity(s):
+    global LISTEN_SNOWBOY_SENSITIVITY
+    try:
+        x = float(s)
+        
+        if x>1:
+            x = x / 100.0
+        
+        if x<1.0:
+            LISTEN_SNOWBOY_SENSITIVITY = x
+        else:
+            raise Exception("Number not between 0 and 1")    
+        return { 'result': True,  'message' : "OK"}
+    except Exception as e:
+        print(e)
+        return { 'result': False,  'message' : "Kann Empfindlichkeit nicht aendern: " + str(e)}
+    
+        
+        
+    
 
 def hasSnowboy():
     s = socket.gethostname() 
