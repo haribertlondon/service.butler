@@ -1,4 +1,5 @@
 #------TODO-------
+#git-update durch sprachbefehl
 #umlaute in der Google response: Öffne, evtl Python 2 Problem
 #Lautstärke-Regelung an Fernbedienung
 bei serien die komplette playlist reinladen und nicht nur die aktuelle episode
