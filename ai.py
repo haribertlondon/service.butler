@@ -141,6 +141,14 @@ def speechInterprete(guess):
     matches = re.findall("^(?:Schicke |Sende )?(?:Mail |Erinnerung |eMail |Erinnere mich )(?:an |mit )?(.*)$", command, re.IGNORECASE)
     if checkMatch(matches):
         result = pluginMail.sendMail(matches[0], "", settings.MAIL_SERVER_SETTINGS_FILE)
+        
+    matches = re.findall("^Spule vor$", command, re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiSeek(+30)
+        
+    matches = re.findall("^Spule zurück$", command, re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiSeek(-30)
 
     matches = re.findall("^(?:Mache |Mach )?Leiser$", command, re.IGNORECASE)
     if checkMatch(matches):
