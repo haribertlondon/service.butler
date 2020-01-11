@@ -3,6 +3,9 @@ dynamischer Filter
 screensaver geht nicht
 #bei FILME die komplette playlist reinladen und nicht nur die aktuelle episode
 Spiele einen schwedischen/Deutschen Film
+Play random unwatched episode of TV show
+Play random unwatched movie
+Play random movie from a specific genre
 Spiele eine Komödie/Horror/Thriller
 #Lautstärke-Regelung an Fernbedienung
 #bessere Filmsuche IV = 4 = vier = Four

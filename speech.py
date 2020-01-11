@@ -4,6 +4,7 @@
 import collections
 import pyaudio
 import time
+import math
 import audioop
 import sys
 import settings
@@ -89,8 +90,8 @@ class HotwordDetector(object):
         self.sample_width = pyaudio.get_sample_size(self.audio_format)
         self.energy_threshold = settings.LISTEN_ENERGY_THRESHOLD 
         self.stream_in = self.audio.open( input=True,  output=False, input_device_index=settings.LISTEN_MIC_INDEX, format= self.audio_format, channels=self.num_channels, rate=self.sample_rate, frames_per_buffer=self.chunksize, stream_callback=audio_callback)
-
-    def state_phrase(self, data, energy):        
+        
+    def updateTimes(self, energy):
         if energy > self.energy_threshold:
             self.phrase_time += self.seconds_per_buffer 
             self.pause_time = 0                       
@@ -98,7 +99,11 @@ class HotwordDetector(object):
             if self.phrase_time  > 0:           #only count if something was said before
                 self.pause_time += self.seconds_per_buffer             
         
-        self.elapsed_time += self.seconds_per_buffer        
+        self.elapsed_time += self.seconds_per_buffer
+
+    def state_phrase(self, data, energy):
+        
+        self.updateTimes(energy)
             
         self.frames.append(data)
             
@@ -130,23 +135,22 @@ class HotwordDetector(object):
         self.frames.append(data)  
         
         try:
-            ans = self.detector.RunDetection(data)    #TODO: ++++++++++++++++++++++maybe not data but whole buffer?++++++++++++++++++++++            
-        
-
-            #dynamic adjustment
-            damping = settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW ** self.seconds_per_buffer  # account for different chunk sizes and rates
-            target_energy = energy * settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_RATIO
-            #print(damping)
-            self.energy_threshold = self.energy_threshold * damping + target_energy * (1.0 - damping)
-
+            ans = self.detector.RunDetection(data)    #TODO: ++++++++++++++++++++++maybe not data but whole buffer?++++++++++++++++++++++                        
         except Exception as e:
             if self.elapsed_time == 0:
-                print("Failed to run snowboy. Wait for start of phrase by energy", e)      
-            if self.phrase_time > 0:                
+                print("Failed to run snowboy. Wait for start of phrase by energy", e)                
+            
+            self.updateTimes(energy)
+            if self.pause_time > 1.0: #throw phrase away if pause was too long
+                self.phrase_time = 0
+            if self.phrase_time > 0.25:                
                 ans = 1
             else: 
                 ans = 0
-                
+        #dynamic adjustment
+        if settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU>0:
+            self.applyLowPassFilter(energy, settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU) #tau = 4sec => reach 4*6=24sec
+                      
         self.elapsed_time += self.seconds_per_buffer
               
         if ans == -1:
@@ -171,7 +175,14 @@ class HotwordDetector(object):
         self.startTime_for_tictoc = time.time()
         return "silence"
     
-    def state_adjustSilence(self,energy):        
+    def applyLowPassFilter(self, energy, tau):
+        #mit damping=exp(-0.023/tau) self.seconds_per_buffer = 0.023
+        damping = math.exp( - self.cycleTime / tau ) 
+        target_energy = energy * settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_RATIO
+        self.energy_threshold = self.energy_threshold * damping + target_energy * (1.0 - damping)
+        #y(n) = damping*y(n-1) + (1-damping)*x(n)      
+    
+    def state_adjustSilence(self, energy):
         # adjust energy threshold until a phrase starts       
         self.elapsed_time += self.seconds_per_buffer
         if self.elapsed_time > settings.LISTEN_ADJUSTSILENCE_DURATION:
@@ -181,10 +192,8 @@ class HotwordDetector(object):
             self.phrase_time = 0
             return "snowboy"
         else:
-            # dynamically adjust the energy threshold using asymmetric weighted average
-            damping = settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING ** self.seconds_per_buffer  # account for different chunk sizes and rates
-            target_energy = energy * settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_RATIO
-            self.energy_threshold = self.energy_threshold * damping + target_energy * (1.0 - damping)
+            # dynamically adjust the energy threshold using asymmetric weighted average            
+            self.applyLowPassFilter(energy, settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_FAST_TAU)
             return "silence"
     
     def state_storeWav(self, audio):
@@ -237,11 +246,12 @@ class HotwordDetector(object):
         self.startTime_for_tictoc = time.time()
         self.phrase_time = 0
         self.pause_time = 0
+        self.cycleTime = self.seconds_per_buffer * 1.5
         while True:            
                         
             data = self.ring_buffer.get()
             if len(data) == 0:
-                time.sleep(self.seconds_per_buffer * 1.5) #wait for buffer to be filled               
+                time.sleep(self.cycleTime) #wait for buffer to be filled               
                 continue
             
             energy = audioop.rms(data, self.sample_width) 
