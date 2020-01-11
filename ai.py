@@ -180,5 +180,6 @@ if __name__ == "__main__":
     #guess =  {"error": None, "transcription": "Kodi Echo Hallo Kristina" }
     #guess =  {"error": None, "transcription": "Kodi Spiele SWR3" }
     #guess =  {"error": None, "transcription": "Kodi Leiser" }
-    guess =  {"error": None, "transcription": "Termine Starte Modern Family" }
-    speechInterprete(guess)
+    guess =  {"error": None, "transcription": "Termine Starte zzzzzzzzzzzzzzzzzzzzzzzzz" }
+    a = speechInterprete(guess)
+    print(a)
