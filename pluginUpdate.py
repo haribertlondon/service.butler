@@ -1,4 +1,4 @@
-import git #pip install GitPython
+import git #pip install gitpython
 import pluginKodi
 import os
 import time
