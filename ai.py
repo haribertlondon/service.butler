@@ -125,11 +125,11 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiNext()
 
-    matches = re.findall(u"^(Springe |Gehe )?(zu )?(letzter |Letzte |verherigen |vorigen )(Film|Folge|Episode)$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(Springe |Gehe )?(zu )?(letzter |Letzte |vorherigen |vorigen |vorheriger |vorherige )(Film|Folge|Episode)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPrevious()
     
-    matches = re.findall(u"^(Gute Nacht|Schlaf gut|Geh schlafen|Auf wiedersehen|Tschüss|Ruhe|Halts maul)$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(Gute Nacht|Schlaf gut|Geschlafen|Geh schlafen|Auf wiedersehen|Tschüss|Ruhe|Halts maul)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPause()
         result = pluginKodi.kodiStartScreensaver()
@@ -146,15 +146,15 @@ def speechInterprete(guess):
     if checkMatch(matches):
         pluginUpdate.performUpdate()        
         
-    matches = re.findall(u"^(?:Schicke |Sende )?(?:Mail |Erinnerung |eMail |Erinnere mich )(?:an |mit )?(.*)$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Schicke |Sende )?(eine )?(?:Mail |Erinnerung |eMail |Erinnere mich )(?:an |mit )?(.*)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginMail.sendMail(matches[0], "", settings.MAIL_SERVER_SETTINGS_FILE)
         
-    matches = re.findall(u"^Spule vor$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(Spule |Spul |schwul )vor$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiSeek(+30)
         
-    matches = re.findall(u"^Spule zurück$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(Spule |Spul |Schwul )zurück$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiSeek(-30)
 

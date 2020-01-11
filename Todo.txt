@@ -1,4 +1,6 @@
 #------TODO-------
+dynamischer Filter
+screensaver geht nicht
 #bei FILME die komplette playlist reinladen und nicht nur die aktuelle episode
 Spiele einen schwedischen/Deutschen Film
 Spiele eine Komödie/Horror/Thriller
