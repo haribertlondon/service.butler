@@ -111,6 +111,14 @@ def speechInterprete(guess):
     matches = re.findall("^(?:Play|Los|Weiter|Continue|Spiele weiter|Spiel weiter)( den Film)?$", command, re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlay()
+
+    matches = re.findall("^(Springe |Gehe )?(zu )?(Nächste |Nächster |Kommender |Folgender |Folgende |Kommende )(Film|Folge|Episode)$", command, re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiNext()
+
+    matches = re.findall("^(Springe |Gehe )?(zu )?(letzter |Letzte |verherigen |vorigen )(Film|Folge|Episode)$", command, re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPrevious()
     
     matches = re.findall("^(Gute Nacht|Schlaf gut|Geh schlafen|Auf wiedersehen|Tschüss|Ruhe|Halts maul)$", command, re.IGNORECASE)
     if checkMatch(matches):

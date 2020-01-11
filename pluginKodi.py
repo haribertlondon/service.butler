@@ -57,6 +57,12 @@ def getKodiUrl(command, typeStr, searchStr, playerID= None):
         post = '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": '+searchStr+' }, "id": 1 }'
     elif command == 'screensaver':
         post = '{"jsonrpc":"2.0","method":"GUI.ActivateWindow","id":1,"params":{"window":"screensaver"}}'
+    elif command == 'next':
+        post = '{ "jsonrpc": "2.0", "method": "Player.GoTo", "id": 1, "params": { "playerid": '+str(playerID)+', "to":"next"} }'
+    elif command == 'previous':
+        post = '{ "jsonrpc": "2.0", "method": "Player.GoTo", "id": 1, "params": { "playerid": '+str(playerID)+', "to":"previous"} }'
+    elif command == 'seek':
+        post = '{"jsonrpc": "2.0", "method": "Player.Seek", "id": 1, "params": { "playerid": '+str(playerID)+', "value": { "seconds": '+searchStr+' } }}'  
     else:
         print('Command not found', command)
     #elif command == 'tagesschau':                   
@@ -146,6 +152,15 @@ def kodiStop():
 
 def getLastEpisode(tvshowid):        
     return postKodiRequest("lastepisode", None, tvshowid)
+
+def kodiSeek(sec):  
+    return postKodiRequest("seek", None, sec, getActivePlayerID()) 
+
+def kodiNext():  
+    return postKodiRequest("next", None, None, getActivePlayerID()) 
+
+def kodiPrevious():  
+    return postKodiRequest("previous", None, None, getActivePlayerID())
 
 def kodiGetCurrentPlaying():
     #(url, post) = getKodiUrl("info", None, None)

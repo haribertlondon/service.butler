@@ -1,14 +1,13 @@
 #------TODO-------
-anderes hotword
+#umlaute in der Google response: Öffne, evtl Python 2 Problem
 #Lautstärke-Regelung an Fernbedienung
-#amazon smart plug unterstützung
 bei serien die komplette playlist reinladen und nicht nur die aktuelle episode
 Filme die schon angefangen sind, aber der letzten Position weiterspielen
-umlaute in der Google response: Öffne, evtl Python 2 Problem
-#spulen #30 sek vorspulen
 Spiel modern Family soll nicht nur Filme durchsuchen
 #bessere Filmsuche (sucht nach "contain" und filtert den besten Wert raus)
+
 #witze erzählen
+#amazon smart plug unterstützung
 #als kodi plugin laufen lassen (dann kann man besser beenden, starten)
 AdjustSilence während Snowboy State
 #Ringpuffer für Aufnahmen
@@ -16,9 +15,11 @@ AdjustSilence während Snowboy State
 #wecker 
 #kochbuch
 #geschichte erzählen
-#nächster Film: curl -g --data-binary '{ "jsonrpc": "2.0", "method": "Player.GoTo", "id": 1, "params": { "playerid": 0, "to":"next"} }' --header 'content-type: application/json;' http://192.168.deine.IP:Port/jsonrpc
 
 #--------DONE---------------
+#anderes hotword: Hermine Melissa Paulina  Marina Melina Pandora Sabine Sabrina Elisa  ||||  Miranda Amélie Evelyn Tamina Camilla Alpaka Eboni Lorretta Serena
+#nächster Film: curl -g --data-binary '{ "jsonrpc": "2.0", "method": "Player.GoTo", "id": 1, "params": { "playerid": 0, "to":"next"} }' --header 'content-type: application/json;' http://192.168.deine.IP:Port/jsonrpc
+#spulen #30 sek vorspulen
 #schalte den TV aus
 #Gute Nacht
 #autostart

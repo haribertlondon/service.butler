@@ -25,13 +25,12 @@ LISTEN_AUDIO_GAIN = 2.0
 HTTP_TIMEOUT = 20
 
 LISTEN_WRITEWAV = "speech.wav"
-LISTEN_HOTWORD = ["kodi", "jarvis", "corrin", "gaudi", "audi", "tony", "rowdy", "godi", "tonie", "toni", "gorie", "gori","(k|g|p|h)(au|o|ow)(l|d|r|rr|n)(i|y|ie)", "pauli", "howdy"]
+LISTEN_HOTWORD = ["Hermine", "kodi", "jarvis", "corrin", "gaudi", "audi", "tony", "rowdy", "godi", "tonie", "toni", "gorie", "gori","(k|g|p|h)(au|o|ow)(l|d|r|rr|n)(i|y|ie)", "pauli", "howdy"]
 LISTEN_GOOGLEKEY = ""
 LISTEN_LANGUAGE= 'de-DE' #["en-US",'de']
 HTTP_KODI_IP = 'localhost:8080'#'192.168.0.60:8080'
 LISTEN_SNOWBOY_RESOURCE = './resources/lib/snowboyrpi8/resources/common.res'
-LISTEN_SNOWBOY_MODELS = ['./resources/lib/snowboyrpi8/kodi.pmdl']
-LISTEN_SNOWBOY = ( LISTEN_SNOWBOY_RESOURCE , LISTEN_SNOWBOY_MODELS   )
+LISTEN_SNOWBOY_MODELS = ['./resources/lib/snowboyrpi8/hermine.pmdl']
 
 def setSensitivity(s):
     global LISTEN_SNOWBOY_SENSITIVITY

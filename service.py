@@ -27,10 +27,10 @@ import sys
 import ai
 import settings
 import texttospeech 
-import speech2     
+import speech   
          
          
-def detected_callback(response, audio):
+def detected_callback(response, _): #audio):
     try:
         result = ai.speechInterprete(response)
                 
@@ -50,5 +50,5 @@ def detected_callback(response, audio):
 if __name__ == "__main__":
     textspeech = texttospeech.init()
     
-    speech2.run(sensitivity=settings.LISTEN_SNOWBOY_SENSITIVITY, detected_callback = detected_callback, audio_gain = settings.LISTEN_AUDIO_GAIN)
+    speech.run(sensitivity=settings.LISTEN_SNOWBOY_SENSITIVITY, detected_callback = detected_callback, audio_gain = settings.LISTEN_AUDIO_GAIN)
     sys.exit()
