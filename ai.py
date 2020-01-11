@@ -126,7 +126,7 @@ def speechInterprete(guess):
         result = pluginKodi.kodiPause()
         result = pluginKodi.kodiStartScreensaver()
         
-    matches = re.findall("^Stelle Empfindlichkeit auf (.*)$", command, re.IGNORECASE)
+    matches = re.findall("^(?:Stelle |Setze )Empfindlichkeit auf (.*)$", command, re.IGNORECASE)
     if checkMatch(matches):
         result = settings.setSensitivity(matches[0])
         
@@ -134,7 +134,7 @@ def speechInterprete(guess):
     if checkMatch(matches):
         sys.exit()
         
-    matches = re.findall("^Mache ein Update$", command, re.IGNORECASE)
+    matches = re.findall("^(Mache |Mach )ein Update$", command, re.IGNORECASE)
     if checkMatch(matches):
         pluginUpdate.performUpdate()        
         

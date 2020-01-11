@@ -1,9 +1,9 @@
 #------TODO-------
-#git-update durch sprachbefehl
 #umlaute in der Google response: Öffne, evtl Python 2 Problem
 #Lautstärke-Regelung an Fernbedienung
 bei serien die komplette playlist reinladen und nicht nur die aktuelle episode
 Filme die schon angefangen sind, aber der letzten Position weiterspielen
+
 Spiel modern Family soll nicht nur Filme durchsuchen
 #bessere Filmsuche (sucht nach "contain" und filtert den besten Wert raus)
 
@@ -18,6 +18,7 @@ AdjustSilence während Snowboy State
 #geschichte erzählen
 
 #--------DONE---------------
+#git-update durch sprachbefehl
 #anderes hotword: Hermine Melissa Paulina  Marina Melina Pandora Sabine Sabrina Elisa  ||||  Miranda Amélie Evelyn Tamina Camilla Alpaka Eboni Lorretta Serena
 #nächster Film: curl -g --data-binary '{ "jsonrpc": "2.0", "method": "Player.GoTo", "id": 1, "params": { "playerid": 0, "to":"next"} }' --header 'content-type: application/json;' http://192.168.deine.IP:Port/jsonrpc
 #spulen #30 sek vorspulen
