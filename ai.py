@@ -48,16 +48,24 @@ def speechInterprete(guess):
         settings.LISTEN_HOTWORD = [settings.LISTEN_HOTWORD]
         
     hotword_found = False
-    for hotword in settings.LISTEN_HOTWORD:     
+    for hotword in settings.LISTEN_HOTWORD:
+        print("Checking for hotword ", hotword, command)     
         (command, n) = re.subn("^"+hotword,"", command, re.IGNORECASE) 
         if n>0:
+            print("Found hotword")
             command = command.strip() 
             hotword_found = True
+            break
+
+    if hotword_found and len(command)==0: #only hotword was detected. => Do not say anything
+        print("Hotword detected but no more text came. Aborting")
+        return {'result': False, 'message': 'Silence!'}
 
 
     if not hotword_found:
         matches = re.findall("^(Pause|Stop|Halt|Stopp|Spiel|Start|Öffne|Play|Radio|Was)", command, re.IGNORECASE) 
         if not matches:
+            print("No hotwords found and also no keywords")
             return {'result': False, 'message': 'Silence!'}
         else:
             print("Keyword not detected but found ", matches)
@@ -126,7 +134,7 @@ def speechInterprete(guess):
         result = pluginKodi.kodiPause()
         result = pluginKodi.kodiStartScreensaver()
         
-    matches = re.findall("^(?:Stelle |Setze )Empfindlichkeit auf (.*)$", command, re.IGNORECASE)
+    matches = re.findall("^(?:Stelle |Setze |Stell )Empfindlichkeit auf (.*)$", command, re.IGNORECASE)
     if checkMatch(matches):
         result = settings.setSensitivity(matches[0])
         

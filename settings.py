@@ -28,7 +28,7 @@ MAIL_SERVER_SETTINGS_FILE = '../mail.jpg'
 HTTP_TIMEOUT = 20
 
 LISTEN_WRITEWAV = "speech.wav"
-LISTEN_HOTWORD = ["Hermine", "kodi", "jarvis", "corrin", "gaudi", "audi", "tony", "rowdy", "godi", "tonie", "toni", "gorie", "gori","(k|g|p|h)(au|o|ow)(l|d|r|rr|n)(i|y|ie)", "pauli", "howdy"]
+LISTEN_HOTWORD = ["termin", "hermine", "termine", "kodi", "jarvis", "corrin", "gaudi", "audi", "tony", "rowdy", "godi", "tonie", "toni", "gorie", "gori","(k|g|p|h)(au|o|ow)(l|d|r|rr|n)(i|y|ie)", "pauli", "howdy"]
 LISTEN_GOOGLEKEY = ""
 LISTEN_LANGUAGE= 'de-DE' #["en-US",'de']
 HTTP_KODI_IP = 'localhost:8080'#'192.168.0.60:8080'
@@ -44,8 +44,10 @@ def setSensitivity(s):
             x = x / 100.0
         
         if x<1.0:
-            LISTEN_SNOWBOY_SENSITIVITY = x
+            LISTEN_SNOWBOY_SENSITIVITY = str(x)
+            print("Setting sensitivity to ", LISTEN_SNOWBOY_SENSITIVITY)
         else:
+            print("Not able to change sensitivity", s)
             raise Exception("Number not between 0 and 1")    
         return { 'result': True,  'message' : "OK"}
     except Exception as e:
