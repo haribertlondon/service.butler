@@ -48,9 +48,9 @@ def speechInterprete(guess):
         settings.LISTEN_HOTWORD = [settings.LISTEN_HOTWORD]
         
     hotword_found = False
-    for hotword in settings.LISTEN_HOTWORD:
+    for hotword in sorted(settings.LISTEN_HOTWORD, key=len, reverse = True): #needs to be sorted by string length. Otherwise "Termin" will be replace without "Termine"
         print("Checking for hotword ", hotword, command)     
-        (command, n) = re.subn(u"^"+hotword,"", command, re.IGNORECASE) 
+        (command, n) = re.subn(u"^"+hotword,"", command, flags = re.IGNORECASE) #re.sub seems not to support re.Ignorecase
         if n>0:
             print("Found hotword")
             command = command.strip() 
@@ -63,7 +63,7 @@ def speechInterprete(guess):
 
 
     if not hotword_found:
-        matches = re.findall(u"^(Pause|Stop|Halt|Stopp|Spiel|Start|Öffne|Play|Radio|Was)", command, re.IGNORECASE) 
+        matches = re.findall(u"^(Pause|Stop|Halt|Stop|Spiel|Start|Öffne|Play|Radio|Was|Spule|Mach|Was|Gute)", command, flags = re.IGNORECASE) 
         if not matches:
             print("No hotwords found and also no keywords")
             return {'result': False, 'message': 'Silence!'}
@@ -73,96 +73,96 @@ def speechInterprete(guess):
     a = pluginKodi.kodiShowMessage(guess["transcription"])
     print(a)
 
-    matches = re.findall(u"^(?:Echo).*", command, re.IGNORECASE)
+    matches = re.findall(u"^(?:Echo).*", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginEcho.echoEcho()
 
-    matches = re.findall(u"^(Pause|Break)", command, re.IGNORECASE)
+    matches = re.findall(u"^(Pause|Break)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPause()
 
-    matches = re.findall(u"^(Stop|Halt|Stopp)", command, re.IGNORECASE)
+    matches = re.findall(u"^(Stop|Halt|Stopp)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiStop()
 
-    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?Youtube(?: mit)? (?:dem|der|den|die|das)?(.*)", command, re.IGNORECASE)
+    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?Youtube(?: mit)? (?:dem|der|den|die|das)?(.*)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube(matches[0])
 
-    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?(die )?letzte Serie( weiter)?", command, re.IGNORECASE)
+    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?(die )?letzte Serie( weiter)?", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayLastTvShow()
 
-    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?(die )?(letzte )?Tagesschau", command, re.IGNORECASE)
+    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?(die )?(letzte )?Tagesschau", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayTagesschau('tagesschau')
 
-    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?(die )?(letzten |letzte )?Tagesthemen", command, re.IGNORECASE)
+    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?(die )?(letzten |letzte )?Tagesthemen", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayTagesschau('tagesthemen')
 
-    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?(?:Radio |Radiosender )?(SWR[ 0-9]+|RPR[ 0-9]+|Big[ ]*FM|Antenne[ ]*K.*|Deutschland[ ]*funk)", command, re.IGNORECASE)    
+    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?(?:Radio |Radiosender )?(SWR[ 0-9]+|RPR[ 0-9]+|Big[ ]*FM|Antenne[ ]*K.*|Deutschland[ ]*funk)", command, flags = re.IGNORECASE)    
     if checkMatch(matches):
         result = pluginKodi.kodiPlayRadio(matches[0])
 
-    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?(?:die Serie )?(.*) weiter", command, re.IGNORECASE)
+    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?(?:die Serie )?(.*) weiter", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayTVShowLastEpisodeByName(matches[0])
 
-    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )(.*)", command, re.IGNORECASE)
+    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )(.*)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
-        result = pluginKodi.kodiPlayMovie(matches[0])
+        result = pluginKodi.kodiPlayMovieOrSeries(matches[0])
 
-    matches = re.findall(u"^(?:Was läuft|Was läuft gerade|Info|Information)", command, re.IGNORECASE)
+    matches = re.findall(u"^(?:Was läuft|Was läuft gerade|Info|Information)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiGetCurrentPlaying()
 
-    matches = re.findall(u"^(?:Play|Los|Weiter|Continue|Spiele weiter|Spiel weiter)( den Film)?$", command, re.IGNORECASE)
+    matches = re.findall(u"^(?:Play|Los|Weiter|Continue|Spiele weiter|Spiel weiter)( den Film)?$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlay()
 
-    matches = re.findall(u"^(Springe |Gehe )?(zu )?(Nächste |Nächster |Kommender |Folgender |Folgende |Kommende )(Film|Folge|Episode)$", command, re.IGNORECASE)
+    matches = re.findall(u"^(Springe |Gehe )?(zu )?(Nächste |Nächster |Kommender |Folgender |Folgende |Kommende )(Film|Folge|Episode)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiNext()
 
-    matches = re.findall(u"^(Springe |Gehe )?(zu )?(letzter |Letzte |verherigen |vorigen )(Film|Folge|Episode)$", command, re.IGNORECASE)
+    matches = re.findall(u"^(Springe |Gehe )?(zu )?(letzter |Letzte |verherigen |vorigen )(Film|Folge|Episode)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPrevious()
     
-    matches = re.findall(u"^(Gute Nacht|Schlaf gut|Geh schlafen|Auf wiedersehen|Tschüss|Ruhe|Halts maul)$", command, re.IGNORECASE)
+    matches = re.findall(u"^(Gute Nacht|Schlaf gut|Geh schlafen|Auf wiedersehen|Tschüss|Ruhe|Halts maul)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPause()
         result = pluginKodi.kodiStartScreensaver()
         
-    matches = re.findall(u"^(?:Stelle |Setze |Stell )Empfindlichkeit auf (.*)$", command, re.IGNORECASE)
+    matches = re.findall(u"^(?:Stelle |Setze |Stell )Empfindlichkeit auf (.*)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = settings.setSensitivity(matches[0])
         
-    matches = re.findall(u"^Beende dich selbst$", command, re.IGNORECASE)
+    matches = re.findall(u"^Beende dich( selbst)?$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         sys.exit()
         
-    matches = re.findall(u"^(Mache |Mach )ein Update$", command, re.IGNORECASE)
+    matches = re.findall(u"^(Mache |Mach |Führe )ein Update( durch| aus)?$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         pluginUpdate.performUpdate()        
         
-    matches = re.findall(u"^(?:Schicke |Sende )?(?:Mail |Erinnerung |eMail |Erinnere mich )(?:an |mit )?(.*)$", command, re.IGNORECASE)
+    matches = re.findall(u"^(?:Schicke |Sende )?(?:Mail |Erinnerung |eMail |Erinnere mich )(?:an |mit )?(.*)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginMail.sendMail(matches[0], "", settings.MAIL_SERVER_SETTINGS_FILE)
         
-    matches = re.findall(u"^Spule vor$", command, re.IGNORECASE)
+    matches = re.findall(u"^Spule vor$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiSeek(+30)
         
-    matches = re.findall(u"^Spule zurück$", command, re.IGNORECASE)
+    matches = re.findall(u"^Spule zurück$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiSeek(-30)
 
-    matches = re.findall(u"^(?:Mache |Mach )?Leiser$", command, re.IGNORECASE)
+    matches = re.findall(u"^(?:Mache |Mach )?Leiser$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiVolumeDown()
 
-    matches = re.findall(u"^(?:Mache |Mach )?Lauter$", command, re.IGNORECASE) 
+    matches = re.findall(u"^(?:Mache |Mach )?Lauter$", command, flags = re.IGNORECASE) 
     if checkMatch(matches):
         result = pluginKodi.kodiVolumeUp()
 
@@ -179,5 +179,6 @@ if __name__ == "__main__":
     #guess =  {"error": None, "transcription": "Kodi Youtube mit Trailer Deutsch" }
     #guess =  {"error": None, "transcription": "Kodi Echo Hallo Kristina" }
     #guess =  {"error": None, "transcription": "Kodi Spiele SWR3" }
-    guess =  {"error": None, "transcription": "Kodi Leiser" }
+    #guess =  {"error": None, "transcription": "Kodi Leiser" }
+    guess =  {"error": None, "transcription": "Termine Starte Modern Family" }
     speechInterprete(guess)

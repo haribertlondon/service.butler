@@ -1,12 +1,8 @@
 #------TODO-------
-#umlaute in der Google response: Öffne, evtl Python 2 Problem
+#bessere Filmsuche (sucht aktuell nach "contain" und filtert den besten Wert raus)
+#bei Filme die komplette playlist reinladen und nicht nur die aktuelle episode
 #Lautstärke-Regelung an Fernbedienung
-bei serien die komplette playlist reinladen und nicht nur die aktuelle episode
-Filme die schon angefangen sind, aber der letzten Position weiterspielen
-
-Spiel modern Family soll nicht nur Filme durchsuchen
-#bessere Filmsuche (sucht nach "contain" und filtert den besten Wert raus)
-
+#screensaver "Schlaf gut" does not work properly?
 #witze erzählen
 #amazon smart plug unterstützung
 #als kodi plugin laufen lassen (dann kann man besser beenden, starten)
@@ -18,12 +14,15 @@ AdjustSilence während Snowboy State
 #geschichte erzählen
 
 #--------DONE---------------
+bei serien die komplette playlist reinladen und nicht nur die aktuelle episode
+Filme/Episoden die schon angefangen sind, aber der letzten Position weiterspielen
+"Spiel modern Family" soll nicht nur Filme durchsuchen
+#umlaute in der Google response: Öffne, evtl Python 2 Problem
 #git-update durch sprachbefehl
 #anderes hotword: Hermine Melissa Paulina  Marina Melina Pandora Sabine Sabrina Elisa  ||||  Miranda Amélie Evelyn Tamina Camilla Alpaka Eboni Lorretta Serena
 #nächster Film: curl -g --data-binary '{ "jsonrpc": "2.0", "method": "Player.GoTo", "id": 1, "params": { "playerid": 0, "to":"next"} }' --header 'content-type: application/json;' http://192.168.deine.IP:Port/jsonrpc
 #spulen #30 sek vorspulen
-#schalte den TV aus
-#Gute Nacht
+#Gute Nacht: schalte den TV aus
 #autostart
 #CEC im Wohnzimmer fixen
 #Setze snowboy sensitivity 
@@ -35,11 +34,7 @@ AdjustSilence während Snowboy State
 Manchmal wird keyword von Google nicht erkannt. Dann nach Spiele, Öffne etc suchen
 #spiel radio
 Spiele letzte Tagessachu und nicht die letzte um 20-15
-   <favourite name="Deutschlandfunk" thumb="http://static.rad.io/images/broadcasts/25/3f/1521/2/t100.png">PlayMedia(&quot;plugin://plugin.audio.radio_de/station/1521&quot;)</favourite>
-    <favourite name="bigFM Saarland" thumb="http://static.rad.io/images/broadcasts/b2/65/1445/2/t100.png">PlayMedia(&quot;plugin://plugin.audio.radio_de/station/1445&quot;)</favourite>
-    <favourite name="ANTENNE KAISERSLAUTERN 96.9" thumb="http://static.rad.io/images/broadcasts/51/fd/8367/t100.png">PlayMedia(&quot;plugin://plugin.audio.radio_de/station/8367&quot;)</favourite>
-    <favourite name="RPR1.Kaiserslautern" thumb="http://static.rad.io/images/broadcasts/e0/53/107229/3/t100.png">PlayMedia(&quot;plugin://plugin.audio.radio_de/station/107229&quot;)</favourite>
-    <favourite name="SWR2" thumb="http://static.rad.io/images/broadcasts/cb/2c/2414/3/t100.png">PlayMedia(&quot;plugin://plugin.audio.radio_de/station/2414&quot;)</favourite>
+#Radiosender
 #plugins ermoeglichen
 #echo Befehl implementieren zum Test der Klangqualität
 #youtube support: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=30&order=relevance&q=trailer%2Bgerman&key=AIzaSyDCgSFYMKR4IJsIM-BkZXMuqaVHkqRjXzI
