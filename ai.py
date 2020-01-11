@@ -5,6 +5,7 @@ import settings
 import pluginKodi
 import pluginEcho
 import pluginMail
+import pluginUpdate
 
 def checkMatch(match):    
     global matchCounter
@@ -61,7 +62,7 @@ def speechInterprete(guess):
         else:
             print("Keyword not detected but found ", matches)
 
-    a = pluginKodi.postKodiRequest("showmessage", "", guess["transcription"])
+    a = pluginKodi.kodiShowMessage(guess["transcription"])
     print(a)
 
     matches = re.findall("^(?:Echo).*", command, re.IGNORECASE)
@@ -132,6 +133,10 @@ def speechInterprete(guess):
     matches = re.findall("^Beende dich selbst$", command, re.IGNORECASE)
     if checkMatch(matches):
         sys.exit()
+        
+    matches = re.findall("^Mache ein Update$", command, re.IGNORECASE)
+    if checkMatch(matches):
+        pluginUpdate.performUpdate()        
         
     matches = re.findall("^(?:Schicke |Sende )?(?:Mail |Erinnerung |eMail |Erinnere mich )(?:an |mit )?(.*)$", command, re.IGNORECASE)
     if checkMatch(matches):

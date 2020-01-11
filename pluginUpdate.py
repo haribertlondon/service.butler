@@ -1,7 +1,10 @@
 import git #pip install GitPython
+import pluginKodi
+import os
+import time
 
 
-def update():
+def gitupdate():
     repo = git.Repo('.')
     msg1 = repo.git.reset('--hard','origin/master')
     # blast any current changes
@@ -24,5 +27,16 @@ def update():
     
     print("Updated")
     
+def performUpdate():
+    a = pluginKodi.kodiShowMessage("Starting Update from server...")
+    print(a)
+    gitupdate()
+    time.sleep(2)
+    a = pluginKodi.kodiShowMessage("Rebooting system in 10 sec")
+    print(a)
+    time.sleep(10)
+    print("Rebooting system")
+    os.system('systemctl reboot -i')
+    
 if __name__ == "__main__":
-    update()
+    performUpdate()
