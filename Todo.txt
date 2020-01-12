@@ -1,6 +1,9 @@
 #------TODO-------
 Snowboy alternative mit Sphinx
 snowboy buffer length: buffer vs data - Reicht Länge?
+do not reboot after update but just restart script
+Filme-Liste cachen, dass man nicht so lange warten muss
+Zuerst nach Serien dann nach Filme suchen um Zeit zu sparen
 dynamischer Filter
 screensaver geht nicht
 #bei FILME die komplette playlist reinladen und nicht nur die aktuelle episode

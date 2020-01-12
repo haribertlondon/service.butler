@@ -7,9 +7,11 @@ import time
 import math
 import audioop
 import sys
+import mysphinx
 import settings
 import pluginEcho
 import pluginKodi
+
 try:    
     import speech_recognition as sr #@UnusedImport #check if package is installed
 except:
@@ -29,7 +31,6 @@ class RingBuffer(object):
         self._buf.extend(data)
 
     def get(self):
-#        tmp = bytearray(self._buf)
         if (sys.version_info > (3, 0)):
             tmp = bytearray(self._buf)
         else:
@@ -76,7 +77,10 @@ class HotwordDetector(object):
         self.seconds_per_buffer = float(self.chunksize) / self.sample_rate
         self.audio_format = pyaudio.paInt16        
         self.ring_buffer = RingBuffer( self.num_channels * self.sample_rate * 5)
-        self.audio = pyaudio.PyAudio()        
+        self.audio = pyaudio.PyAudio()
+        
+        self.sphinxrecognizer = mysphinx.MyRecognizer() #sr.Recognizer()  
+        self.sphinxrecognizer.prepare_sphinx2(language = "en-GIT", keyword_entries = settings.LISTEN_SPHINX_KEYWORDS) 
 
         for mic in enumerate(sr.Microphone.list_microphone_names()):
             print(mic)  
@@ -124,7 +128,31 @@ class HotwordDetector(object):
                 else:
                     return ("phrase", None) # wait for more pause at the end of phrase
         else:
-            return ("phrase", None) #still waiting for min time           
+            return ("phrase", None) #still waiting for min time
+        
+    def hotword_sphinx(self, _):
+        frame_data = b"".join(self.frames)
+        
+        #dur = len(frame_data)/self.sample_rate/self.sample_width
+        #print(dur)
+        #targetDuration = 1.5
+        #newLength = (int)(len(self.frames)*targetDuration/dur)
+        #if newLength < len(self.frames):            
+        #    self.frames = self.frames[-newLength:]
+        #    frame_data = b"".join(self.frames)
+                       
+        audio = sr.AudioData(frame_data, self.sample_rate, self.sample_width)
+        
+        try:       
+            a = self.sphinxrecognizer.recognize_sphinx2(audio_data = audio, onlykeywords = True)                    
+        except Exception as e:                        
+            print("Exception ", e)
+            a = ""          
+        
+        if len(a)>0:
+            return 1
+        else:
+            return 0
         
     def state_snowboy(self, data, energy):
             
@@ -135,18 +163,22 @@ class HotwordDetector(object):
         self.frames.append(data)  
         
         try:
+            if settings.LISTEN_SPHINX_ACTIVE:
+                raise Exception("We should use sphinx")  
+                      
             ans = self.detector.RunDetection(data)    #TODO: ++++++++++++++++++++++maybe not data but whole buffer?++++++++++++++++++++++                        
         except Exception as e:
             if self.elapsed_time == 0:
                 print("Failed to run snowboy. Wait for start of phrase by energy", e)                
             
             self.updateTimes(energy)
-            if self.pause_time > 1.0: #throw phrase away if pause was too long
-                self.phrase_time = 0
-            if self.phrase_time > 0.25:                
-                ans = 1
-            else: 
-                ans = 0
+            #if self.pause_time > 1.0: #throw phrase away if pause was too long
+            #    self.phrase_time = 0
+            #if self.phrase_time > 0.25:                
+            #    ans = 1
+            #else: 
+            #    ans = 0
+            ans = self.hotword_sphinx(data)
         #dynamic adjustment
         if settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU>0:
             self.applyLowPassFilter(energy, settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU) #tau = 4sec => reach 4*6=24sec
@@ -288,7 +320,7 @@ class HotwordDetector(object):
         self.audio.terminate()
 
 def run(sensitivity=0.5, detected_callback = None, audio_gain = 1.0):    
-    detector = HotwordDetector(decoder_model = settings.LISTEN_SNOWBOY_MODELS, sensitivity=sensitivity, audio_gain = audio_gain)
+    detector = HotwordDetector(decoder_model = settings.LISTEN_SNOWBOY_MODELS, sensitivity=sensitivity, audio_gain = audio_gain)    
     print('Listening... ')    
     detector.start(detected_callback=detected_callback)
     detector.terminate()
