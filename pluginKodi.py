@@ -66,7 +66,7 @@ def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
     elif command == 'previous':
         post = '{ "jsonrpc": "2.0", "method": "Player.GoTo", "id": 1, "params": { "playerid": '+str(playerID)+', "to":"previous"} }'
     elif command == 'seek':
-        post = '{"jsonrpc": "2.0", "method": "Player.Seek", "id": 1, "params": { "playerid": '+str(playerID)+', "value": { "seconds": '+searchStr+' } }}'
+        post = '{"jsonrpc": "2.0", "method": "Player.Seek", "id": 1, "params": { "playerid": '+str(playerID)+', "value": { "seconds": '+str(searchStr)+' } }}'
     elif command == 'clearPlaylist' :    
         post = '{"jsonrpc": "2.0", "id": 0, "method": "Playlist.Clear", "params": {"playlistid": '+str(playlistID)+'}}'
     elif command == 'getPlaylist':

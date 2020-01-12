@@ -49,14 +49,13 @@ class MyRecognizer(sr.Recognizer):
         config.set_string("-logfn", os.devnull)  # disable logging (logging causes unwanted output in terminal)
         self.decoder = pocketsphinx.Decoder(config)
         
-        with sr.PortableNamedTemporaryFile("w") as f:
-                # generate a keywords file - Sphinx documentation recommendeds sensitivities between 1e-50 and 1e-5
-                f.writelines("{} /1e{}/\n".format(keyword, 100 * sensitivity - 110) for keyword, sensitivity in keyword_entries)
-                f.flush()
+        with open("sphinx.txt", "w") as f:
+            # generate a keywords file - Sphinx documentation recommendeds sensitivities between 1e-50 and 1e-5
+            f.writelines("{} /{}/\n".format(keyword, sensitivity) for keyword, sensitivity in keyword_entries)
 
-                # perform the speech recognition with the keywords file (this is inside the context manager so the file isn;t deleted until we're done)
-                self.decoder.set_kws("keywords", f.name)
-                self.decoder.set_search("keywords")
+        # perform the speech recognition with the keywords file (this is inside the context manager so the file isn;t deleted until we're done)
+        self.decoder.set_kws("keywords", "sphinx.txt")
+        self.decoder.set_search("keywords")
         
         return 
 

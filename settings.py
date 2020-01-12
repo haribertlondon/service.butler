@@ -22,8 +22,10 @@ LISTEN_SNOWBOY_SENSITIVITY = "0.69" # was "0.4" in the example
 LISTEN_VERBOSE_TIMEOUT = 3.0
 LISTEN_AUDIO_GAIN = 1.3
 
-LISTEN_SPHINX_ACTIVE = False
-LISTEN_SPHINX_KEYWORDS = [("parker", 1.0), ("kodi", 1.0), ("hermine", 1.0)]
+LISTEN_SPHINX_ACTIVE = True
+x=1e-7
+#LISTEN_SPHINX_KEYWORDS = [("parker", x), ("kodi", x), ("hermine", x)]
+LISTEN_SPHINX_KEYWORDS = [("kodi", x)]
 
 
 MAIL_SERVER_SETTINGS_FILE = '../mail.jpg'

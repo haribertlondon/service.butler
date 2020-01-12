@@ -133,13 +133,13 @@ class HotwordDetector(object):
     def hotword_sphinx(self, _):
         frame_data = b"".join(self.frames)
         
-        #dur = len(frame_data)/self.sample_rate/self.sample_width
+        dur = len(frame_data)*1.0000001/self.sample_rate/self.sample_width
         #print(dur)
-        #targetDuration = 1.5
-        #newLength = (int)(len(self.frames)*targetDuration/dur)
-        #if newLength < len(self.frames):            
-        #    self.frames = self.frames[-newLength:]
-        #    frame_data = b"".join(self.frames)
+        targetDuration = 0.8
+        newLength = (int)(len(self.frames)*targetDuration/dur)
+        if newLength < len(self.frames):            
+            self.frames = self.frames[-newLength:]
+            frame_data = b"".join(self.frames)
                        
         audio = sr.AudioData(frame_data, self.sample_rate, self.sample_width)
         
@@ -150,15 +150,16 @@ class HotwordDetector(object):
             a = ""          
         
         if len(a)>0:
+            print("Detected words", a)
             return 1
         else:
             return 0
         
     def state_snowboy(self, data, energy):
             
-        minN = (int)(1.5/self.seconds_per_buffer) #keeps some time 0.5sec before the phrase
-        if len(self.frames) > minN:
-            self.frames = self.frames[-minN:] #keep last N frames                    
+        #minN = (int)(0.4/self.seconds_per_buffer) #keeps some time 0.5sec before the phrase
+        #if len(self.frames) > minN:
+        #    self.frames = self.frames[-minN:] #keep last N frames                    
         
         self.frames.append(data)  
         

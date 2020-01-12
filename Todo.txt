@@ -1,5 +1,6 @@
 #------TODO-------
 Snowboy alternative mit Sphinx
+Spiele letzten Film weiter
 snowboy buffer length: buffer vs data - Reicht Länge?
 do not reboot after update but just restart script
 Filme-Liste cachen, dass man nicht so lange warten muss
