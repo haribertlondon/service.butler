@@ -1,27 +1,39 @@
 #------TODO-------
-Snowboy alternative mit Sphinx
-Spiele letzten Film weiter
-snowboy buffer length: buffer vs data - Reicht Länge?
-do not reboot after update but just restart script
-Filme-Liste cachen, dass man nicht so lange warten muss
+TV: #Lautstärke-Regelung an Fernbedienung
+TV: Sound-Probleme
+
+#screensaver "Schlaf gut" does not work properly?
+LED anschließen
+Deutsche Aussprache in Sphinx statt die Englische
+Notification "Listening" weg, wenn LED oder sonst was da
+
 Zuerst nach Serien dann nach Filme suchen um Zeit zu sparen
-Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man das in Thread auslagern?
-dynamischer Filter
-screensaver geht nicht
-#bei FILME die komplette playlist reinladen und nicht nur die aktuelle episode
+Spiele letzten Film weiter
+"Spiele Trailer" statt Youtube Trailer Deutsch
+Sag was nettes erweitern 
+
 Spiele einen schwedischen/Deutschen Film
+Spiele eine Komödie/Horror/Thriller
 Play random unwatched episode of TV show
 Play random unwatched movie
-Play random movie from a specific genre
+
+Natürlichere Sprachausgabe 
+Sprachausgabe nicht so verzögern 
+
+snowboy buffer length: buffer vs data - Reicht Länge?
+Snowboy und Sphinx kombinieren
+Pausen abschneiden vor dem reingeben in Sphinx und Snowboy => weniger auslastung
+
+Filme-Liste cachen, dass man nicht so lange warten muss
+Toleranz für Serien/Film-Suche optimieren (standard ist 0.6)
+
+do not reboot after update but just restart script
+Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man das in Thread auslagern?
 "Sende Bug"
-Spiele eine Komödie/Horror/Thriller
-#Lautstärke-Regelung an Fernbedienung
 #bessere Filmsuche IV = 4 = vier = Four
-#screensaver "Schlaf gut" does not work properly?
+
 #witze erzählen
-#amazon smart plug unterstützung
 #als kodi plugin laufen lassen (dann kann man besser beenden, starten)
-AdjustSilence während Snowboy State
 #Ringpuffer für Aufnahmen
 #mehrere keywords fuer kodi, tannenbaum, chefkoch
 #wecker 
@@ -29,6 +41,11 @@ AdjustSilence während Snowboy State
 #geschichte erzählen
 
 #--------DONE---------------
+#AdjustSilence während Snowboy State
+#amazon smart plug unterstützung - Geht nicht
+Snowboy alternative mit Sphinx
+#bei FILME die komplette playlist reinladen und nicht nur die aktuelle episode
+dynamischer Filter
 Mailformat ist aktuell für Betreff: (u'eine ', u'erinnerung')
 "Spiel[^ ]*"
 #bessere Filmsuche (sucht aktuell nach "contain" und filtert den besten Wert raus)
