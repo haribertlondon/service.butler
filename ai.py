@@ -81,35 +81,35 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPause()
 
-    matches = re.findall(u"^(Stop|Halt|Stopp)", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(Stop[a-z]*|Halt[a-z]*|Stop[a-z]*)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiStop()
 
-    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?Youtube(?: mit)? (?:dem|der|den|die|das)?(.*)", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Youtube(?: mit)? (?:dem|der|den|die|das)?(.*)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube(matches[0])
 
-    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?(die )?letzte Serie( weiter)?", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?letzte Serie( weiter)?", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayLastTvShow()
 
-    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?(die )?(letzte )?Tagesschau", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?(letzte )?Tagesschau", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayTagesschau('tagesschau')
 
-    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?(die )?(letzten |letzte )?Tagesthemen", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?(letzten |letzte )?Tagesthemen", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayTagesschau('tagesthemen')
 
-    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?(?:Radio |Radiosender )?(SWR[ 0-9]+|RPR[ 0-9]+|Big[ ]*FM|Antenne[ ]*K.*|Deutschland[ ]*funk)", command, flags = re.IGNORECASE)    
+    matches = re.findall(u"^(?:Play |Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(?:Radio |Radiosender )?(SWR[ 0-9]+|RPR[ 0-9]+|Big[ ]*FM|Antenne[ ]*K.*|Deutschland[ ]*funk)", command, flags = re.IGNORECASE)    
     if checkMatch(matches):
         result = pluginKodi.kodiPlayRadio(matches[0])
 
-    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )?(?:die Serie )?(.*) weiter", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(?:die Serie )?(.*) weiter", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayTVShowLastEpisodeByName(matches[0])
 
-    matches = re.findall(u"^(?:Spiele |Spiel |Spielt |Play |Starte |Öffne |Öffnet |Start )(.*)", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(.*)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayMovieOrSeries(matches[0])
 
@@ -117,52 +117,52 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiGetCurrentPlaying()
 
-    matches = re.findall(u"^(?:Play|Los|Weiter|Continue|Spiele weiter|Spiel weiter)( den Film)?$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play|Los|Weiter|Continue|Spiel[a-z]* weiter)[ ]*(den Film)?$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlay()
 
-    matches = re.findall(u"^(Springe |Gehe )?(zu )?(Nächste |Nächster |Kommender |Folgender |Folgende |Kommende )(Film|Folge|Episode)$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(Spring[a-z]* |Geh[a-z]* )?(zu )?(Nächste[a-z]* |Kommend[a-z]* |Folgend[a-z]* )(Film|Folge|Episode)?$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiNext()
 
-    matches = re.findall(u"^(Springe |Gehe )?(zu )?(letzter |Letzte |vorherigen |vorigen |vorheriger |vorherige )(Film|Folge|Episode)$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(Spring[a-z]* |Geh[a-z]* )?(zu )?(letzter |Letzte |vorherigen |vorigen |vorheriger |vorherige )(Film|Folge|Episode)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPrevious()
     
-    matches = re.findall(u"^(Gute Nacht|Schlaf gut|Geschlafen|Geh schlafen|Auf wiedersehen|Tschüss|Ruhe|Halts maul)$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(Gut[a-z]* Nacht|Schlaf[a-z]* gut|Geschlafen|Geh[a-z]* schlafen|Auf wiedersehen|Tschüss|Ruhe|Halts maul|Klappe)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPause()
         result = pluginKodi.kodiStartScreensaver()
         
-    matches = re.findall(u"^(?:Stelle |Setze |Stell )Empfindlichkeit auf (.*)$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Stell[a-z]* |Setz[a-z]* )Empfindlichkeit auf (.*)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = settings.setSensitivity(matches[0])
         
-    matches = re.findall(u"^Beende dich( selbst)?$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^Beende[a-z]* dich( selbst)?$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         sys.exit()
         
-    matches = re.findall(u"^(Mache |Mach |Führe )ein Update( durch| aus)?$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(Mach[a-z]* |Führ[a-z]* )ein Update( durch| aus)?$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         pluginUpdate.performUpdate()        
         
-    matches = re.findall(u"^(?:Schicke |Sende )?(eine )?(?:Mail |Erinnerung |eMail |Erinnere mich )(?:an |mit )?(.*)$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Schick[a-z]* |Send[a-z]* )?(eine )?(?:Mail |Erinnerung |eMail |Erinnere mich )(?:an |mit )?(.*)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginMail.sendMail(matches[0], "", settings.MAIL_SERVER_SETTINGS_FILE)
         
-    matches = re.findall(u"^(Spule |Spul |schwul )vor$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(Spul[a-z]* |schwul[a-z]* )vor$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiSeek(+30)
         
-    matches = re.findall(u"^(Spule |Spul |Schwul )zurück$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(Spul[a-z]* |Schwul[a-z]* )zurück$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiSeek(-30)
 
-    matches = re.findall(u"^(?:Mache |Mach )?Leiser$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Mach[a-z]* |Stell[a-z]* )?Leiser$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiVolumeDown()
 
-    matches = re.findall(u"^(?:Mache |Mach )?Lauter$", command, flags = re.IGNORECASE) 
+    matches = re.findall(u"^(?:Mach[a-z]* |Stell[a-z]* )?Lauter$", command, flags = re.IGNORECASE) 
     if checkMatch(matches):
         result = pluginKodi.kodiVolumeUp()
 
@@ -180,6 +180,6 @@ if __name__ == "__main__":
     #guess =  {"error": None, "transcription": "Kodi Echo Hallo Kristina" }
     #guess =  {"error": None, "transcription": "Kodi Spiele SWR3" }
     #guess =  {"error": None, "transcription": "Kodi Leiser" }
-    guess =  {"error": None, "transcription": "Termine Starte zzzzzzzzzzzzzzzzzzzzzzzzz" }
+    guess =  {"error": None, "transcription": "Termine Stoppe" }
     a = speechInterprete(guess)
     print(a)

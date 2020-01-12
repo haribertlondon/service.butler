@@ -1,4 +1,7 @@
 #------TODO-------
+Snowboy alternative
+snowboy buffer length: buffer vs data - Reicht Länge?
+Mailformat ist aktuell für Betreff: (u'eine ', u'erinnerung')
 dynamischer Filter
 screensaver geht nicht
 #bei FILME die komplette playlist reinladen und nicht nur die aktuelle episode
@@ -6,6 +9,7 @@ Spiele einen schwedischen/Deutschen Film
 Play random unwatched episode of TV show
 Play random unwatched movie
 Play random movie from a specific genre
+"Sende Bug"
 Spiele eine Komödie/Horror/Thriller
 #Lautstärke-Regelung an Fernbedienung
 #bessere Filmsuche IV = 4 = vier = Four
@@ -21,6 +25,7 @@ AdjustSilence während Snowboy State
 #geschichte erzählen
 
 #--------DONE---------------
+"Spiel[^ ]*"
 #bessere Filmsuche (sucht aktuell nach "contain" und filtert den besten Wert raus)
 bei serien die komplette playlist reinladen und nicht nur die aktuelle episode
 Filme/Episoden die schon angefangen sind, aber der letzten Position weiterspielen
