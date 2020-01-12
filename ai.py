@@ -128,6 +128,10 @@ def speechInterprete(guess):
     matches = re.findall(u"^(Spring[a-z]* |Geh[a-z]* )?(zu )?(letzter |Letzte |vorherigen |vorigen |vorheriger |vorherige )(Film|Folge|Episode)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPrevious()
+        
+    matches = re.findall(u"^Sag[a-z]* was Nettes( zu mir)?$", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = {'result': True, 'message': 'Hallo Lieber Benedikt. Du hast heute sehr sehr lecker gekocht.'}
     
     matches = re.findall(u"^(Gut[a-z]* Nacht|Schlaf[a-z]* gut|Geschlafen|Geh[a-z]* schlafen|Auf wiedersehen|Tschüss|Ruhe|Halts maul|Klappe)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):

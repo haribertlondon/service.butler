@@ -7,7 +7,7 @@ except:
     import resources.lib.speech_recognition as sr #@Reimport #if not, use the provides ones
     
     
- # import the PocketSphinx speech recognition module
+# import the PocketSphinx speech recognition module
 try:
     from pocketsphinx import pocketsphinx
 
