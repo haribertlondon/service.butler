@@ -146,7 +146,7 @@ def speechInterprete(guess):
     if checkMatch(matches):
         pluginUpdate.performUpdate()        
         
-    matches = re.findall(u"^(?:Schick[a-z]* |Send[a-z]* )?(eine )?(?:Mail |Erinnerung |eMail |Erinnere mich )(?:an |mit )?(.*)$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Schick[a-z]* |Send[a-z]* )?(?:eine )?(?:Mail |Erinnerung |eMail |Erinnere mich )(?:an |mit )?(.*)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginMail.sendMail(matches[0], "", settings.MAIL_SERVER_SETTINGS_FILE)
         

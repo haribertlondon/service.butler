@@ -1,7 +1,6 @@
 #------TODO-------
-Snowboy alternative
+Snowboy alternative mit Sphinx
 snowboy buffer length: buffer vs data - Reicht Länge?
-Mailformat ist aktuell für Betreff: (u'eine ', u'erinnerung')
 dynamischer Filter
 screensaver geht nicht
 #bei FILME die komplette playlist reinladen und nicht nur die aktuelle episode
@@ -25,6 +24,7 @@ AdjustSilence während Snowboy State
 #geschichte erzählen
 
 #--------DONE---------------
+Mailformat ist aktuell für Betreff: (u'eine ', u'erinnerung')
 "Spiel[^ ]*"
 #bessere Filmsuche (sucht aktuell nach "contain" und filtert den besten Wert raus)
 bei serien die komplette playlist reinladen und nicht nur die aktuelle episode
