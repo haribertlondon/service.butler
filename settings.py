@@ -8,8 +8,8 @@ LISTEN_MIC_INDEX = None
 
 LISTEN_TIMEOUT = None
 LISTEN_PHRASE_TOTALTIMEOUT = 5.0 #makes sense with snowboy hotword detection
-LISTEN_PHRASE_PUREPHRASETIME = 0.09 #short expression, like for "Play"
-LISTEN_PHRASE_PAUSE_THRESHOLD = 0.8 #pause after phrase
+LISTEN_PHRASE_PUREPHRASETIME = 0.65 #short expression, like for "Play"
+LISTEN_PHRASE_PAUSE_THRESHOLD = 1.0 #pause after phrase
 LISTEN_PHRASE_MIN_TIME = LISTEN_PHRASE_PUREPHRASETIME + LISTEN_PHRASE_PAUSE_THRESHOLD
 
 LISTEN_ADJUSTSILENCE_DURATION = 1.0
@@ -18,12 +18,12 @@ LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_FAST_TAU = 0.8 #seconds 0.8sec was t
 LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU = 15 #seconds 
 
 LISTEN_ENERGY_THRESHOLD = 300 #will be modified dynamically. This is the start value
-LISTEN_SNOWBOY_SENSITIVITY = "0.69" # was "0.4" in the example
+LISTEN_SNOWBOY_SENSITIVITY = "0.6" # was "0.4" in the example
 LISTEN_VERBOSE_TIMEOUT = 3.0
 LISTEN_AUDIO_GAIN = 1.3
-
-LISTEN_SPHINX_ACTIVE = True
-x=1e-7
+LISTEN_HOTWORD_METHODS = 3 #1=snowboy 2=sphinx 3=both
+LISTEN_HOTWORD_DURATION = 0.8
+x=1e-6
 #LISTEN_SPHINX_KEYWORDS = [("parker", x), ("kodi", x), ("hermine", x)]
 LISTEN_SPHINX_KEYWORDS = [("kodi", x)]
 
@@ -38,7 +38,7 @@ LISTEN_GOOGLEKEY = ""
 LISTEN_LANGUAGE= 'de-DE' #["en-US",'de']
 HTTP_KODI_IP = 'localhost:8080'#'192.168.0.60:8080'
 LISTEN_SNOWBOY_RESOURCE = './resources/lib/snowboyrpi8/resources/common.res'
-LISTEN_SNOWBOY_MODELS = ['./resources/lib/snowboyrpi8/hermine.pmdl']
+LISTEN_SNOWBOY_MODELS = ['./resources/lib/snowboyrpi8/kodi.pmdl']
 
 def setSensitivity(s):
     global LISTEN_SNOWBOY_SENSITIVITY
@@ -68,7 +68,7 @@ def hasSnowboy():
     return s != "Ankermann"
 
 def isDebug():
-    return True or socket.gethostname() == "Ankermann"
+    return socket.gethostname() == "Ankermann"
 
 try:
     import xbmcaddon    

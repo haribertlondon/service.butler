@@ -27,7 +27,8 @@ import sys
 import ai
 import settings
 import texttospeech 
-import speech   
+import speech
+import pluginKodi
          
          
 def detected_callback(response, _): #audio):
@@ -46,9 +47,13 @@ def detected_callback(response, _): #audio):
     
     except Exception as e:
         print("Fatal error in ai.callback: ", e)
+        
+def listening_callback():
+    #pluginKodi.kodiShowMessage("Listening...")
+    print("Listening....")
 
 if __name__ == "__main__":
     textspeech = texttospeech.init()
     
-    speech.run(sensitivity=settings.LISTEN_SNOWBOY_SENSITIVITY, detected_callback = detected_callback, audio_gain = settings.LISTEN_AUDIO_GAIN)
+    speech.run(sensitivity=settings.LISTEN_SNOWBOY_SENSITIVITY, detected_callback = detected_callback, audio_gain = settings.LISTEN_AUDIO_GAIN, listening_callback=listening_callback)
     sys.exit()

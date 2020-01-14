@@ -1,15 +1,16 @@
 #------TODO-------
 TV: #Lautstärke-Regelung an Fernbedienung
 TV: Sound-Probleme
-
+Puffer glattziehen
 #screensaver "Schlaf gut" does not work properly?
 LED anschließen
 Deutsche Aussprache in Sphinx statt die Englische
 Notification "Listening" weg, wenn LED oder sonst was da
 
 Zuerst nach Serien dann nach Filme suchen um Zeit zu sparen
-Spiele letzten Film weiter
+Spiele letzten Film (weiter)
 "Spiele Trailer" statt Youtube Trailer Deutsch
+Spiele Daily Show
 Sag was nettes erweitern 
 
 Spiele einen schwedischen/Deutschen Film
