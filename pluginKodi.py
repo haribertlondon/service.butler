@@ -144,9 +144,9 @@ def kodiChangeVolume(change):
         return response
     
 def kodiPlayMovieOrSeries(title):
-    result = kodiPlayMovie(title)
+    result = kodiPlayTVShowLastEpisodeByName(title)
     if not result.get('result', False):
-        result = kodiPlayTVShowLastEpisodeByName(title)
+        result = kodiPlayMovie(title)
     if not result.get('result', False):
         result = { 'result': False,  'message' : "Keinen Film oder Serie mit Namen " + str(title) +  " gefunden"}
     return result

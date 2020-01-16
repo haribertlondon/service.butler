@@ -85,31 +85,39 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiStop()
 
-    matches = re.findall(u"^(?:Play |Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Youtube(?: mit)? (?:dem|der|den|die|das)?(.*)", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Youtube(?: mit)? (?:dem|der|den|die|das)?(.*)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube(matches[0])
 
-    matches = re.findall(u"^(?:Play |Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?letzte Serie( weiter)?", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?letzte Serie( weiter)?", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayLastTvShow()
 
-    matches = re.findall(u"^(?:Play |Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?(letzte )?Tagesschau", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?(letzte )?Tagesschau", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayTagesschau('tagesschau')
 
-    matches = re.findall(u"^(?:Play |Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?(letzten |letzte )?Tagesthemen", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?(letzten |letzte )?Tagesthemen", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayTagesschau('tagesthemen')
 
-    matches = re.findall(u"^(?:Play |Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(?:Radio |Radiosender )?(SWR[ 0-9]+|RPR[ 0-9]+|Big[ ]*FM|Antenne[ ]*K.*|Deutschland[ ]*funk)", command, flags = re.IGNORECASE)    
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(?:Radio |Radiosender )?(SWR[ 0-9]+|RPR[ 0-9]+|Big[ ]*FM|Antenne[ ]*K.*|Deutschland[ ]*funk)", command, flags = re.IGNORECASE)    
     if checkMatch(matches):
         result = pluginKodi.kodiPlayRadio(matches[0])
 
-    matches = re.findall(u"^(?:Play |Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(?:die Serie )?(.*) weiter", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(?:die Serie )?(.*) weiter", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayTVShowLastEpisodeByName(matches[0])
+        
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Trailer", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayYoutube("Neue KINO TRAILER")
+        
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(The )?Daily Show", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayYoutube("The Daily Show")
 
-    matches = re.findall(u"^(?:Play |Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(.*)", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(.*)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayMovieOrSeries(matches[0])
 

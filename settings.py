@@ -23,7 +23,7 @@ LISTEN_VERBOSE_TIMEOUT = 103.0
 LISTEN_AUDIO_GAIN = 1.0
 LISTEN_HOTWORD_METHODS = 1 #1=snowboy 2=sphinx 3=bothOR 4=bothAND
 LISTEN_HOTWORD_DURATION = 0.4
-x=1e-11 #x=0.5e-10
+x=1e-51 #x=0.5e-10
 #LISTEN_SPHINX_KEYWORDS = [("parker", x), ("kodi", x), ("hermine", x)]
 LISTEN_SPHINX_KEYWORDS = [("kodi", x)]
 
@@ -33,7 +33,7 @@ MAIL_SERVER_SETTINGS_FILE = '../mail.jpg'
 HTTP_TIMEOUT = 20
 
 LISTEN_WRITEWAV = "speech.wav"
-LISTEN_HOTWORD = ["termin", "hermine", "termine", "kodi", "jarvis", "corrin", "gaudi", "audi", "tony", "rowdy", "godi", "tonie", "toni", "gorie", "gori","(k|g|p|h)(au|o|ow)(l|d|r|rr|n)(i|y|ie)", "pauli", "howdy"]
+LISTEN_HOTWORD = ["termin", "hermine", "termine", "kodi", "jarvis", "corrin", "gaudi", "audi", "tony", "rowdy", "godi", "tonie", "toni", "gorie", "gori","curry", "(k|g|p|h)(au|o|ow)(l|d|r|rr|n)(i|y|ie)", "pauli", "howdy"]
 LISTEN_GOOGLEKEY = ""
 LISTEN_LANGUAGE= 'de-DE' #["en-US",'de']
 HTTP_KODI_IP = 'localhost:8080'#'192.168.0.60:8080'

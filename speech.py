@@ -165,7 +165,7 @@ class HotwordDetector(object):
         if resultSphinx>0 or resultSnowboy>0:
             print("Snowboy", resultSnowboy, "Sphinx", resultSphinx, energy, self.energy_threshold)
         #if energy > self.energy_threshold and (settings.LISTEN_HOTWORD_METHODS == 3 and max(resultSnowboy, resultSphinx) > 0 or settings.LISTEN_HOTWORD_METHODS == 4 and resultSnowboy>0 and resultSphinx>0):
-        if energy > self.energy_threshold/1.5*1.1 and resultSnowboy > 0:
+        if energy > self.energy_threshold/1.5*1.1 and (resultSnowboy > 0 or resultSphinx > 0):
             print("Keyword detected at time: "+ time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())), "Snowboy", resultSnowboy, "Sphinx", resultSphinx)
 
             if listening_callback is not None:

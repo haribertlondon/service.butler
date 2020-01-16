@@ -9,10 +9,7 @@ LED anschließen
 Deutsche Aussprache in Sphinx statt die Englische
 Notification "Listening" weg, wenn LED oder sonst was da
 
-Zuerst nach Serien dann nach Filme suchen um Zeit zu sparen
 Spiele letzten Film (weiter)
-"Spiele Trailer" statt Youtube Trailer Deutsch
-Spiele Daily Show
 Sag was nettes erweitern 
 
 Spiele einen schwedischen/Deutschen Film
@@ -44,6 +41,9 @@ Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man 
 #geschichte erzählen
 
 #--------DONE---------------
+Spiele Daily Show
+"Spiele Trailer" statt Youtube Trailer Deutsch
+Zuerst nach Serien dann nach Filme suchen um Zeit zu sparen
 #AdjustSilence während Snowboy State
 #amazon smart plug unterstützung - Geht nicht
 Snowboy alternative mit Sphinx
