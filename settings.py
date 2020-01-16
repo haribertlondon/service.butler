@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import socket
+import sys
 
 LISTEN_CHUNKSIZE = 1024
 LISTEN_SAMPLERATE = 44100
@@ -61,7 +62,8 @@ def setSensitivity(s):
     
         
         
-    
+def isPython3():
+    return (sys.version_info > (3, 0))
 
 def hasSnowboy():
     s = socket.gethostname() 

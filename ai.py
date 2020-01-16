@@ -6,6 +6,7 @@ import pluginKodi
 import pluginEcho
 import pluginMail
 import pluginUpdate
+import pluginJokes
 
 def checkMatch(match):    
     global matchCounter
@@ -76,6 +77,10 @@ def speechInterprete(guess):
     matches = re.findall(u"^(?:Echo).*", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginEcho.echoEcho()
+        
+    matches = re.findall(u"^Erz.{0,10}hl[a-z]* ein[a-z]* Witz", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginJokes.tellJoke()
 
     matches = re.findall(u"^(Pause|Break)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
