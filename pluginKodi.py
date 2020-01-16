@@ -294,14 +294,21 @@ def kodiPlayLastTvShow():
         tvshowid = result['data']['tvshows'][0]['tvshowid']
         return kodiPlayTVShowLastEpisodeById(tvshowid)    
  
-def kodiPlayYoutube(searchStr):    
+def kodiPlayYoutube(searchStr):
     searchStr = searchStr.replace(" ","+")
     try:
         url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=30&order=relevance&q='+searchStr+'&key=AIzaSyDCgSFYMKR4IJsIM-BkZXMuqaVHkqRjXzI'
         js = htmlrequests.downloadJsonDic(url,None)
-        videoId = js['items'][0]['id']['videoId']
+        videoId = None
+        for item in js['items']:
+            if 'videoId' in item['id']:
+                videoId = item['id']['videoId']
+                break
+        if videoId is None:
+            raise Exception("Kein Video gefunden")
         result = postKodiRequest("youtube", None, videoId)
     except Exception as e:
+        print("---------------------------",e)
         result = {'result': False, 'message' : 'Youtube kann nicht gestartet werden '+str(e)}
     print(js)
     return result

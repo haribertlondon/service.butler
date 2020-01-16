@@ -2,6 +2,8 @@
 TV: #Lautstärke-Regelung an Fernbedienung
 TV: Sound-Probleme
 Puffer glattziehen
+sphinx wieder raus, dann auch audio raus um cpu zu reduzieren
+die letzte Pause nach der Phrase nicht mit nach Google schicken => schneller
 #screensaver "Schlaf gut" does not work properly?
 LED anschließen
 Deutsche Aussprache in Sphinx statt die Englische

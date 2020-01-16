@@ -38,7 +38,7 @@ class RingBuffer(object):
         self._buf.append(data)
 
     def get(self):
-        tmp = self._buf.copy() 
+        tmp = list(self._buf) #TODO: increase speed?
         self._buf.clear()
         return tmp
 
@@ -143,6 +143,7 @@ class HotwordDetector(object):
             a = ""          
         
         if len(a)>0:
+            print("Detected the word: " + a)
             return 1
         else:
             return 0
@@ -152,17 +153,19 @@ class HotwordDetector(object):
         if settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU>0:
             self.applyLowPassFilter(energy, settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU) #tau = 4sec => reach 4*6=24sec
                 
-        if (settings.LISTEN_HOTWORD_METHODS == 1 or settings.LISTEN_HOTWORD_METHODS == 3) and settings.hasSnowboy():
+        if (settings.LISTEN_HOTWORD_METHODS in [1,3,4]) and settings.hasSnowboy():
             resultSnowboy = self.hotword_snowboy(frame_data)
         else:
             resultSnowboy = 0
                     
-        if settings.LISTEN_HOTWORD_METHODS == 2 or settings.LISTEN_HOTWORD_METHODS == 3 or not settings.hasSnowboy():                         
+        if settings.LISTEN_HOTWORD_METHODS in [2,3,4] or not settings.hasSnowboy():
             resultSphinx = self.hotword_sphinx(audio)
         else:
             resultSphinx = 0         
-        
-        if max(resultSnowboy, resultSphinx) > 0:                
+        if resultSphinx>0 or resultSnowboy>0:
+            print("Snowboy", resultSnowboy, "Sphinx", resultSphinx, energy, self.energy_threshold)
+        #if energy > self.energy_threshold and (settings.LISTEN_HOTWORD_METHODS == 3 and max(resultSnowboy, resultSphinx) > 0 or settings.LISTEN_HOTWORD_METHODS == 4 and resultSnowboy>0 and resultSphinx>0):
+        if energy > self.energy_threshold/1.5*1.1 and resultSnowboy > 0:
             print("Keyword detected at time: "+ time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())), "Snowboy", resultSnowboy, "Sphinx", resultSphinx)
 
             if listening_callback is not None:
