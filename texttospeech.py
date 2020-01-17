@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #soundSupport = True
 #try:
 #    import pyttsx3    
@@ -11,16 +12,20 @@
 #engine.say('Sally sells seashells by the seashore.')
     
 import os
+from gtts import gTTS
+import settings
+from google_speech import Speech
+import playsound
+
     
-try:
-    from urllib import quote  # Python 2.X
-except ImportError:
-    from urllib.parse import quote  # Python 3+
+if settings.isPython3():
+    from urllib.parse import quote  # Python 3+    
+else:
+    from urllib import quote  # Python 2.X @UnresolvedImport
 
 def init():
     try:
         import pyttsx3
-
         engine = pyttsx3.init()
         try:
             print("Set language to german")
@@ -33,8 +38,26 @@ def init():
     except Exception as e:
         print("Cannot activate texttospeech",e)
         return None
+    print("init text to speech")
     
-def sayString(engine, s):
+def sayStringX(engine , text):
+    try:
+        sayStringPack(engine, text)
+    except Exception as e:
+        print(e)
+        sayString_old(engine, text)
+
+def sayStringPack(_ , text):    
+    speech = Speech(text, "de")
+    speech.play()
+
+def sayString(_,text):
+    tts = gTTS(text, lang='de')
+    tts.save('response.mp3')
+    playsound.playsound('response.mp3', True)
+    
+    
+def sayString_old(engine, s):
     #s="Hallo "+s
     print("Voice output", s)
     try:          
@@ -57,6 +80,7 @@ def sayString(engine, s):
 
 if __name__ == "__main__":
     engine = init()
-    sayString(engine,"I want to have cup cakes. I want to have vacations")
-    sayString(engine,"Ich will cup cakes")
+    #sayString(engine,"I want to have cup cakes. I want to have vacations")
+    sayString(engine,u"Ich will eine eiskalte Hündin haben")
+    print("Finished")
 

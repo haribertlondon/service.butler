@@ -1,4 +1,6 @@
 #------TODO-------
+https://pypi.org/project/google-speech/
+Kann es sein, dass das hotword IMMER abgeschnitten wird=
 TV: #Lautstärke-Regelung an Fernbedienung
 TV: Sound-Probleme
 sphinx wieder raus, dann auch audio raus um cpu zu reduzieren
