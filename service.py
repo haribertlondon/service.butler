@@ -17,7 +17,12 @@
 # sudo apt-get install python-pyaudio
 # sudo apt-get install python-pip
 # sudo apt-get install libespeak-dev
+# sudo apt-get install python-audioop
+# sudo apt-get install python-git
+# sudo apt-get install python-pyttsx3
+# sudo apt-get install python-pocketsphinx
 # pip install pyttsx3
+# pip install playsound
 # pip install SpeechRecognition
 #   set kodi as autostart: 
 #		?????, i did it with sudo apt-get install cron; cron -e; add line-> @reboot sleep 10; kodi --standalone

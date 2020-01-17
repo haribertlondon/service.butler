@@ -2,7 +2,10 @@ if pgrep kodi.*bin.* > /dev/null
 then
     echo Found
 else
-    echo NotFound
+    echo KodiNotFound
+    echo WaitForNetwork
+    sleep 10
+    echo NowStartingKodi
     kodi --standalone &
     echo KodiStarted
 fi
