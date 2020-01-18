@@ -1,27 +1,13 @@
 #------TODO-------
-https://pypi.org/project/google-speech/
-Kann es sein, dass das hotword IMMER abgeschnitten wird=
-TV: #Lautstärke-Regelung an Fernbedienung
-TV: Sound-Probleme
-sphinx wieder raus, dann auch audio raus um cpu zu reduzieren
-die letzte Pause nach der Phrase nicht mit nach Google schicken => schneller
 #screensaver "Schlaf gut" does not work properly?
-LED anschließen
-Notification "Listening" weg, wenn LED oder sonst was da
-
-Spiele letzten Film (weiter)
 Sag was nettes erweitern 
-
 Spiele einen schwedischen/Deutschen Film
-Spiele eine Komödie/Horror/Thriller
 Play random unwatched episode of TV show
 Play random unwatched movie
-
 Natürlichere Sprachausgabe 
 Sprachausgabe nicht so verzögern 
 
-Pausen abschneiden vor dem reingeben in Sphinx und Snowboy => weniger auslastung
-
+Use python3
 Filme-Liste cachen, dass man nicht so lange warten muss
 Toleranz für Serien/Film-Suche optimieren (standard ist 0.6)
 
@@ -37,13 +23,27 @@ Deutsche Sprache in Sphinx statt die Englische
 #kochbuch
 #geschichte erzählen
 
-#--------DONE---------------
+#--------TEST---------------
+Spiele eine Komödie/Horror/Thriller
+Spiele letzten Film (weiter)
+Ausgabe-Lautstärke
+Kann es sein, dass das hotword IMMER abgeschnitten wird?
+Sprachausgabe: gtts
+Notification "Listening" weg, wenn LED oder sonst was da
+LED anschließen
+Spiele swr3
 #witze erzählen
+TV: Sound-Probleme
+Spiele Daily Show
+"Spiele Trailer" statt Youtube Trailer Deutsch
+#--------DONE---------------
+Pausen abschneiden vor dem reingeben in Sphinx und Snowboy => weniger auslastung
+die letzte Pause nach der Phrase nicht mit nach Google schicken => schneller
+sphinx wieder raus, dann auch audio raus um cpu zu reduzieren
+TV: #Lautstärke-Regelung an Fernbedienung
 Snowboy und Sphinx kombinieren
 snowboy buffer length: buffer vs data - Reicht Länge?
 Puffer glattziehen
-Spiele Daily Show
-"Spiele Trailer" statt Youtube Trailer Deutsch
 Zuerst nach Serien dann nach Filme suchen um Zeit zu sparen
 #AdjustSilence während Snowboy State
 #amazon smart plug unterstützung - Geht nicht

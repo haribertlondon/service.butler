@@ -94,9 +94,17 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube(matches[0])
 
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?letzte Serie( weiter)?", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?letzt[a-z]* Serie( weiter)?", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayLastTvShow()
+        
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(den )?letzt[a-z]* Film( weiter)?", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayLastMovie()
+        
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?eine[a-z]* (Komödie|Thriller|Krimi|Liebesfilm|Action|Actionfilm|Abenteuer|Abenteuerfilm|Animationsfilm|Animation|Drama|Dokumentarfilm|Familienfilm|Horror|Horrorfilm|Komödie|Kriegsfilm|Krimi|Liebesfilm|Mysteryfilm|Mystery|Science-Fiction-Film|Science-Fiction|Western)", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayRandomMovieByGenre(matches[0])
 
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?(letzte )?Tagesschau", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -106,7 +114,7 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPlayTagesschau('tagesthemen')
 
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(?:Radio |Radiosender )?(SWR[ 0-9]+|RPR[ 0-9]+|Big[ ]*FM|Antenne[ ]*K.*|Deutschland[ ]*funk)", command, flags = re.IGNORECASE)    
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(?:Radio |Radiosender )?(?:mit )?(SWR[ 0-9]+|RPR[ 0-9]+|Big[ ]*FM|Antenne[ ]*K.*|Deutschland[ ]*funk)", command, flags = re.IGNORECASE)    
     if checkMatch(matches):
         result = pluginKodi.kodiPlayRadio(matches[0])
 
@@ -145,6 +153,10 @@ def speechInterprete(guess):
     matches = re.findall(u"^Sag[a-z]* was Nettes( zu mir)?$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = {'result': True, 'message': 'Hallo Lieber Benedikt. Du hast heute sehr sehr lecker gekocht.'}
+        
+    matches = re.findall(u"^(Wie )?Hat es dir (heute )?geschmeckt$", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = {'result': True, 'message': 'Hallo Lieber Benedikt. Es hat mir heute sehr sehr gut geschmeckt.'}
     
     matches = re.findall(u"^(Gut[a-z]* Nacht|Schlaf[a-z]* gut|Geschlafen|Geh[a-z]* schlafen|Auf wiedersehen|Tschüss|Ruhe|Halts maul|Klappe)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):

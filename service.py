@@ -28,13 +28,12 @@
 #		?????, i did it with sudo apt-get install cron; cron -e; add line-> @reboot sleep 10; kodi --standalone
 # install this package with zip file
 
-import sys
+import sys, traceback
 import ai
 import settings
 import texttospeech 
 import speech
-import pluginKodi
-         
+import gpio
          
 def detected_callback(response, _): #audio):
     try:
@@ -43,22 +42,26 @@ def detected_callback(response, _): #audio):
         print('Result=', result)
         if result and isinstance(result, dict) and 'message' in result:
             if result['message'] != 'Silence!' and result['message'] != 'OK':
-                texttospeech.sayString(textspeech, result['message'])
+                texttospeech.sayString(result['message'])
             else: 
                 #silence
                 print(result['message'])
         else:
-            texttospeech.sayString(textspeech, 'Sum Sum Sum')
+            texttospeech.sayString('Sum Sum Sum')
     
     except Exception as e:
         print("Fatal error in ai.callback: ", e)
+        traceback.print_exc(file=sys.stdout)
+    gpio.setLedState(False)        
+        
         
 def listening_callback():
     #pluginKodi.kodiShowMessage("Listening...")
+    gpio.setLedState(True)
     print("Listening....")
 
-if __name__ == "__main__":
-    textspeech = texttospeech.init()
-    
+if __name__ == "__main__":    
+    gpio.setLedState(False)    
     speech.run(sensitivity=settings.LISTEN_SNOWBOY_SENSITIVITY, detected_callback = detected_callback, audio_gain = settings.LISTEN_AUDIO_GAIN, listening_callback=listening_callback)
+    gpio.setLedState(False)
     sys.exit()

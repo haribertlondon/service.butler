@@ -9,6 +9,7 @@ import sys
 import mysphinx
 import settings
 import pluginEcho
+from settings import isDebug
 
 try:    
     import speech_recognition as sr #@UnusedImport #check if package is installed
@@ -127,9 +128,9 @@ class HotwordDetector(object):
         else:
             return "phrase"  #still waiting for min time
         
-    def hotword_snowboy(self, frame_data):
+    def hotword_snowboy(self):
         try:
-            result = self.detector.RunDetection(frame_data)
+            result = self.detector.RunDetection(self.frame_data)
         except Exception as e:
             print("Snowboy Exception. Reason ", e)
             result = 0
@@ -148,20 +149,25 @@ class HotwordDetector(object):
         else:
             return 0
         
-    def state_hotword(self, frame_data, energy, audio, listening_callback):
+    def state_hotword(self, energy, listening_callback):
+        #prepare data for processing
+        self.frame_data = getByteArray(self.frames)
+        
         #dynamic adjustment
         if settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU>0:
             self.applyLowPassFilter(energy, settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU) #tau = 4sec => reach 4*6=24sec
                 
         if (settings.LISTEN_HOTWORD_METHODS in [1,3,4]) and settings.hasSnowboy():
-            resultSnowboy = self.hotword_snowboy(frame_data)
+            resultSnowboy = self.hotword_snowboy()
         else:
             resultSnowboy = 0
                     
         if settings.LISTEN_HOTWORD_METHODS in [2,3,4] or not settings.hasSnowboy():
+            audio = sr.AudioData(self.frame_data, self.sample_rate, self.sample_width)
             resultSphinx = self.hotword_sphinx(audio)
         else:
-            resultSphinx = 0         
+            resultSphinx = 0  
+
         if resultSphinx>0 or resultSnowboy>0:
             print("Snowboy", resultSnowboy, "Sphinx", resultSphinx, energy, self.energy_threshold)
         #if energy > self.energy_threshold and (settings.LISTEN_HOTWORD_METHODS == 3 and max(resultSnowboy, resultSphinx) > 0 or settings.LISTEN_HOTWORD_METHODS == 4 and resultSnowboy>0 and resultSphinx>0):
@@ -205,18 +211,27 @@ class HotwordDetector(object):
             self.applyLowPassFilter(energy, settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_FAST_TAU)
             return "silence"
     
-    def state_storeWav(self, audio):
-        if settings.isDebug():
-            pluginEcho.echoStoreWav(audio)
-            #pluginEcho.echoPlayWav()
-        return "end"
-    
-    def state_recognition(self, audio, detected_callback):
+    def state_recognition(self, detected_callback):
         
         response = {"error": None, "transcription": None }
     
         try:
             print("Starting speech recognition...")
+            #self.frame_data = getByteArray(self.frames)
+            #audio = sr.AudioData(self.frame_data, self.sample_rate, self.sample_width)
+            #pluginEcho.echoStoreWav(audio, "original.wav")            
+
+            #cut pause at the end of buffer (increases recognition speed)
+            bufferLenOfPause = (int)( (settings.LISTEN_PHRASE_PAUSE_THRESHOLD-0.2) / self.seconds_per_buffer) 
+            print("bufferLenOfPause: "+str(bufferLenOfPause)+" von "+str(len(self.frames)))
+            if bufferLenOfPause> 0 and bufferLenOfPause < len(self.frames):
+                self.frames = self.frames[:-bufferLenOfPause]
+            print("New bufferLen: "+str(len(self.frames)))
+            
+            #prepare data for processing
+            self.frame_data = getByteArray(self.frames)
+            
+            audio = sr.AudioData(self.frame_data, self.sample_rate, self.sample_width)
             
             recognizer = sr.Recognizer()    
             response["transcription"] = recognizer.recognize_google(audio, key=None, language=settings.LISTEN_LANGUAGE)        
@@ -231,8 +246,9 @@ class HotwordDetector(object):
             response["error"] = "API unavailable " +  str(e) # API was unreachable or unresponsive
         except sr.UnknownValueError:
             response["error"] = "Unable to recognize speech" # speech was unintelligible
-            
-        self.state_storeWav(audio) 
+        
+        if isDebug():    
+            pluginEcho.echoStoreWav(audio) 
             
         if detected_callback: #and not settings.isDebug():
             detected_callback(response, audio)  
@@ -278,21 +294,19 @@ class HotwordDetector(object):
             if len(self.frames) > newLength:            
                 self.frames = self.frames[-newLength:] 
             
-            #prepare data for processing
-            frame_data = getByteArray(self.frames)    
-            audio = sr.AudioData(frame_data, self.sample_rate, self.sample_width)
+                
             
             #state machine
             if state == "init":
                 state = self.state_init()
             elif state == "silence":
                 state = self.state_adjustSilence(energy)
-            elif state == "hotword":
-                state = self.state_hotword(frame_data, energy, audio, listening_callback)
+            elif state == "hotword":            
+                state = self.state_hotword(energy, listening_callback)
             elif state ==  "phrase":
                 state = self.state_phrase()
             elif state == "recognition":
-                state = self.state_recognition(audio, detected_callback)
+                state = self.state_recognition(detected_callback)
             elif state == "end":
                 state = "init" #start all over again
             else:

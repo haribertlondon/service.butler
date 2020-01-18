@@ -23,10 +23,9 @@ LISTEN_SNOWBOY_SENSITIVITY = "0.56" # was "0.4" in the example
 LISTEN_VERBOSE_TIMEOUT = 103.0
 LISTEN_AUDIO_GAIN = 1.0
 LISTEN_HOTWORD_METHODS = 1 #1=snowboy 2=sphinx 3=bothOR 4=bothAND
-LISTEN_HOTWORD_DURATION = 0.4
-x=1e-51 #x=0.5e-10
-#LISTEN_SPHINX_KEYWORDS = [("parker", x), ("kodi", x), ("hermine", x)]
-LISTEN_SPHINX_KEYWORDS = [("kodi", x)]
+LISTEN_HOTWORD_DURATION = 0.8
+x=1e-33 #x=0.5e-10
+LISTEN_SPHINX_KEYWORDS = [("kodi", x)] #LISTEN_SPHINX_KEYWORDS = [("parker", x), ("kodi", x), ("hermine", x)]
 
 
 MAIL_SERVER_SETTINGS_FILE = '../mail.jpg'
@@ -40,6 +39,8 @@ LISTEN_LANGUAGE= 'de-DE' #["en-US",'de']
 HTTP_KODI_IP = 'localhost:8080'#'192.168.0.60:8080'
 LISTEN_SNOWBOY_RESOURCE = './resources/lib/snowboyrpi8/resources/common.res'
 LISTEN_SNOWBOY_MODELS = ['./resources/lib/snowboyrpi8/kodi.pmdl']
+
+OUTPUT_VOLUME_DB = -20
 
 def setSensitivity(s):
     global LISTEN_SNOWBOY_SENSITIVITY
