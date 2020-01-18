@@ -21,6 +21,7 @@
 # sudo apt-get install python-git
 # sudo apt-get install python-pyttsx3
 # sudo apt-get install python-pocketsphinx
+# sudo apt-get install gpiozero
 # pip install pyttsx3
 # pip install playsound
 # pip install SpeechRecognition
