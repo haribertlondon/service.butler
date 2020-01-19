@@ -2,6 +2,7 @@
 Google-Bilder-Suche ->Browser anzeigen
 Show Mails (Mail Kodi addon)
 Extra 3
+Daily Show - Channel!!
 TV: Sound-Probleme
 #Neustart Raspi
 Neustart Kodi
