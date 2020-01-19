@@ -102,7 +102,7 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPlayLastMovie()
         
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?eine[a-z]* (Komödie|Thriller|Krimi|Liebesfilm|Action|Actionfilm|Abenteuer|Abenteuerfilm|Animationsfilm|Animation|Drama|Dokumentarfilm|Familienfilm|Horror|Horrorfilm|Komödie|Kriegsfilm|Krimi|Liebesfilm|Mysteryfilm|Mystery|Science-Fiction-Film|Science-Fiction|Western)", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?ein[a-z]* (Komödie|Thriller|Krimi|Liebesfilm|Action|Actionfilm|Abenteuer|Abenteuerfilm|Animationsfilm|Animation|Drama|Dokumentarfilm|Familienfilm|Horror|Horrorfilm|Komödie|Kriegsfilm|Krimi|Liebesfilm|Mysteryfilm|Mystery|Science-Fiction-Film|Science-Fiction|Western)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayRandomMovieByGenre(matches[0])
 

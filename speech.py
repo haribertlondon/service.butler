@@ -9,6 +9,7 @@ import sys
 import mysphinx
 import settings
 import pluginEcho
+import gpio
 from settings import isDebug
 
 try:    
@@ -156,8 +157,11 @@ class HotwordDetector(object):
         #dynamic adjustment
         if settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU>0:
             self.applyLowPassFilter(energy, settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU) #tau = 4sec => reach 4*6=24sec
+
+        energy2 = audioop.rms(self.frame_data, self.sample_width) 
+        energy = energy2*1.0
                 
-        if (settings.LISTEN_HOTWORD_METHODS in [1,3,4]) and settings.hasSnowboy():
+        if (settings.LISTEN_HOTWORD_METHODS in [1,3,4]) and settings.hasSnowboy(): # and energy>self.energy_threshold:
             resultSnowboy = self.hotword_snowboy()
         else:
             resultSnowboy = 0
@@ -169,13 +173,15 @@ class HotwordDetector(object):
             resultSphinx = 0  
 
         if resultSphinx>0 or resultSnowboy>0:
-            print("Snowboy", resultSnowboy, "Sphinx", resultSphinx, energy, self.energy_threshold)
+            print("Snowboy="+ str(resultSnowboy) + "  Sphinx=" + str(resultSphinx) + "  Energy= " + str(energy) +"  Threshold=" + str( self.energy_threshold) )
         #if energy > self.energy_threshold and (settings.LISTEN_HOTWORD_METHODS == 3 and max(resultSnowboy, resultSphinx) > 0 or settings.LISTEN_HOTWORD_METHODS == 4 and resultSnowboy>0 and resultSphinx>0):
-        if energy > self.energy_threshold/1.5*1.1 and (resultSnowboy > 0 or resultSphinx > 0):
+        if energy > self.energy_threshold/1.5*1.5 and (resultSnowboy > 0 or resultSphinx > 0):
             print("Keyword detected at time: "+ time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())), "Snowboy", resultSnowboy, "Sphinx", resultSphinx)
 
             if listening_callback is not None:
                 listening_callback()
+
+            gpio.setLed1State(True)
 
             self.pause_time = 0.0
             self.elapsed_time = 0.0
@@ -191,6 +197,8 @@ class HotwordDetector(object):
         self.framesBufferSize = 0
         self.elapsed_time = 0
         self.startTime_for_tictoc = time.time()
+        gpio.setLed1State(False)
+        gpio.setLed2State(False)
         return "silence"
     
     def applyLowPassFilter(self, energy, tau):        
@@ -214,7 +222,8 @@ class HotwordDetector(object):
     def state_recognition(self, detected_callback):
         
         response = {"error": None, "transcription": None }
-    
+        gpio.setLed2State(True)
+        gpio.setLed1State(False)
         try:
             print("Starting speech recognition...")
             #self.frame_data = getByteArray(self.frames)

@@ -1,5 +1,8 @@
 #------TODO-------
 TV: Sound-Probleme
+#Neustart Raspi
+Neustart Kodi
+oss statt alsa
 Sprachausgabe: gtts ist sehr schlecht
 Spiele eine Liebesfilm
 #screensaver "Schlaf gut" does not work properly?

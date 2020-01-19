@@ -53,16 +53,13 @@ def detected_callback(response, _): #audio):
     except Exception as e:
         print("Fatal error in ai.callback: ", e)
         traceback.print_exc(file=sys.stdout)
-    gpio.setLedState(False)        
         
         
 def listening_callback():
     #pluginKodi.kodiShowMessage("Listening...")
-    gpio.setLedState(True)
     print("Listening....")
 
 if __name__ == "__main__":    
-    gpio.setLedState(False)    
+    gpio.init()
     speech.run(sensitivity=settings.LISTEN_SNOWBOY_SENSITIVITY, detected_callback = detected_callback, audio_gain = settings.LISTEN_AUDIO_GAIN, listening_callback=listening_callback)
-    gpio.setLedState(False)
     sys.exit()
