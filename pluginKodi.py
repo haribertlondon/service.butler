@@ -79,11 +79,7 @@ def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
         post = '{"jsonrpc": "2.0", "id": 1, "method": "Player.Open", "params": {"item": {"playlistid": '+str(playlistID)+', "position":'+str(searchStr)+' } ,"options":{"resume": true}} }'    
     else:
         print('Command not found', command)
-    #elif command == 'tagesschau':                   
-    #    post = '{ "jsonrpc": "2.0", "method": "Addons.ExecuteAddon","params":{"addonid":"plugin.video.tagesschau","params":{"action":"list_feed","feed":"latest_broadcasts" }}, "id": 1 }'
-    #elif command == 'getplaylist':
-    #    post = '{"jsonrpc": "2.0", "method": "Playlist.GetItems", "params": { "properties": [ "runtime", "showtitle", "season", "title", "artist", "file" ], "playlistid": 1}, "id": 1}'           
-    
+     
     try:   
         post = str.encode(post) # set to byte array
     except:
@@ -342,7 +338,7 @@ def kodiPlayRandomMovieByGenre(genre):
 def kodiPlayYoutube(searchStr):
     searchStr = searchStr.replace(" ","+")
     try:
-        url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=30&order=relevance&q='+searchStr+'&key=AIzaSyDCgSFYMKR4IJsIM-BkZXMuqaVHkqRjXzI'
+        url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&order=relevance&q='+searchStr+'&key=AIzaSyDCgSFYMKR4IJsIM-BkZXMuqaVHkqRjXzI'
         js = htmlrequests.downloadJsonDic(url,None)
         #videoId = None
         lst = []
@@ -436,8 +432,9 @@ def kodiPlayMovie(movieTitle):
     return result
 
 if __name__ == "__main__":
-    #kodiPlayTagesschau("tagesthemen")
-    kodiPlayMovieOrSeries("Modern Family")
+    kodiPlayTagesschau("tagesthemen")
+    #kodiPlayMovieOrSeries("Modern Family")
+    #kodiPlayYoutube("Extra 3")
     #idx = getActivePlayerID()
     #kodiGetCurrentPlaying()
     #kodiStop()

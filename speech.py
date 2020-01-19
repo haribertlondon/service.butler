@@ -289,7 +289,7 @@ class HotwordDetector(object):
             
             #whole frame buffer
             self.frames.extend(chunk)          
-            dur = len(self.frames)*self.seconds_per_buffer #keep length of buffer small 
+            #dur = len(self.frames)*self.seconds_per_buffer #keep length of buffer small 
             
             #reduce buffer length as ring buffer
             if state == "phrase" or state == "recognition": #here, we need a longer buffer

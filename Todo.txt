@@ -1,26 +1,27 @@
 #------TODO-------
-Google-Bilder-Suche ->Browser anzeigen
+
 Spiele Trailer von Filmen in Bibliothek
-Spiele aktuelle Trailer
-Show Mails (Mail Kodi addon)
-Extra 3
-Daily Show - Channel!!
-TV: Sound-Probleme
-#Neustart Raspi
-Neustart Kodi
-oss statt alsa
-Sprachausgabe: gtts ist sehr schlecht
-Spiele eine Liebesfilm
-#screensaver "Schlaf gut" does not work properly?
-Sag was nettes erweitern 
-Spiele Daily Show als Playlist oder Channel
-Spiele eine Doku
-Spiele Maybrit Illner
-Spiele einen schwedischen/Deutschen Film
 Play random unwatched episode of TV show
 Play random unwatched movie
+
+Snowboy Sensitivität weiter optimieren
+
+TV: Sound-Probleme
+Sprachausgabe: gtts ist sehr schlecht
 Natürlichere Sprachausgabe 
-Sprachausgabe nicht so verzögern 
+Sprachausgabe nicht so verzögern
+
+
+Show Mails (Mail Kodi addon)
+Google-Bilder-Suche ->Browser anzeigen
+
+Neustart Raspi
+Neustart Kodi
+
+#screensaver "Schlaf gut" does not work properly?
+Sag was nettes erweitern 
+Spiele einen schwedischen/Deutschen Film
+
 
 Use python3
 Filme-Liste cachen, dass man nicht so lange warten muss
@@ -30,23 +31,32 @@ do not reboot after update but just restart script: https://stackoverflow.com/qu
 Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man das in Thread auslagern?
 "Sende Bug"
 #bessere Filmsuche IV = 4 = vier = Four
-Deutsche Sprache in Sphinx statt die Englische
 #als kodi plugin laufen lassen (dann kann man besser beenden, starten)
-#Ringpuffer für Aufnahmen
 #mehrere keywords fuer kodi, tannenbaum, chefkoch
 #wecker 
 #kochbuch
 #geschichte erzählen
 
 #--------TEST---------------
-3 LEDs
-Show Website Screenshot: http://api.screenshotlayer.com/api/capture?access_key=b5ac6f204eb21a3e1ea452efaddd82f3&url=http://yahoo.com&viewport=1440x900&width=900
-Google nach -> Browser anzeigen
-Sensiblerer Snowboy
-Ausgabe-Lautstärke
-Notification "Listening" weg, wenn LED oder sonst was da
-"Spiele Trailer" statt Youtube Trailer Deutsch
+Spiele Daily Show als Playlist oder Channel
+Spiele eine Doku
+Spiele Maybrit Illner
+Spiele eine Liebesfilm
+Spiele aktuelle Trailer
+Daily Show - Channel!!
+Extra 3
+KodiPlugin Rework
 #--------DONE---------------
+#Ringpuffer für Aufnahmen
+Deutsche Sprache in Sphinx statt die Englische: nein
+oss statt alsa: Nein
+Sensiblerer Snowboy
+"Spiele Trailer" statt Youtube Trailer Deutsch
+Notification "Listening" weg, wenn LED oder sonst was da
+Ausgabe-Lautstärke
+Google nach -> Browser anzeigen
+Show Website Screenshot: http://api.screenshotlayer.com/api/capture?access_key=b5ac6f204eb21a3e1ea452efaddd82f3&url=http://yahoo.com&viewport=1440x900&width=900
+3 LEDs
 LED anschließen
 Spiele swr3
 Spiele Daily Show

@@ -96,6 +96,18 @@ def speechInterprete(guess):
     matches = re.findall(u"^(Stop[a-z]*|Halt[a-z]*|Stop[a-z]*)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiStop()
+        
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Extra (3|Drei)", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayYoutube("Extra 3")
+        
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(eine )?Doku(mentation)?", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayYoutube("Dokumentation deutsch")
+        
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Maybrit Illner", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayYoutube("Maybrit Illner")
 
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Youtube(?: mit)? (?:dem|der|den|die|das)?(.*)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
