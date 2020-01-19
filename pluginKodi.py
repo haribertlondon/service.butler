@@ -3,6 +3,9 @@ import difflib
 import htmlrequests
 import settings
 import sys
+from builtins import str 
+import json        
+        
 
 def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
     hostname = 'http://' + settings.HTTP_KODI_IP + '/jsonrpc'
@@ -16,10 +19,9 @@ def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
         playlistID = 0
     
     if command == "search": 
-        if typeStr == "movies" or typeStr == "movie":
-            #post = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "title", "value": "'+str(searchStr)+'"}, "properties" : ["dateadded", "lastplayed", "year", "rating", "playcount", "genre"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}'
+        if typeStr == "movies" or typeStr == "movie" or typeStr == "movieid":
             post = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "properties" : ["playcount"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}'
-        elif typeStr == "tvshows":
+        elif typeStr == "tvshows" or typeStr == "tvshowid":
             post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetTVShows", "params": { "properties": ["dateadded", "lastplayed",  "year", "rating", "playcount"],           "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvshows"}'
     elif command == "play":
         post = '{ "jsonrpc": "2.0", "method": "Player.PlayPause", "params": {"playerid": '+str(playerID)+', "play":true },"id":1}'        
@@ -28,12 +30,7 @@ def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
     elif command == "rawopen":
         post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": {"item":{"file":"'+searchStr+'"}},"id":1}'
     elif command == "open":
-        if typeStr == 'movies' or typeStr == 'movie': 
-            post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"movieid": '+str(searchStr)+ '} ,"options":{"resume": true} }, "id": 1 }'
-        elif typeStr == 'tvshows' or typeStr == 'episodes' or typeStr == 'episode': 
-            post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"episodeid": '+str(searchStr)+ '} ,"options":{"resume": true} }, "id": 1 }'
-        else:
-            post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"playlistid": ' +str(searchStr) + '} ,"options":{"resume": true} }, "id": 1 }'
+        post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": '+json.dumps(searchStr)+' ,"options":{"resume": true} }, "id": 1 }'        
     elif command == 'getRandomMovieByGenre':
         post = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "properties" : ["playcount", "genre"], "limits": { "start" : 0, "end": 10 }, "filter": {"field": "genre", "operator": "contains", "value": "'+searchStr+'"}, "sort": { "order": "ascending", "method": "random", "ignorearticle": true } }, "id": "libMovies"}'
     elif command == 'info':
@@ -45,7 +42,7 @@ def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
     elif command == 'lasttvshow':            
         post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetTVShows", "params": {  "properties": ["dateadded", "lastplayed",  "year", "rating", "playcount"],           "sort": { "order": "descending", "method": "lastplayed" } }, "id": "libTvshows"}'    
     elif command == 'lastmovie':            
-        post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetMovies", "params": {  "properties": ["resume" ,"dateadded", "lastplayed",  "year", "rating", "playcount"],           "sort": { "order": "descending", "method": "lastplayed" } }, "id": "libMovies"}'
+        post = '{ "jsonrpc":"2.0", "method":"VideoLibrary.GetMovies", "params": {  "properties": ["resume" ,"dateadded", "lastplayed",  "year", "rating", "playcount"],   "limits": { "start" : 0, "end": 100 },         "sort": { "order": "descending", "method": "lastplayed" } }, "id": "libMovies"}'
     elif command == 'tagesschau':                   
         post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"file": "plugin://plugin.video.tagesschau/?action=play_video&feed=latest_broadcasts&tsid='+searchStr+'"  } }, "id": 1 }'
     elif command == 'youtube':
@@ -77,14 +74,9 @@ def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
     elif command == 'getPlaylist':
         post = '{"jsonrpc":"2.0","method":"Player.GetProperties","params":{ "playerid": '+str(playerID)+', "properties": ["playlistid"]}, "id":1}'
     elif command == 'addPlaylist':
-        if typeStr == 'movies' or typeStr == 'movie': 
-            post = '{ "jsonrpc": "2.0", "method": "Playlist.Add", "params": { "playlistid": '+str(playlistID)+', "item": {"movieid": '+str(searchStr)+ '}  }, "id": 1 }'            
-        elif typeStr == 'tvshows' or typeStr == 'episodes' or typeStr == 'episode': 
-            post = '{ "jsonrpc": "2.0", "method": "Playlist.Add", "params": {"playlistid": '+str(playlistID)+', "item": {"episodeid": '+str(searchStr)+ '}  }, "id": 1 }'                    
-        elif typeStr == 'file':
-            post = '{ "jsonrpc": "2.0", "method": "Playlist.Add", "params": {"playlistid": '+str(playlistID)+', "item": {"file": "'+str(searchStr)+ '"}  }, "id": 1 }'
+        post = '{ "jsonrpc": "2.0", "method": "Playlist.Add", "params": {"playlistid": '+str(playlistID)+', "item": '+json.dumps( searchStr )+'  }, "id": 1 }'
     elif command == 'playPlaylist':
-        post = '{"jsonrpc": "2.0", "id": 2, "method": "Player.Open", "params": {"item": {"playlistid": '+str(playlistID)+', "position":'+str(searchStr)+' } ,"options":{"resume": true}} }'    
+        post = '{"jsonrpc": "2.0", "id": 1, "method": "Player.Open", "params": {"item": {"playlistid": '+str(playlistID)+', "position":'+str(searchStr)+' } ,"options":{"resume": true}} }'    
     else:
         print('Command not found', command)
     #elif command == 'tagesschau':                   
@@ -238,28 +230,26 @@ def kodiGetActivePlaylistID(playerID):
 def kodiClearPlaylist(playlistID):
     return postKodiRequest('clearPlaylist', None, None, playlistID = playlistID)
 
-def kodiAddToPlaylist(episodeID, playlistID, typeStr):
-    return postKodiRequest('addPlaylist', typeStr, episodeID, playlistID = playlistID)
+def kodiAddToPlaylist(itemID, playlistID, typeStr):
+    return postKodiRequest('addPlaylist', typeStr, itemID, playlistID = playlistID)
 
 def kodiPlayPlaylist(playlistID, position = 0):
     return postKodiRequest('playPlaylist', None, position, playlistID = playlistID)        
 
 def kodiPlayItemsAsPlaylist(items, typeStr):    
-        
-    try:
-        ID = items[0][typeStr+'id']
-    except Exception as e:
-        print(e)
-        print(items)
-        return { 'result': False,  'message' : ' Keine Episode dieser Serie gefunden, die abgespielt werden kann. Grund: ' +str(e)  }
-        
-    if typeStr == "movie":
-        result = kodiPlayMovieId(ID)
-    else:
-        result = kodiPlayEpisode(ID)
-    
     try:
         playerID = getActivePlayerID()
+        
+        items = [items] if not isinstance(items, list) else items
+        
+        for idx, item in enumerate(items):
+            if 'file' in item:                
+                items[idx] = { 'file': item['file'] }
+            if 'episodeid' in item:                
+                items[idx] = { 'episodeid': item['episodeid']}
+            if 'movieid' in item:                
+                items[idx] = {'movieid' : item['movieid']}
+            
                     
         playlistIDs = kodiGetActivePlaylistID(playerID)
         print("Playlists found ", playlistIDs)        
@@ -267,14 +257,18 @@ def kodiPlayItemsAsPlaylist(items, typeStr):
         try:
             playlistID = playlistIDs['data']['playlistid']
         except:
-            playlistID = 1        
+            playlistID = 1  
+        
+        if len(items)>0:
+            result = postKodiRequest('open', None, items[0], playlistID = playlistID)   
+        
+        #kodiClearPlaylist(playlistID)
+        if result['result'] and len(items)>1:                
+            result = kodiAddToPlaylist(items, playlistID, typeStr)
             
-        print("Adding the rest of episodes")  
-        if len(items)>1:
-            items = items[1:] #removing first, since this is already in playlist      
-            for item in items:                
-                result = kodiAddToPlaylist(item[typeStr+'id'], playlistID, typeStr)
-                print(result)
+        print(result)
+        # result = kodiPlayPlaylist(playlistID, 0)
+        print(result)
     except Exception as e:
         print(e)
         print("Ignoring these failures. We now try to run the episode")
@@ -289,7 +283,7 @@ def kodiPlayTVShowLastEpisodeById(tvshowid):
     
     if 'result' in result and result['result'] and 'data' in result and len(result['data']['episodes'])>0: 
         #result = { 'result': True,  'message' : "Starte " + str(result["data"])}
-        return kodiPlayItemsAsPlaylist(result['data']['episodes'],"episode")
+        return kodiPlayItemsAsPlaylist(result['data']['episodes'],"episodeid")
     else:   
         result = { 'result': False,  'message' : result['message'] + ' Keine Episode dieser Serie gefunden, die abgespielt werden kann. Grund: ' +getErrorMessage(result)  }        
     
@@ -306,14 +300,17 @@ def kodiPlayLastTvShow():
 def kodiPlayLastMovie():            
     result = postKodiRequest("lastmovie", None, None)    
     try:
-        movies = result['data']['movies']
-        for movie in movies: 
+        lst = []
+        for movie in result['data']['movies']: 
             if movie['resume']['position'] > 0:
-                return kodiPlayMovieId(movie['movieid'])
-        raise Exception("No movie found")
+                lst.append(movie)
+        if len(lst)  > 0:         
+            return kodiPlayItemsAsPlaylist(lst, "movieid")
+        else:
+            return { 'result': False,  'message' : 'Keinen letzten Film gefunden'  } 
     except Exception as e:
         print(e)
-        return result
+        return { 'result': False,  'message' : 'Keinen letzten Film gefunden'  } 
     
 def kodiPlayRandomMovieByGenre(genre):            
     genre = genre.replace("-"," ").lower()
@@ -334,7 +331,7 @@ def kodiPlayRandomMovieByGenre(genre):
     try:
         movies = result['data']['movies']        
         if len(movies)>0:
-            return kodiPlayItemsAsPlaylist(movies, "movie")
+            return kodiPlayItemsAsPlaylist(movies, "movieid")
         else:
             raise Exception("No movies found")
     except Exception as e:
@@ -347,18 +344,17 @@ def kodiPlayYoutube(searchStr):
     try:
         url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=30&order=relevance&q='+searchStr+'&key=AIzaSyDCgSFYMKR4IJsIM-BkZXMuqaVHkqRjXzI'
         js = htmlrequests.downloadJsonDic(url,None)
-        videoId = None
+        #videoId = None
+        lst = []
         for item in js['items']:
             if 'videoId' in item['id']:
-                print(item['id'])
-                if videoId is None: #play first entry
-                    videoId = item['id']['videoId']
-                    result = postKodiRequest("youtube", None, videoId) 
-                else:
-                    youtubeUrl = 'plugin://plugin.video.youtube/play/?video_id='+str(item['id']['videoId'])
-                    postKodiRequest("addPlaylist", "file", youtubeUrl) #add further playlist entries
-        if videoId is None:
-            raise Exception("Kein Video gefunden")        
+                lst.append( { 'file' : 'plugin://plugin.video.youtube/play/?video_id='+item['id']['videoId']  } )
+
+        if len(lst) > 0:
+            result = kodiPlayItemsAsPlaylist(lst, "file")
+        else:
+            raise Exception("Kein Video gefunden")
+            
             
     except Exception as e:
         print("---------------------------",e)
@@ -384,7 +380,6 @@ def kodiPlayRadio(channel):
     else:
         return {'result': False, 'message': 'Channel nicht gefunden'}
     
-    
  
 def kodiPlayTagesschau(showStr):
     try:
@@ -392,7 +387,7 @@ def kodiPlayTagesschau(showStr):
         if showStr == "tagesschau": #show latest tagesschau
             ts = js['latestBroadcast']['sophoraId']
         else:
-            ts = [x for x in js['latestBroadcastsPerType'] if x['title']==showStr][0]['sophoraId'] 
+            ts = [x for x in js['latestBroadcastsPerType'] if showStr in x['title'] ][0]['sophoraId'] 
         print(ts)
                 
         if (sys.version_info > (3, 0)):
@@ -402,6 +397,7 @@ def kodiPlayTagesschau(showStr):
         
         result = postKodiRequest("tagesschau", None, strts)
     except Exception as e:
+        print(e)
         result = {'result': False, 'message' : 'Tagesschau kann nicht gestartet werden '+str(e)}
     return result
     
@@ -418,13 +414,13 @@ def getErrorMessage(dic):
                 return "Unbekannt"
 
 
-def kodiPlayMovieId(movieId):
-    result = postKodiRequest("open", "movie", movieId)   
+def kodiPlayItem(movieId):
+    result = postKodiRequest("open", None, movieId)   
     if result['result']: 
         result = { 'result': True,  'message' : "Starte " + str(movieId)}
     else:   
         result = { 'result': False,  'message' : 'Konnte Film nicht starten. Grund: ' + getErrorMessage(result) }
-    return result  
+    return result
     
 def kodiPlayMovie(movieTitle):    
     items = getPlayableItems("movies", movieTitle)
@@ -432,7 +428,7 @@ def kodiPlayMovie(movieTitle):
         
     #play item
     if len(item)>0:  
-        result =  kodiPlayMovieId(item["movieid"])
+        result =  kodiPlayItem({'movieid': item["movieid"]} )
         if 'result' in result and result['result']: 
             result = { 'result': True,  'message' : "Starte den Film " +  item["label"] }
     else:
@@ -441,10 +437,12 @@ def kodiPlayMovie(movieTitle):
 
 if __name__ == "__main__":
     #kodiPlayTagesschau("tagesthemen")
+    kodiPlayMovieOrSeries("Modern Family")
     #idx = getActivePlayerID()
     #kodiGetCurrentPlaying()
     #kodiStop()
     #a=kodiPlayLastTvShow()
     #a=kodiPlayRandomMovieByGenre(u"Komödie")
-    a = kodiPlayYoutube("The Daily Show")
-    print(a)
+    #a = kodiPlayYoutube("The Daily Show")
+    #a = kodiPlayLastMovie()
+    #print(a)
