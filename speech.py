@@ -181,7 +181,7 @@ class HotwordDetector(object):
             if listening_callback is not None:
                 listening_callback()
 
-            gpio.setLed1State(True)
+            gpio.setLedState(gpio.LED_RED, gpio.ONLY_ONE_LED)
 
             self.pause_time = 0.0
             self.elapsed_time = 0.0
@@ -197,8 +197,7 @@ class HotwordDetector(object):
         self.framesBufferSize = 0
         self.elapsed_time = 0
         self.startTime_for_tictoc = time.time()
-        gpio.setLed1State(False)
-        gpio.setLed2State(False)
+        gpio.setMultipleLed(gpio.ALL_LEDS, gpio.LED_OFF)       
         return "silence"
     
     def applyLowPassFilter(self, energy, tau):        
@@ -222,8 +221,7 @@ class HotwordDetector(object):
     def state_recognition(self, detected_callback):
         
         response = {"error": None, "transcription": None }
-        gpio.setLed2State(True)
-        gpio.setLed1State(False)
+        gpio.setLedState(gpio.LED_YELLOW, gpio.ONLY_ONE_LED)        
         try:
             print("Starting speech recognition...")
             #self.frame_data = getByteArray(self.frames)

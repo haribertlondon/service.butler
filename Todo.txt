@@ -1,4 +1,7 @@
 #------TODO-------
+Google-Bilder-Suche ->Browser anzeigen
+Show Mails (Mail Kodi addon)
+Extra 3
 TV: Sound-Probleme
 #Neustart Raspi
 Neustart Kodi
@@ -33,6 +36,9 @@ Deutsche Sprache in Sphinx statt die Englische
 #geschichte erzählen
 
 #--------TEST---------------
+3 LEDs
+Show Website Screenshot: http://api.screenshotlayer.com/api/capture?access_key=b5ac6f204eb21a3e1ea452efaddd82f3&url=http://yahoo.com&viewport=1440x900&width=900
+Google nach -> Browser anzeigen
 Sensiblerer Snowboy
 Ausgabe-Lautstärke
 Notification "Listening" weg, wenn LED oder sonst was da

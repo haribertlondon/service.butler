@@ -25,6 +25,18 @@ def downloadBinary(url, post):
         
     return (html, error)
 
+def downloadToFile(url, post, filename):
+    try:
+        data = downloadBinary(url, post)
+        f = open(filename, 'w+b')            
+        if isinstance(data, tuple):
+            data = data[0]
+        f.write(data)
+        f.close() 
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
 def downloadJsonDic(url, post):
     (html, error) = downloadBinary(url, post)  

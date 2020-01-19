@@ -7,12 +7,15 @@ import pluginEcho
 import pluginMail
 import pluginUpdate
 import pluginJokes
+import gpio
+import pluginBrowser
 
 def checkMatch(match):    
     global matchCounter
     
     if match: 
         if matchCounter == 0:
+            gpio.setLedState(gpio.LED_GREEN, gpio.ONLY_ONE_LED)
             matchCounter = matchCounter + 1            
             return True
         else:
@@ -81,6 +84,10 @@ def speechInterprete(guess):
     matches = re.findall(u"^Erz.{0,10}hl[a-z]* ein[a-z]* Witz", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginJokes.tellJoke()
+        
+    matches = re.findall(u"^Goog[a-z]* nach (.*)", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginBrowser.runGoogleLucky(matches[0])
 
     matches = re.findall(u"^(Pause|Break)", command, flags = re.IGNORECASE)
     if checkMatch(matches):

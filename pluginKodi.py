@@ -25,6 +25,8 @@ def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
         post = '{ "jsonrpc": "2.0", "method": "Player.PlayPause", "params": {"playerid": '+str(playerID)+', "play":true },"id":1}'        
     elif command == "pause":
         post = '{ "jsonrpc": "2.0", "method": "Player.PlayPause", "params": {"playerid": '+str(playerID)+' ,"play":false},"id":1}'
+    elif command == "rawopen":
+        post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": {"item":{"file":"'+searchStr+'"}},"id":1}'
     elif command == "open":
         if typeStr == 'movies' or typeStr == 'movie': 
             post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": {"movieid": '+str(searchStr)+ '} ,"options":{"resume": true} }, "id": 1 }'
