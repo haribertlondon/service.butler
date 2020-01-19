@@ -1,5 +1,7 @@
 #------TODO-------
 Google-Bilder-Suche ->Browser anzeigen
+Spiele Trailer von Filmen in Bibliothek
+Spiele aktuelle Trailer
 Show Mails (Mail Kodi addon)
 Extra 3
 Daily Show - Channel!!

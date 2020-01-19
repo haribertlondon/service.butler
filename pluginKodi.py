@@ -81,6 +81,8 @@ def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
             post = '{ "jsonrpc": "2.0", "method": "Playlist.Add", "params": { "playlistid": '+str(playlistID)+', "item": {"movieid": '+str(searchStr)+ '}  }, "id": 1 }'            
         elif typeStr == 'tvshows' or typeStr == 'episodes' or typeStr == 'episode': 
             post = '{ "jsonrpc": "2.0", "method": "Playlist.Add", "params": {"playlistid": '+str(playlistID)+', "item": {"episodeid": '+str(searchStr)+ '}  }, "id": 1 }'                    
+        elif typeStr == 'file':
+            post = '{ "jsonrpc": "2.0", "method": "Playlist.Add", "params": {"playlistid": '+str(playlistID)+', "item": {"file": "'+str(searchStr)+ '"}  }, "id": 1 }'
     elif command == 'playPlaylist':
         post = '{"jsonrpc": "2.0", "id": 2, "method": "Player.Open", "params": {"item": {"playlistid": '+str(playlistID)+', "position":'+str(searchStr)+' } ,"options":{"resume": true}} }'    
     else:
@@ -348,11 +350,16 @@ def kodiPlayYoutube(searchStr):
         videoId = None
         for item in js['items']:
             if 'videoId' in item['id']:
-                videoId = item['id']['videoId']
-                break
+                print(item['id'])
+                if videoId is None: #play first entry
+                    videoId = item['id']['videoId']
+                    result = postKodiRequest("youtube", None, videoId) 
+                else:
+                    youtubeUrl = 'plugin://plugin.video.youtube/play/?video_id='+str(item['id']['videoId'])
+                    postKodiRequest("addPlaylist", "file", youtubeUrl) #add further playlist entries
         if videoId is None:
-            raise Exception("Kein Video gefunden")
-        result = postKodiRequest("youtube", None, videoId)
+            raise Exception("Kein Video gefunden")        
+            
     except Exception as e:
         print("---------------------------",e)
         result = {'result': False, 'message' : 'Youtube kann nicht gestartet werden '+str(e)}
@@ -438,5 +445,6 @@ if __name__ == "__main__":
     #kodiGetCurrentPlaying()
     #kodiStop()
     #a=kodiPlayLastTvShow()
-    a=kodiPlayRandomMovieByGenre(u"Komödie")
+    #a=kodiPlayRandomMovieByGenre(u"Komödie")
+    a = kodiPlayYoutube("The Daily Show")
     print(a)

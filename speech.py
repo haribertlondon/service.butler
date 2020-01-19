@@ -181,7 +181,7 @@ class HotwordDetector(object):
             if listening_callback is not None:
                 listening_callback()
 
-            gpio.setLedState(gpio.LED_RED, gpio.ONLY_ONE_LED)
+            gpio.setLedState(gpio.LED_RED, gpio.LED_ON, gpio.ONLY_ONE_LED)
 
             self.pause_time = 0.0
             self.elapsed_time = 0.0
@@ -221,7 +221,7 @@ class HotwordDetector(object):
     def state_recognition(self, detected_callback):
         
         response = {"error": None, "transcription": None }
-        gpio.setLedState(gpio.LED_YELLOW, gpio.ONLY_ONE_LED)        
+        gpio.setLedState(gpio.LED_YELLOW, gpio.LED_ON, gpio.ONLY_ONE_LED)        
         try:
             print("Starting speech recognition...")
             #self.frame_data = getByteArray(self.frames)
@@ -254,7 +254,7 @@ class HotwordDetector(object):
         except sr.UnknownValueError:
             response["error"] = "Unable to recognize speech" # speech was unintelligible
         
-        if isDebug():    
+        if isDebug():# or True:    
             pluginEcho.echoStoreWav(audio) 
             
         if detected_callback: #and not settings.isDebug():
@@ -289,14 +289,14 @@ class HotwordDetector(object):
             
             #whole frame buffer
             self.frames.extend(chunk)          
-            dur = len(self.frames)*self.seconds_per_buffer #keep length of buffer small (only keep 0.8 sec)   
+            dur = len(self.frames)*self.seconds_per_buffer #keep length of buffer small 
             
             #reduce buffer length as ring buffer
             if state == "phrase" or state == "recognition": #here, we need a longer buffer
                 maxFrameLen = settings.LISTEN_PHRASE_TOTALTIMEOUT + settings.LISTEN_HOTWORD_DURATION + 1.0
             else:
                 maxFrameLen = settings.LISTEN_HOTWORD_DURATION 
-            newLength = (int)(len(self.frames)*maxFrameLen/dur)
+            newLength = (int)(maxFrameLen/self.seconds_per_buffer)
             
             if len(self.frames) > newLength:            
                 self.frames = self.frames[-newLength:] 

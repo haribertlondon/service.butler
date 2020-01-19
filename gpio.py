@@ -8,7 +8,7 @@ except Exception as e:
     hasGPIO = False
 
 
-pinsLed = [27, 17, 16] #0=red, 1=yellow, 2=green
+pinsLed = [26, 17, 16] #0=red, 1=yellow, 2=green
 
 #some consts
 LED_RED = 0 
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     print("Start")
     led = init()
     while True:
-        setMultipleLed([True, True, True])        
+        setMultipleLed([0, 1, 2], True)        
         time.sleep(1)
         setMultipleLed(-1, False)
         time.sleep(1)

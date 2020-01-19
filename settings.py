@@ -9,7 +9,7 @@ LISTEN_MIC_INDEX = None
 
 LISTEN_TIMEOUT = None
 LISTEN_PHRASE_TOTALTIMEOUT = 5.0 #makes sense with snowboy hotword detection
-LISTEN_PHRASE_PUREPHRASETIME = 0.6 #short expression, like for "Play" 0.65 is too long
+LISTEN_PHRASE_PUREPHRASETIME = 0.55 #short expression, like for "Play" 0.65 is too long
 LISTEN_PHRASE_PAUSE_THRESHOLD = 1.0 #pause after phrase
 LISTEN_PHRASE_MIN_TIME = LISTEN_PHRASE_PUREPHRASETIME + LISTEN_PHRASE_PAUSE_THRESHOLD
 
@@ -19,8 +19,8 @@ LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_FAST_TAU = 0.8 #seconds 0.8sec was t
 LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU = 15 #seconds 
 
 LISTEN_ENERGY_THRESHOLD = 300 #will be modified dynamically. This is the start value
-LISTEN_SNOWBOY_SENSITIVITY = "0.59" #"0.56" # was "0.4" in the example
-LISTEN_VERBOSE_TIMEOUT = 103.0
+LISTEN_SNOWBOY_SENSITIVITY = "0.58" #"0.56" # was "0.4" in the example
+LISTEN_VERBOSE_TIMEOUT = 60.0
 LISTEN_AUDIO_GAIN = 1.3
 LISTEN_HOTWORD_METHODS = 1 #1=snowboy 2=sphinx 3=bothOR 4=bothAND
 LISTEN_HOTWORD_DURATION = 0.8
@@ -33,7 +33,7 @@ MAIL_SERVER_SETTINGS_FILE = '../mail.jpg'
 HTTP_TIMEOUT = 20
 
 LISTEN_WRITEWAV = "speech.wav"
-LISTEN_HOTWORD = ["termin", "hermine", "termine", "kodi", "jarvis", "corrin", "gaudi", "audi", "tony", "rowdy", "godi", "tonie", "toni", "gorie", "gori","curry", "(k|g|p|h)(au|o|ow)(l|d|r|rr|n)(i|y|ie)", "pauli", "howdy"]
+LISTEN_HOTWORD = ["termin", "hermine", "termine", "kodi", "jarvis", "corrin", "gaudi", "audi", "tony", "rowdy", "godi", "tonie", "toni", "gorie", "gori","curry", "(k|g|p|h|c)(au|o|ow)(l|d|r|rr|n)(i|y|ie|ey)", "pauli", "howdy"]
 LISTEN_GOOGLEKEY = ""
 LISTEN_LANGUAGE= 'de-DE' #["en-US",'de']
 HTTP_KODI_IP = 'localhost:8080'#'192.168.0.60:8080'

@@ -1,4 +1,10 @@
-from urllib.request import quote as urlquote
+# -*- coding: utf-8 -*-
+import sys
+if (sys.version_info > (3, 0)):
+    import urllib.request as urlrequest #@UnusedImport 
+else:
+    import urllib2 as urlrequest #@UnresolvedImport @Reimport
+
 import requests
 import re
 import pluginKodi
@@ -9,11 +15,11 @@ import datetime
 def getFilename():    
     uniqStr = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     defaultFilename = os.path.dirname(os.path.realpath(__file__))+"/browser"+uniqStr+".jpg"
-    defaultFilename = (r'|'.join((r'|'.join(defaultFilename.split('/'))).split("\\"))).replace("|","\/")
-    return defaultFilename
+    defaultFilename2 = (r'|'.join((r'|'.join(defaultFilename.split('/'))).split("\\"))).replace("|","\/")
+    return (defaultFilename, defaultFilename2)
 
 def getImageUrl(url = 'http://yahoo.com'):
-    qurl = urlquote(url, safe='')
+    qurl = urlrequest.quote(url, safe='')
     fullurl = 'http://api.screenshotlayer.com/api/capture?access_key=b5ac6f204eb21a3e1ea452efaddd82f3&viewport=1440x900&format=jpg&url='+qurl
     return fullurl
     
@@ -24,18 +30,18 @@ def getRedirect(url):
     print(url)
     return url
 
-def runUrl(url, filename = None):
+def runUrl(url, filename = None, filenameQuoted=None):
     if filename is None:
-        filename = getFilename()
+        (filename, filenameQuoted) = getFilename()
     imageUrl = getImageUrl(url)
     a = htmlrequests.downloadToFile(imageUrl, None, filename)
     if a:
-        return pluginKodi.postKodiRequest("rawopen", None, filename, None, None)
+        return pluginKodi.postKodiRequest("rawopen", None, filenameQuoted, None, None)
     else:
-        return {'result': False, 'message': 'Konnte url nicht öffnen'}
+        return {'result': False, 'message': u'Konnte URL nicht öffnen'}
 
 def runGoogleLucky(s, filename = None):    
-    s = urlquote(s, safe='')
+    s = urlrequest.quote(s, safe='')
     url = 'http://www.google.com/search?q='+s+'&btnI'
     print(url)    
     url = getRedirect(url)
@@ -43,5 +49,7 @@ def runGoogleLucky(s, filename = None):
     return runUrl(url, filename)
 
 if __name__ == "__main__":
-    runGoogleLucky("raspi pinout")    
+    #runGoogleLucky("raspi pinout")    
+    a = getFilename()
+    print(a)
     print("Finished")

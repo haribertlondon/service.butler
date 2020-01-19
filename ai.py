@@ -15,7 +15,7 @@ def checkMatch(match):
     
     if match: 
         if matchCounter == 0:
-            gpio.setLedState(gpio.LED_GREEN, gpio.ONLY_ONE_LED)
+            gpio.setLedState(gpio.LED_GREEN, gpio.LED_ON, gpio.ONLY_ONE_LED)
             matchCounter = matchCounter + 1            
             return True
         else:
@@ -67,7 +67,7 @@ def speechInterprete(guess):
 
 
     if not hotword_found:
-        matches = re.findall(u"^(Erz.{0,10}hl[a-z]*|Pause|Stop|Halt|Stop|Spiel|Start|Öffne|Play|Radio|Was|Spule|Mach|Was|Gute)", command, flags = re.IGNORECASE) 
+        matches = re.findall(u"^(Erz.{0,10}hl[a-z]*|Stell|Führ|Schick|Google|Spring|Geh|Sag|Pause|Stop|Halt|Stop|Spiel|Start|Öffne|Play|Radio|Was|Spule|Mach|Was|Gute)", command, flags = re.IGNORECASE) 
         if not matches:
             print("No hotwords found and also no keywords")
             return {'result': False, 'message': 'Silence!'}
@@ -85,7 +85,7 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginJokes.tellJoke()
         
-    matches = re.findall(u"^Goog[a-z]* nach (.*)", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^Goog[a-z]* (?:nach )?(.*)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginBrowser.runGoogleLucky(matches[0])
 
