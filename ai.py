@@ -101,9 +101,13 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube("Extra 3")
         
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(eine )?Doku(mentation)?", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(ein[a-z]* )?Doku(mentation)?", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube("Dokumentation deutsch")
+        
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(ein[a-z]* )?zufällig[a-z]* Film?", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayRandomMovieByGenre(u"", True)
         
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Maybrit Illner", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -123,7 +127,7 @@ def speechInterprete(guess):
         
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?ein[a-z]* (Komödie|Thriller|Krimi|Liebesfilm|Action|Actionfilm|Abenteuer|Abenteuerfilm|Animationsfilm|Animation|Drama|Dokumentarfilm|Familienfilm|Horror|Horrorfilm|Komödie|Kriegsfilm|Krimi|Liebesfilm|Mysteryfilm|Mystery|Science-Fiction-Film|Science-Fiction|Western)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
-        result = pluginKodi.kodiPlayRandomMovieByGenre(matches[0])
+        result = pluginKodi.kodiPlayRandomMovieByGenre(matches[0], False)
 
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?(letzte )?Tagesschau", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -141,9 +145,13 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPlayTVShowLastEpisodeByName(matches[0])
         
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Trailer", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?neu[a-z]* Trailer", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube("Neue KINO TRAILER")
+        
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Trailer", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayAvailableMovieTrailers()
         
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?(The )?Daily Show", command, flags = re.IGNORECASE)
     if checkMatch(matches):

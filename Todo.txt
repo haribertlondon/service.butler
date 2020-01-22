@@ -1,8 +1,8 @@
 #------TODO-------
 
-Spiele Trailer von Filmen in Bibliothek
+
 Play random unwatched episode of TV show
-Play random unwatched movie
+
 
 Snowboy Sensitivität weiter optimieren
 
@@ -38,6 +38,9 @@ Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man 
 #geschichte erzählen
 
 #--------TEST---------------
+Spiele Trailer von Filmen in Bibliothek (Playlist-Funktioniert?) 
+
+Play random unwatched movie
 Spiele Daily Show als Playlist oder Channel
 Spiele eine Doku
 Spiele Maybrit Illner
