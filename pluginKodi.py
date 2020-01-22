@@ -6,6 +6,7 @@ import sys
 #from builtins import str
 import re 
 import json        
+import time
         
 
 def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
@@ -13,7 +14,7 @@ def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
     url = hostname    
     post = None
     
-    if playerID is None:
+    if playerID is None or playerID < 0:
         playerID = 1
     
     if playlistID is None:
@@ -119,12 +120,26 @@ def postKodiRequest_Internal(url, post):
         return { 'result': False,  'message' : 'Fehlgeschlagen. '} # + getErrorMessage(result) }
     
 def getActivePlayerID():
-    response = postKodiRequest("playerID", None, None)
     try:
-        return response["data"][0]["playerid"]
+        return getActivePlayerID_exception()
     except Exception as e:
         print(e)
         return 1 #it seems in my case, that 1 is the default playerID
+    
+def getActivePlayerID_wait(maxWait): #maxWait in seconds
+    for i in range(maxWait):
+        try:
+            playerID = getActivePlayerID_exception()
+        except: 
+            print("No player id. Waiting..."+str(i))
+            time.sleep(1) #wait until movie has started. otherwise, playerId is not known. However, the movie has already started
+        else:
+            return playerID
+    return None
+    
+def getActivePlayerID_exception():
+    response = postKodiRequest("playerID", None, None)
+    return response["data"][0]["playerid"]
     
 def postKodiRequest(command, typeStr, searchStr, playerID = None, playlistID = None):
     (url, post) = getKodiUrl(command, typeStr, searchStr, playerID = playerID, playlistID = playlistID) 
@@ -260,14 +275,15 @@ def kodiPlayItemsAsPlaylist(items, typeStr):
         if len(items)>0:
             result = postKodiRequest('open', None, items[0])
             
-            playerID = getActivePlayerID()            
+            playerID = getActivePlayerID_wait(10) #max wait 10 sec
+            
             playlistIDs = kodiGetActivePlaylistID(playerID)
             print("Playlists found ", playlistIDs)        
             
             try:
                 playlistID = playlistIDs['data']['playlistid']
             except:
-                playlistID = 1     
+                playlistID = 0
                     
             if result['result'] and len(items)>1:
                 result = kodiAddToPlaylist(items[1:], playlistID, typeStr)
@@ -457,7 +473,10 @@ if __name__ == "__main__":
     #kodiGetCurrentPlaying()
     #kodiStop()
     #a=kodiPlayLastTvShow()
-    a=kodiPlayAvailableMovieTrailers()
-    #a = kodiPlayYoutube("The Daily Show")
+    #a=kodiPlayAvailableMovieTrailers()
+    #playerID = getActivePlayerID()
+    #a = kodiGetActivePlaylistID(playerID)
+    #print(a)
+    a = kodiPlayYoutube("The Daily Show")
     #a = kodiPlayLastMovie()
     #print(a)
