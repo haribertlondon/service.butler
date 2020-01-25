@@ -159,7 +159,7 @@ class HotwordDetector(object):
             self.applyLowPassFilter(energy, settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU) #tau = 4sec => reach 4*6=24sec
 
         energy2 = audioop.rms(self.frame_data, self.sample_width) 
-        energy = energy2*1.0
+        energy = (energy*0.5+energy2*0.5)*1.5
                 
         if (settings.LISTEN_HOTWORD_METHODS in [1,3,4]) and settings.hasSnowboy(): # and energy>self.energy_threshold:
             resultSnowboy = self.hotword_snowboy()
