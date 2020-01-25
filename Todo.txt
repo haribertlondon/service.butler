@@ -4,14 +4,11 @@ Markus Lanz
 
 Play random unwatched episode of TV show
 
-
 Snowboy Sensitivität weiter optimieren
 
 TV: Sound-Probleme
-Sprachausgabe: gtts ist sehr schlecht
-Natürlichere Sprachausgabe 
+Sprachausgabe: gtts ist sehr schlecht 
 Sprachausgabe nicht so verzögern
-
 
 Show Mails (Mail Kodi addon)
 Google-Bilder-Suche ->Browser anzeigen
@@ -22,7 +19,6 @@ Neustart Kodi
 #screensaver "Schlaf gut" does not work properly?
 Sag was nettes erweitern 
 Spiele einen schwedischen/Deutschen Film
-
 
 Use python3
 Filme-Liste cachen, dass man nicht so lange warten muss
@@ -39,18 +35,18 @@ Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man 
 #geschichte erzählen
 
 #--------TEST---------------
-Spiele Trailer von Filmen in Bibliothek (Playlist-Funktioniert?) 
-
+#adjust silence nur einmal beim Startup
 Play random unwatched movie
-Spiele Daily Show als Playlist oder Channel
 Spiele eine Doku
-Spiele Maybrit Illner
 Spiele eine Liebesfilm
 Spiele aktuelle Trailer
-Daily Show - Channel!!
 Extra 3
-KodiPlugin Rework
 #--------DONE---------------
+KodiPlugin Rework
+Daily Show - Channel!!
+Spiele Daily Show als Playlist oder Channel
+Spiele Maybrit Illner
+Spiele Trailer von Filmen in Bibliothek (Playlist-Funktioniert?)
 #Ringpuffer für Aufnahmen
 Deutsche Sprache in Sphinx statt die Englische: nein
 oss statt alsa: Nein

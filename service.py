@@ -33,10 +33,10 @@ import sys, traceback
 import ai
 import settings
 import texttospeech 
-import speech
+import stateMachine
 import gpio
          
-def detected_callback(response, _): #audio):
+def detected_callback(response): #audio):
     try:
         result = ai.speechInterprete(response)
                 
@@ -61,5 +61,8 @@ def listening_callback():
 
 if __name__ == "__main__":    
     gpio.init()
-    speech.run(sensitivity=settings.LISTEN_SNOWBOY_SENSITIVITY, detected_callback = detected_callback, audio_gain = settings.LISTEN_AUDIO_GAIN, listening_callback=listening_callback)
+    detector = stateMachine.HotwordDetectorStateMachine(decoder_model = settings.LISTEN_SNOWBOY_MODELS, sensitivity=settings.LISTEN_SNOWBOY_SENSITIVITY, audio_gain = settings.LISTEN_AUDIO_GAIN)    
+    detector.start(detected_callback=detected_callback, listening_callback = listening_callback)
+    detector.terminate()
+    
     sys.exit()
