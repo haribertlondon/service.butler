@@ -1,11 +1,5 @@
 #------TODO-------
-Use python3
-Youtube geht nicht?
-Heute Show
-Markus Lanz
 "Starte den Tag": Tagesschau+Markus Lanz 
-"Spiele Come fly with me" wirft einen error
-"Spiele den Film Identität" vertägt keine Umlaute
 Play random unwatched episode of TV show
 
 Snowboy Sensitivität weiter optimieren
@@ -24,7 +18,7 @@ Neustart Kodi
 Sag was nettes erweitern 
 Spiele einen schwedischen/Deutschen Film
 
-
+Heute Show per zdf
 Filme-Liste cachen, dass man nicht so lange warten muss
 Toleranz für Serien/Film-Suche optimieren (standard ist 0.6)
 
@@ -41,6 +35,12 @@ Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man 
 #geschichte erzählen
 
 #--------TEST---------------
+Youtube geht nicht?
+Use python3
+Heute Show
+Markus Lanz
+"Spiele den Film Identität" vertägt keine Umlaute
+"Spiele Come fly with me" wirft einen error
 Markus Lanz
 #adjust silence nur einmal beim Startup
 Play random unwatched movie

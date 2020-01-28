@@ -6,7 +6,6 @@ import pluginEcho
 import mysphinx
 import settings
 import audioop
-import time
 
 try:    
     import speech_recognition as sr #@UnusedImport #check if package is installed
@@ -14,9 +13,16 @@ except:
     print("No speech_recognition installed on system. Try to use fallback...")
     import resources.lib.speech_recognition as sr #@Reimport #if not, use the provides ones
 try:
-    from resources.lib.snowboyrpi8 import snowboydetect as snowboydetect #@UnresolvedImport
+    if settings.isPython3:
+        print("Load Python3 Snowboy...")
+        from resources.lib.snowboyrpi8Python3 import snowboydetect as snowboydetect #@UnresolvedImport #@UnusedImport
+        print("Finalized loading snowboy")
+    else:
+        print("Load Python2 Snowboy...")
+        from resources.lib.snowboyrpi8 import snowboydetect as snowboydetect #@UnresolvedImport #@UnusedImport #@Reimport
+        print("Finalized loading snowboy")
 except Exception as e:
-    print("Could not load snowboy detect", e)        
+    print("Could not load snowboy detect", e)
   
 def getByteArray(lst):    
     flat_list = [item for sublist in lst for item in sublist]    
@@ -54,19 +60,19 @@ class HotwordDetector(object):
         model_str = ",".join(decoder_model)
         
         try:    
-            self.detector = snowboydetect.SnowboyDetect(resource_filename=settings.LISTEN_SNOWBOY_RESOURCE, model_str=model_str)
+            self.detector = snowboydetect.SnowboyDetect(resource_filename=str(settings.LISTEN_SNOWBOY_RESOURCE).encode(), model_str=model_str.encode())
             self.detector.SetAudioGain(audio_gain)
             self.num_hotwords = self.detector.NumHotwords()
             self.num_channels = self.detector.NumChannels()
             self.sample_rate = self.detector.SampleRate()            
-    
+
             if len(decoder_model) > 1 and len(sensitivity) == 1:
                 sensitivity = sensitivity*self.num_hotwords
             if len(sensitivity) != 0:
                 assert self.num_hotwords == len(sensitivity), "number of hotwords in decoder_model (%d) and sensitivity " + "(%d) does not match" % (self.num_hotwords, len(sensitivity))
             sensitivity_str = ",".join([str(t) for t in sensitivity])
             if len(sensitivity) != 0:
-                self.detector.SetSensitivity(sensitivity_str);
+                self.detector.SetSensitivity(sensitivity_str.encode());
         except Exception as e:
             print("Error while loading Snowboy: ", e)
             self.num_channels = 1
@@ -103,7 +109,10 @@ class HotwordDetector(object):
     def hotword_snowboy(self):
         try:
             frame_data = getByteArray(self.frames)
-            result = self.detector.RunDetection(frame_data)
+            if settings.isPython3():
+                result = self.detector.RunDetection(bytes(frame_data))
+            else:
+                result = self.detector.RunDetection(frame_data)
         except Exception as e:
             print("Snowboy Exception. Reason ", e)
             result = 0

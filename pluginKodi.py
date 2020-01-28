@@ -302,7 +302,7 @@ def kodiPlayTVShowLastEpisodeById(tvshowid):
       
     result = getLastEpisode(tvshowid)
     
-    if 'result' in result and result['result'] and 'data' in result and len(result['data']['episodes'])>0: 
+    if 'result' in result and result['result'] and 'data' in result and 'episodes' in result['data'] and len(result['data']['episodes'])>0: 
         #result = { 'result': True,  'message' : "Starte " + str(result["data"])}
         return kodiPlayItemsAsPlaylist(result['data']['episodes'],"episodeid")
     else:   

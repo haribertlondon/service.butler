@@ -42,7 +42,7 @@ def downloadJsonDic(url, post):
     (html, error) = downloadBinary(url, post)  
 
     if html and not error:
-        js = json.loads(html)
+        js = json.loads(html.decode('utf-8'))
     else:
         js = {'result' : False, 'message': error}
     print(js)

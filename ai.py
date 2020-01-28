@@ -164,6 +164,10 @@ def speechInterprete(guess):
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?(The )?Daily Show", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube("The Daily Show")
+        
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )den Film (.*)", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayMovie(matches[0])
 
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(.*)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -245,6 +249,6 @@ if __name__ == "__main__":
     #guess =  {"error": None, "transcription": "Kodi Spiele SWR3" }
     #guess =  {"error": None, "transcription": "Kodi Leiser" }
     #guess =  {"error": None, "transcription": "Termine Stoppe" }
-    guess =  {"error": None, "transcription": "Kodi Spiele die Heute show" }
+    guess =  {"error": None, "transcription": u"Kodi Spiele den Film Identität" }
     a = speechInterprete(guess)
     print(a)
