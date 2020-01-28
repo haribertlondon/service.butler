@@ -3,8 +3,6 @@ import difflib
 import htmlrequests
 import settings
 import sys
-#from builtins import str
-import re 
 import json        
 import time
         
