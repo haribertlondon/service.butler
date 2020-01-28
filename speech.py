@@ -14,9 +14,9 @@ except:
     print("No speech_recognition installed on system. Try to use fallback...")
     import resources.lib.speech_recognition as sr #@Reimport #if not, use the provides ones
 try:
-    from resources.lib.snowboyrpi8 import snowboydetect as snowboydetect#@UnresolvedImport
+    from resources.lib.snowboyrpi8 import snowboydetect as snowboydetect #@UnresolvedImport
 except Exception as e:
-    print("Could not load snowboy", e)        
+    print("Could not load snowboy detect", e)        
   
 def getByteArray(lst):    
     flat_list = [item for sublist in lst for item in sublist]    
@@ -82,7 +82,10 @@ class HotwordDetector(object):
         self.infos = []        
         
         self.sphinxrecognizer = mysphinx.MyRecognizer() #sr.Recognizer()  
-        self.sphinxrecognizer.prepare_sphinx2(language = "en-GIT", keyword_entries = settings.LISTEN_SPHINX_KEYWORDS) 
+        try:
+            self.sphinxrecognizer.prepare_sphinx2(language = "en-GIT", keyword_entries = settings.LISTEN_SPHINX_KEYWORDS) 
+        except:
+            pass
 
         for mic in enumerate(sr.Microphone.list_microphone_names()):
             print(mic)  
@@ -99,7 +102,8 @@ class HotwordDetector(object):
         
     def hotword_snowboy(self):
         try:
-            result = self.detector.RunDetection(self.frame_data)
+            frame_data = getByteArray(self.frames)
+            result = self.detector.RunDetection(frame_data)
         except Exception as e:
             print("Snowboy Exception. Reason ", e)
             result = 0
@@ -183,11 +187,12 @@ class HotwordDetector(object):
         #analyze one chunk
         dataArray = getByteArray(chunk)
         energy = audioop.rms(dataArray, self.sample_width)
+        isEnergy = energy > self.energy_threshold
         isHotWord = False 
        
         #whole frame buffer
         self.frames.extend(chunk)        
-        self.infos.append( (energy, isHotWord) )                  
+        self.infos.append( (isEnergy, isHotWord) )                  
         
         self.cutLeftFramesToMaxBufferSize(maxFrameLenSeconds)
               

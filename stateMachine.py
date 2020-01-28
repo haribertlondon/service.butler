@@ -16,14 +16,13 @@ class TimeTracker():
         self.pure_phrase_time = 0.0
         self.startTime_for_tictoc = time.time()
         
-    def update(self, infos, energy_threshold):
+    def update(self, infos):
         self.reset()
-        self.energy_threshold = energy_threshold
         for info in infos:
             self.updateChunk(info)
         
     def updateChunk(self, info): 
-        (energy, isHotword) = info 
+        (isEnergy, isHotword) = info 
         
         seconds = self.seconds_per_buffer  
         self.elapsed_time += seconds
@@ -31,7 +30,7 @@ class TimeTracker():
         if (isHotword or self.total_time_since_last_hotword > 0.0):
             self.total_time_since_last_hotword += seconds
              
-        if energy > self.energy_threshold:
+        if isEnergy:
             self.pure_phrase_time += seconds
             self.pause_time_after_phrase = 0                       
         else: 
@@ -104,7 +103,7 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
         if self.tracker.elapsed_time > settings.LISTEN_PHRASE_TOTALTIMEOUT: #reached max time
                 print("MaxTimeLimit reached", self.tracker.elapsed_time, 'Phrase', self.tracker.pure_phrase_time, 'Pause: ', self.tracker.pause_time_after_phrase)
                 return "init"
-        elif self.tracker.pause_time_after_phrase > settings.LISTEN_PHRASE_PAUSE_THRESHOLD: #wait for pause at the end
+        elif self.tracker.pause_time_after_phrase > settings.LISTEN_PHRASE_PAUSE_THRESHOLD and self.tracker.total_time_since_last_hotword > settings.LISTEN_FULLPHRASE_MIN_TIME: #wait for pause at the end
             if self.tracker.pure_phrase_time > settings.LISTEN_PUREPHRASE_MIN_TIME  and self.tracker.total_time_since_last_hotword > settings.LISTEN_FULLPHRASE_MIN_TIME:
                 print("Pause ok and Phrase     ok  Pause: "+str( self.tracker.pause_time_after_phrase) +' || '+str(self.tracker.pure_phrase_time) + ' > '+str(settings.LISTEN_PUREPHRASE_MIN_TIME  )+'  ||  '+str(self.tracker.total_time_since_last_hotword )+ ' > '+ str(settings.LISTEN_FULLPHRASE_MIN_TIME))                        
                 return "recognition"
@@ -164,7 +163,7 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
                 time.sleep(self.cycleTime) #wait for buffer to be filled
                 continue
             
-            self.tracker.update(self.infos, self.energy_threshold)
+            self.tracker.update(self.infos)
             
             #state machine
             lastState = state

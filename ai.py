@@ -112,6 +112,14 @@ def speechInterprete(guess):
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Maybrit Illner", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube("Maybrit Illner")
+        
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Markus Lanz", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayYoutube("Markus Lanz")
+        
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?heute Show", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayYoutube("Heute Show")
 
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Youtube(?: mit)? (?:dem|der|den|die|das)?(.*)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -236,6 +244,7 @@ if __name__ == "__main__":
     #guess =  {"error": None, "transcription": "Kodi Echo Hallo Kristina" }
     #guess =  {"error": None, "transcription": "Kodi Spiele SWR3" }
     #guess =  {"error": None, "transcription": "Kodi Leiser" }
-    guess =  {"error": None, "transcription": "Termine Stoppe" }
+    #guess =  {"error": None, "transcription": "Termine Stoppe" }
+    guess =  {"error": None, "transcription": "Kodi Spiele die Heute show" }
     a = speechInterprete(guess)
     print(a)
