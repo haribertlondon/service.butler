@@ -1,33 +1,30 @@
 #------TODO-------
-"Starte den Tag": Tagesschau+Markus Lanz 
-Play random unwatched episode of TV show
-
 Snowboy Sensitivität weiter optimieren
-
+Neustart Raspi
+Neustart Kodi
+do not reboot after update but just restart script: https://stackoverflow.com/questions/1750757/restarting-a-self-updating-python-script
+Spiele Live Concert aus Kodi heraus (Filme Live)
+#screensaver "Schlaf gut" does not work properly?
+Heute Show per zdf
+#bessere Filmsuche IV = 4 = vier = Four
+Spiele einen schwedischen/Deutschen Film
+"Starte den Tag": Tagesschau+Markus Lanz 
 TV: Sound-Probleme
 Sprachausgabe: gtts ist sehr schlecht 
 Sprachausgabe nicht so verzögern
-
 Show Mails (Mail Kodi addon)
 Google-Bilder-Suche ->Browser anzeigen
+"Spiele Come fly with me" findet keine Folge wenn schon alle Folgen geschaut
 
-Neustart Raspi
-Neustart Kodi
 
-#screensaver "Schlaf gut" does not work properly?
 Sag was nettes erweitern 
-Spiele einen schwedischen/Deutschen Film
-
-Heute Show per zdf
+Play random unwatched episode of TV show
 Filme-Liste cachen, dass man nicht so lange warten muss
 Toleranz für Serien/Film-Suche optimieren (standard ist 0.6)
-
 Wecker in x Minuten
 Sleeper in 40 Minuten
-do not reboot after update but just restart script: https://stackoverflow.com/questions/1750757/restarting-a-self-updating-python-script
 Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man das in Thread auslagern?
 "Sende Bug"
-#bessere Filmsuche IV = 4 = vier = Four
 #als kodi plugin laufen lassen (dann kann man besser beenden, starten)
 #mehrere keywords fuer kodi, tannenbaum, chefkoch
 #wecker 
@@ -47,8 +44,8 @@ Play random unwatched movie
 Spiele eine Doku
 Spiele eine Liebesfilm
 Spiele aktuelle Trailer
-Extra 3
 #--------DONE---------------
+Extra 3
 Play random unwatched episode of TV show
 KodiPlugin Rework
 Daily Show - Channel!!

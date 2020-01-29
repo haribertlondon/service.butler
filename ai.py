@@ -88,6 +88,12 @@ def speechInterprete(guess):
     matches = re.findall(u"^Goog[a-z]* (?:nach )?(.*)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginBrowser.runGoogleLucky(matches[0])
+        
+    matches = re.findall(u"^Beende[a-z]* (dich|Kodi)( selbst)?$", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        sys.exit()
+        
+    
 
     matches = re.findall(u"^(Pause|Break)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -205,10 +211,6 @@ def speechInterprete(guess):
     matches = re.findall(u"^(?:Stell[a-z]* |Setz[a-z]* )Empfindlichkeit auf (.*)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = settings.setSensitivity(matches[0])
-        
-    matches = re.findall(u"^Beende[a-z]* dich( selbst)?$", command, flags = re.IGNORECASE)
-    if checkMatch(matches):
-        sys.exit()
         
     matches = re.findall(u"^(Mach[a-z]* |Führ[a-z]* )ein Update( durch| aus)?$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
