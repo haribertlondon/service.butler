@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import re
-import sys
 import settings
 import pluginKodi
 import pluginEcho
@@ -88,12 +87,18 @@ def speechInterprete(guess):
     matches = re.findall(u"^Goog[a-z]* (?:nach )?(.*)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginBrowser.runGoogleLucky(matches[0])
-        
-    matches = re.findall(u"^Beende[a-z]* (dich|Kodi)( selbst)?$", command, flags = re.IGNORECASE)
+                
+    matches = re.findall(u"^Start[a-z]* dich neu$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
-        sys.exit()
+        pluginUpdate.restartScript()
+            
+    matches = re.findall(u"^Start[a-z]* (Kodi|Audi|Pauli) neu$", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        pluginUpdate.restartKodi()
         
-    
+    matches = re.findall(u"^Start[a-z]* (den )?(Raspberry Pi|Raspberry|System|Raspi|Computer) neu$", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        pluginUpdate.restartRaspi()
 
     matches = re.findall(u"^(Pause|Break)", command, flags = re.IGNORECASE)
     if checkMatch(matches):

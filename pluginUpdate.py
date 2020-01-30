@@ -2,9 +2,12 @@ import git #pip install gitpython
 import pluginKodi
 import os
 import time
+import sys
 
 
 def gitupdate():
+    a = pluginKodi.kodiShowMessage("Starting Update from server...")
+    print(a)
     repo = git.Repo('.')
     msg1 = repo.git.reset('--hard','origin/master')
     # blast any current changes
@@ -27,16 +30,40 @@ def gitupdate():
     
     print("Updated")
     
-def performUpdate():
-    a = pluginKodi.kodiShowMessage("Starting Update from server...")
+def restartScript():
+    args = sys.argv[:]
+    print('Re-spawning %s' % ' '.join(args))
+
+    print('Exe ',sys.executable)
+    print('Args ',args)
+    #a=os.execv(sys.executable, args)
+    a=os.execl(sys.executable, *([sys.executable]+sys.argv))
+    print("finished call")
+    print(a) 
+
+def restartKodi():
+    a=os.system('killall -15 kodi.bin')
     print(a)
-    gitupdate()
-    time.sleep(2)
+    a=os.system('kodi &')
+    print(a)
+    return 
+
+def restartRaspi():
     a = pluginKodi.kodiShowMessage("Rebooting system in 10 sec")
     print(a)
     time.sleep(10)
     print("Rebooting system")
     os.system('systemctl reboot -i')
+    return 
+    
+def performUpdate():
+    gitupdate()
+    time.sleep(2)
+    #restartRaspi()
+    restartScript()
+    
+
     
 if __name__ == "__main__":
-    performUpdate()
+    print("Start script")
+    restartScript()

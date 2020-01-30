@@ -1,8 +1,5 @@
 #------TODO-------
 Snowboy Sensitivität weiter optimieren
-Neustart Raspi
-Neustart Kodi
-do not reboot after update but just restart script: https://stackoverflow.com/questions/1750757/restarting-a-self-updating-python-script
 Spiele Live Concert aus Kodi heraus (Filme Live)
 #screensaver "Schlaf gut" does not work properly?
 Heute Show per zdf
@@ -45,6 +42,9 @@ Spiele eine Doku
 Spiele eine Liebesfilm
 Spiele aktuelle Trailer
 #--------DONE---------------
+Neustart Raspi
+Neustart Kodi
+do not reboot after update but just restart script: https://stackoverflow.com/questions/1750757/restarting-a-self-updating-python-script
 Extra 3
 Play random unwatched episode of TV show
 KodiPlugin Rework
