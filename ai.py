@@ -100,7 +100,7 @@ def speechInterprete(guess):
     if checkMatch(matches):
         pluginUpdate.restartRaspi()
         
-    matches = re.findall(u"^(Überasch[a-z]* mich|Spiel[a-z]* etwas|Spiel[a-z]* was|Spiel[a-z]* irgendetwas|Spiel[a-z]* irgendwas|Zufallswiedergabe|Unterhalt[a-z]* mich)$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(Überasch[a-z]* mich|Spiel[a-z]* etwas|Spiel[a-z]* was|Zeig[a-z]* mir [a-z]*was|Spiel[a-z]* irgendetwas|Spiel[a-z]* irgendwas|Zufallswiedergabe|Unterhalt[a-z]* mich)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         pluginKodi.kodiSurprise()
 
@@ -152,11 +152,11 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPlayLastMovie()
         
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(?:ein[a-z]* )?(Komödie|Thriller|Krimi|Liebesfilm|Action|Actionfilm|Abenteuer|Abenteuerfilm|Animationsfilm|Animation|Drama|Dokumentarfilm|Familienfilm|Horror|Horrorfilm|Komödie|Kriegsfilm|Krimi|Liebesfilm|Mysteryfilm|Mystery|Science-Fiction-Film|Science-Fiction|Western) Trailer", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(?:ein[a-z]* )?(Komödie|Thriller|Krimi[a-z]*|Liebesfilm|Action[a-z]*|Abenteuer[a-z]*|Animation[a-z]*|Drama|Dokument[a-z]*|Familienfilm|Horror[a-z]*|Kriegsfilm|Mystery[a-z]*|Science-Fiction-Film|Science-Fiction|Western[a-z]*) Trailer", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayRandomMovieByGenre(matches[0], False, True)
         
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?ein[a-z]* (Komödie|Thriller|Krimi|Liebesfilm|Action|Actionfilm|Abenteuer|Abenteuerfilm|Animationsfilm|Animation|Drama|Dokumentarfilm|Familienfilm|Horror|Horrorfilm|Komödie|Kriegsfilm|Krimi|Liebesfilm|Mysteryfilm|Mystery|Science-Fiction-Film|Science-Fiction|Western)", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?ein[a-z]* (Komödie|Thriller|Krimi[a-z]*|Liebesfilm|Action[a-z]*|Abenteuer[a-z]*|Animation[a-z]*|Drama|Dokument[a-z]*|Familienfilm|Horror[a-z]*|Kriegsfilm|Mystery[a-z]*|Science-Fiction-Film|Science-Fiction|Western[a-z]*)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayRandomMovieByGenre(matches[0], False, False)
 

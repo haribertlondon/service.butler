@@ -339,17 +339,17 @@ def kodiPlayLastMovie():
     
 def kodiPlayRandomMovieByGenre(genre, unwatched, onlyTrailer):
     genre = genre.replace("-"," ").lower()
-    if genre == "Actionfilm".lower():
+    if "Action".lower() in genre:
         genre = "Action"
-    if genre == "Abenteuerfilm".lower():
+    if "Abenteuer".lower() in genre:
         genre = "Abenteuer"
-    if genre == "Familienfilm".lower():
+    if "Familie".lower() in genre:
         genre = "Familie"
-    if genre == "Fantasyfilm".lower():
+    if "Fantasy".lower() in genre:
         genre = "Fantasy"
-    if genre == "Mysteryfilm".lower():
+    if "Mystery".lower() in genre:
         genre = "Mystery"
-    if genre == "Science Fiction Film".lower():
+    if "Science".lower() in genre:
         genre = "Science Fiction"
         
     if unwatched:

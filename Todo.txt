@@ -1,5 +1,4 @@
 #------TODO-------
-Snowboy Sensitivität weiter optimieren
 "Spiele Favorite xxx"
 Heute Show per zdf
 #bessere Filmsuche IV = 4 = vier = Four
@@ -28,24 +27,24 @@ Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man 
 #geschichte erzählen
 
 #--------TEST---------------
+Snowboy Sensitivität weiter optimieren
 Überasch mich/Spiele etwas: Spiele Maybrit, eine Doku, Daily Show,... => Mixed Playlist
 #screensaver "Schlaf gut" does not work properly?
 Spiele Live Concert aus Kodi heraus (Filme Live)
 "spiele action trailer"
 Spiele eine Dokumentation
-Youtube geht nicht?
-Use python3
 Heute Show
 Markus Lanz
 "Spiele den Film Identität" vertägt keine Umlaute
 "Spiele Come fly with me" wirft einen error
-Markus Lanz
-#adjust silence nur einmal beim Startup
 Play random unwatched movie
 Spiele eine Doku
 Spiele eine Liebesfilm
 Spiele aktuelle Trailer
 #--------DONE---------------
+Youtube geht nicht?
+#adjust silence nur einmal beim Startup
+Use python3
 Neustart Raspi
 Neustart Kodi
 do not reboot after update but just restart script: https://stackoverflow.com/questions/1750757/restarting-a-self-updating-python-script
