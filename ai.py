@@ -99,6 +99,10 @@ def speechInterprete(guess):
     matches = re.findall(u"^Start[a-z]* (den )?(Raspberry Pi|Raspberry|System|Raspi|Computer) neu$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         pluginUpdate.restartRaspi()
+        
+    matches = re.findall(u"^(Überasch[a-z]* mich|Spiel[a-z]* etwas|Spiel[a-z]* was|Spiel[a-z]* irgendetwas|Spiel[a-z]* irgendwas|Zufallswiedergabe|Unterhalt[a-z]* mich)$", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        pluginKodi.kodiSurprise()
 
     matches = re.findall(u"^(Pause|Break)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -123,6 +127,10 @@ def speechInterprete(guess):
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Maybrit Illner", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube("Maybrit Illner")
+        
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(ein )?(Live )?(Konzert|Concert)", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayFavorites("Concerts")
         
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Markus Lanz", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -260,6 +268,6 @@ if __name__ == "__main__":
     #guess =  {"error": None, "transcription": "Kodi Spiele SWR3" }
     #guess =  {"error": None, "transcription": "Kodi Leiser" }
     #guess =  {"error": None, "transcription": "Termine Stoppe" }
-    guess =  {"error": None, "transcription": u"Kodi Spiele Action Trailer" }
+    guess =  {"error": None, "transcription": u"Kodi Überasch mich" }
     a = speechInterprete(guess)
     print(a)

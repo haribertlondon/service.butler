@@ -5,6 +5,7 @@ import settings
 import sys
 import json        
 import time
+import random
         
 
 def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
@@ -27,8 +28,10 @@ def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
         post = '{ "jsonrpc": "2.0", "method": "Player.PlayPause", "params": {"playerid": '+str(playerID)+', "play":true },"id":1}'        
     elif command == "pause":
         post = '{ "jsonrpc": "2.0", "method": "Player.PlayPause", "params": {"playerid": '+str(playerID)+' ,"play":false},"id":1}'
-    elif command == "rawopen":
+    elif command == "openfile":
         post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": {"item":{"file":"'+searchStr+'"}},"id":1}'
+    elif command == "opendirectory":
+        post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": {"item":{"directory":"'+searchStr+'"}, "options":{"shuffled":true}},"id":1}'
     elif command == "open":
         post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": '+json.dumps(searchStr)+' ,"options":{"resume": true} }, "id": 1 }'        
     elif command == 'getRandomMovieByGenre':
@@ -81,6 +84,8 @@ def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
         post = '{"jsonrpc": "2.0", "id": 1, "method": "Player.Open", "params": {"item": {"playlistid": '+str(playlistID)+', "position":'+str(searchStr)+' } ,"options":{"resume": true}} }'    
     elif command == 'getTrailer':
         post = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "properties" : ["playcount", "genre", "trailer"], "limits": { "start" : 0, "end": 10 }, "filter": {"field": "genre", "operator": "contains", "value": "'+searchStr+'"}, "sort": { "order": "ascending", "method": "random", "ignorearticle": true } }, "id": "libMovies"}'
+    elif command == 'favorites':
+        post = '{"jsonrpc": "2.0", "method": "Favourites.GetFavourites", "params": { "properties" : ["path", "windowparameter"]}, "id": "libMovies"}'
     else:
         print('Command not found', command)
      
@@ -273,18 +278,18 @@ def kodiPlayItemsAsPlaylist(items, typeStr):
         if len(items)>0:
             result = postKodiRequest('open', None, items[0])
             
-            playerID = getActivePlayerID_wait(10) #max wait 10 sec
+            #playerID = getActivePlayerID_wait(10) #max wait 10 sec
             
-            playlistIDs = kodiGetActivePlaylistID(playerID)
-            print("Playlists found ", playlistIDs)        
+            #playlistIDs = kodiGetActivePlaylistID(playerID)
+            #print("Playlists found ", playlistIDs)        
             
-            try:
-                playlistID = playlistIDs['data']['playlistid']
-            except:
-                playlistID = 0
+            #try:
+            #    playlistID = playlistIDs['data']['playlistid']
+            #except:
+            #    playlistID = 0
                     
             if result['result'] and len(items)>1:
-                for i in range(2):
+                for i in range(2): #add to playlist number 0 and 1, since sometimes the playlist id changes. The code above also sometimes does not work!
                     result = kodiAddToPlaylist(items[1:], i, typeStr)
         else:
             raise Exception("No items found")
@@ -441,15 +446,28 @@ def getErrorMessage(dic):
                 return "Unbekannt"
 
 def kodiPlayAvailableMovieTrailers():
-    result = postKodiRequest("getTrailer", None, u"")
-    if result['result']:
-        result = kodiPlayItemsAsPlaylist(result['data']['movies'], "trailer")
-    print(result)
+    return kodiPlayRandomMovieByGenre("", False, True)
 
 def kodiPlayItem(movieId):
     result = postKodiRequest("open", None, movieId)   
     if result['result']: 
         result = { 'result': True,  'message' : "Starte " + str(movieId)}
+    else:   
+        result = { 'result': False,  'message' : 'Konnte Film nicht starten. Grund: ' + getErrorMessage(result) }
+    return result
+
+def kodiPlayFile(filepath):
+    result = postKodiRequest("openfile", None, filepath)   
+    if result['result']: 
+        result = { 'result': True,  'message' : "Starte " + str(filepath)}
+    else:   
+        result = { 'result': False,  'message' : 'Konnte Datei nicht starten. Grund: ' + getErrorMessage(result) }
+    return result
+
+def kodiPlayDirectory(filepath):
+    result = postKodiRequest("opendirectory", None, filepath)   
+    if result['result']: 
+        result = { 'result': True,  'message' : "Starte " + str(filepath)}
     else:   
         result = { 'result': False,  'message' : 'Konnte Film nicht starten. Grund: ' + getErrorMessage(result) }
     return result
@@ -467,6 +485,63 @@ def kodiPlayMovie(movieTitle):
         result = { 'result': False,  'message' : "Keinen Film mit Namen " + str(movieTitle) +  " gefunden"}
     return result
 
+def kodiPlayFavorites(favTitle):    
+    
+    result = postKodiRequest('favorites', "", "")
+    #if 'favourites' in a:
+    #    a = a[]
+    if 'result' in result and result['result'] and 'data' in result:
+        lst = result['data'].get("favourites",[])
+        for item in lst:
+            if favTitle == item.get('title',''):
+                if "path" in item:
+                    return kodiPlayFile(item['path'])
+                elif "windowparameter" in item:                    
+                    return kodiPlayDirectory(item['windowparameter'])
+                else:
+                    return { 'result': False,  'message' : "Favoriten haben unbekanntes Format"}
+                    
+                
+            
+    return { 'result': False,  'message' : u"Konnte die Favorite "+str(favTitle)+u" nicht öffnen"}
+
+def kodiSurprise():
+    for _ in range(1,10):
+        result = kodiTrySurprise()
+        if result.get('result', True):
+            return result
+    return { 'result': False,  'message' : u"Konnte keine zufällige Medien starten"}
+
+def kodiTrySurprise():
+    a = random.randint(0, 11)
+    if a == 0:        
+        return kodiPlayYoutube("The Daily Show")
+    elif a == 1:
+        return kodiPlayYoutube("Neue KINO TRAILER")
+    elif a == 2:
+        return kodiPlayYoutube("Maybrit Illner")
+    elif a == 3:
+        return kodiPlayYoutube("Markus Lanz")
+    elif a == 4:
+        return kodiPlayYoutube("Heute Show")
+    elif a == 5:
+        return kodiPlayYoutube("Extra 3")
+    elif a == 6:
+        return kodiPlayYoutube("Dokumentation deutsch")
+    elif a == 7:
+        return kodiPlayTagesschau('tagesthemen')
+    elif a == 8:
+        return kodiPlayTagesschau('tagesschau')
+    elif a == 9:
+        return kodiPlayAvailableMovieTrailers()
+    elif a == 10:
+        return kodiPlayFavorites("Concerts")
+        
+    return { 'result': False,  'message' : u"Konnte keine zufällige Medien starten"}
+ 
+        
+  
+
 if __name__ == "__main__":
     #kodiPlayTagesschau("tagesthemen")
     #kodiPlayMovieOrSeries("Modern Family")
@@ -479,6 +554,9 @@ if __name__ == "__main__":
     #playerID = getActivePlayerID()
     #a = kodiGetActivePlaylistID(playerID)
     #print(a)
-    a = kodiPlayYoutube("The Daily Show")
+    #a = kodiPlayYoutube("The Daily Show")
+    a = kodiPlayFavorites("Concerts")
+    #a = kodiPlayFavorites("SWR2")
+    print(">",a)
     #a = kodiPlayLastMovie()
     #print(a)

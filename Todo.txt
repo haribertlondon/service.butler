@@ -1,8 +1,5 @@
 #------TODO-------
 Snowboy Sensitivität weiter optimieren
-"spiele action trailer"
-Spiele etwas: Spiele Maybrit, eine Doku, Daily Show,... => Mixed Playlist
-Spiele Live Concert aus Kodi heraus (Filme Live)
 #screensaver "Schlaf gut" does not work properly?
 Heute Show per zdf
 #bessere Filmsuche IV = 4 = vier = Four
@@ -31,6 +28,9 @@ Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man 
 #geschichte erzählen
 
 #--------TEST---------------
+Überasch mich/Spiele etwas: Spiele Maybrit, eine Doku, Daily Show,... => Mixed Playlist
+Spiele Live Concert aus Kodi heraus (Filme Live)
+"spiele action trailer"
 Spiele eine Dokumentation
 Youtube geht nicht?
 Use python3
