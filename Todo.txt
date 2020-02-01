@@ -1,5 +1,7 @@
 #------TODO-------
 Snowboy Sensitivität weiter optimieren
+"spiele action trailer"
+Spiele etwas: Spiele Maybrit, eine Doku, Daily Show,... => Mixed Playlist
 Spiele Live Concert aus Kodi heraus (Filme Live)
 #screensaver "Schlaf gut" does not work properly?
 Heute Show per zdf
@@ -12,7 +14,7 @@ Sprachausgabe nicht so verzögern
 Show Mails (Mail Kodi addon)
 Google-Bilder-Suche ->Browser anzeigen
 "Spiele Come fly with me" findet keine Folge wenn schon alle Folgen geschaut
-
+Spiele Hans Zimmer
 
 Sag was nettes erweitern 
 Play random unwatched episode of TV show
@@ -29,6 +31,7 @@ Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man 
 #geschichte erzählen
 
 #--------TEST---------------
+Spiele eine Dokumentation
 Youtube geht nicht?
 Use python3
 Heute Show

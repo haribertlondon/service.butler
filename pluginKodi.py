@@ -32,9 +32,9 @@ def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
     elif command == "open":
         post = '{ "jsonrpc": "2.0", "method": "Player.Open", "params": { "item": '+json.dumps(searchStr)+' ,"options":{"resume": true} }, "id": 1 }'        
     elif command == 'getRandomMovieByGenre':
-        post = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "properties" : ["playcount", "genre"], "limits": { "start" : 0, "end": 10 }, "filter": {"field": "genre", "operator": "contains", "value": "'+searchStr+'"}, "sort": { "order": "ascending", "method": "random", "ignorearticle": true } }, "id": "libMovies"}'
+        post = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "properties" : ["playcount", "genre", "trailer"], "limits": { "start" : 0, "end": 10 }, "filter": {"field": "genre", "operator": "contains", "value": "'+searchStr+'"}, "sort": { "order": "ascending", "method": "random", "ignorearticle": true } }, "id": "libMovies"}'
     elif command == 'getRandomMovieByGenreUnwatched':
-        post = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "properties" : ["playcount", "genre"], "limits": { "start" : 0, "end": 10 }, "filter": {"and": [{"field": "playcount", "operator": "is", "value": "0"}, {"field": "genre", "operator": "contains", "value": "'+searchStr+'"}]}, "sort": { "order": "ascending", "method": "random", "ignorearticle": true } }, "id": "libMovies"}'
+        post = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "properties" : ["playcount", "genre", "trailer"], "limits": { "start" : 0, "end": 10 }, "filter": {"and": [{"field": "playcount", "operator": "is", "value": "0"}, {"field": "genre", "operator": "contains", "value": "'+searchStr+'"}]}, "sort": { "order": "ascending", "method": "random", "ignorearticle": true } }, "id": "libMovies"}'
     elif command == 'info':
         post = '{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title", "season", "episode", "showtitle", "rating"], "playerid": '+str(playerID)+' }, "id": "VideoGetItem"}'
     elif command == 'stop':
@@ -284,7 +284,8 @@ def kodiPlayItemsAsPlaylist(items, typeStr):
                 playlistID = 0
                     
             if result['result'] and len(items)>1:
-                result = kodiAddToPlaylist(items[1:], playlistID, typeStr)
+                for i in range(2):
+                    result = kodiAddToPlaylist(items[1:], i, typeStr)
         else:
             raise Exception("No items found")
             
@@ -331,7 +332,7 @@ def kodiPlayLastMovie():
         print(e)
         return { 'result': False,  'message' : 'Keinen letzten Film gefunden'  } 
     
-def kodiPlayRandomMovieByGenre(genre, unwatched):
+def kodiPlayRandomMovieByGenre(genre, unwatched, onlyTrailer):
     genre = genre.replace("-"," ").lower()
     if genre == "Actionfilm".lower():
         genre = "Action"
@@ -354,7 +355,10 @@ def kodiPlayRandomMovieByGenre(genre, unwatched):
     try:
         movies = result['data']['movies']        
         if len(movies)>0:
-            return kodiPlayItemsAsPlaylist(movies, "movieid")
+            if onlyTrailer:
+                return kodiPlayItemsAsPlaylist(movies, "trailer")
+            else:
+                return kodiPlayItemsAsPlaylist(movies, "movieid")
         else:
             raise Exception("No movies found")
     except Exception as e:

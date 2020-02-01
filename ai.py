@@ -118,7 +118,7 @@ def speechInterprete(guess):
         
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(ein[a-z]* )?zufällig[a-z]* Film?", command, flags = re.IGNORECASE)
     if checkMatch(matches):
-        result = pluginKodi.kodiPlayRandomMovieByGenre(u"", True)
+        result = pluginKodi.kodiPlayRandomMovieByGenre(u"", True, False)
         
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Maybrit Illner", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -144,9 +144,13 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPlayLastMovie()
         
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(?:ein[a-z]* )?(Komödie|Thriller|Krimi|Liebesfilm|Action|Actionfilm|Abenteuer|Abenteuerfilm|Animationsfilm|Animation|Drama|Dokumentarfilm|Familienfilm|Horror|Horrorfilm|Komödie|Kriegsfilm|Krimi|Liebesfilm|Mysteryfilm|Mystery|Science-Fiction-Film|Science-Fiction|Western) Trailer", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayRandomMovieByGenre(matches[0], False, True)
+        
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?ein[a-z]* (Komödie|Thriller|Krimi|Liebesfilm|Action|Actionfilm|Abenteuer|Abenteuerfilm|Animationsfilm|Animation|Drama|Dokumentarfilm|Familienfilm|Horror|Horrorfilm|Komödie|Kriegsfilm|Krimi|Liebesfilm|Mysteryfilm|Mystery|Science-Fiction-Film|Science-Fiction|Western)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
-        result = pluginKodi.kodiPlayRandomMovieByGenre(matches[0], False)
+        result = pluginKodi.kodiPlayRandomMovieByGenre(matches[0], False, False)
 
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?(letzte )?Tagesschau", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -256,6 +260,6 @@ if __name__ == "__main__":
     #guess =  {"error": None, "transcription": "Kodi Spiele SWR3" }
     #guess =  {"error": None, "transcription": "Kodi Leiser" }
     #guess =  {"error": None, "transcription": "Termine Stoppe" }
-    guess =  {"error": None, "transcription": u"Kodi Spiele den Film Identität" }
+    guess =  {"error": None, "transcription": u"Kodi Spiele Action Trailer" }
     a = speechInterprete(guess)
     print(a)
