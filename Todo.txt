@@ -1,6 +1,6 @@
 #------TODO-------
 Snowboy Sensitivität weiter optimieren
-#screensaver "Schlaf gut" does not work properly?
+"Spiele Favorite xxx"
 Heute Show per zdf
 #bessere Filmsuche IV = 4 = vier = Four
 Spiele einen schwedischen/Deutschen Film
@@ -29,6 +29,7 @@ Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man 
 
 #--------TEST---------------
 Überasch mich/Spiele etwas: Spiele Maybrit, eine Doku, Daily Show,... => Mixed Playlist
+#screensaver "Schlaf gut" does not work properly?
 Spiele Live Concert aus Kodi heraus (Filme Live)
 "spiele action trailer"
 Spiele eine Dokumentation

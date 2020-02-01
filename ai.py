@@ -222,8 +222,9 @@ def speechInterprete(guess):
     
     matches = re.findall(u"^(Gut[a-z]* Nacht|Schlaf[a-z]* gut|Geschlafen|Geh[a-z]* schlafen|Auf wiedersehen|Tschüss|Ruhe|Halts maul|Klappe)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
-        result = pluginKodi.kodiPause()
-        result = pluginKodi.kodiStartScreensaver()
+        result = pluginKodi.kodiStop()
+        if checkResult(result):
+            result = pluginUpdate.turnTVOnOff(False)
         
     matches = re.findall(u"^(?:Stell[a-z]* |Setz[a-z]* )Empfindlichkeit auf (.*)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):

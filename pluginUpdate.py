@@ -3,7 +3,7 @@ import pluginKodi
 import os
 import time
 import sys
-
+import subprocess
 
 def gitupdate():
     a = pluginKodi.kodiShowMessage("Starting Update from server...")
@@ -40,6 +40,24 @@ def restartScript():
     a=os.execl(sys.executable, *([sys.executable]+sys.argv))
     print("finished call")
     print(a) 
+    
+def turnTVOnOff(setToTvState):        
+    if not setToTvState:
+        cmd1 = ['echo', 'standby', '0'] 
+    else:
+        cmd1 = ['echo', 'on', '0'] 
+    try:
+        cmd2 = ['cec-client', '-d', '1', '-s']
+        ps1 = subprocess.Popen((cmd1), stdout=subprocess.PIPE)
+        ps2 = subprocess.Popen((cmd2), stdin=ps1.stdout, stdout=subprocess.PIPE)
+        (out, err) = ps2.communicate()
+        print(out,err)        
+        if not err:
+            return { 'result': True,  'message' : ""}
+        else:
+            return { 'result': False,  'message' : "Konnte TV nicht erfolgreich an/ausschalten"}
+    except:
+        return { 'result': False,  'message' : "Konnte TV nicht erfolgreich an/ausschalten"}    
 
 def restartKodi():
     a=os.system('killall -15 kodi.bin')

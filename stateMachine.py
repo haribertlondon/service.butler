@@ -165,27 +165,32 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
             
             self.tracker.update(self.infos)
             
-            #state machine
-            lastState = state
-            if state == "startup":
-                state = self.state_startup()
-            elif state == "silence":
-                state = self.state_adjustSilence(energy)
-            elif state == "init":
-                state = self.state_init()
-            elif state == "hotword":            
-                state = self.state_hotword(energy, listening_callback)
-            elif state ==  "phrase":
-                state = self.state_phrase()
-            elif state == "recognition":
-                state = self.state_recognition(detected_callback)
-            elif state == "end":
-                state = "init" #start all over again
-            else:
-                raise Exception("Unknown state ", state)
-                
-            #print out
-            if lastState != state:# or settings.isDebug():
-                print('Current state', state, "Buffer: ", len(self.frames), ' Energy:', str(round(energy,2)), '>', str(round(self.energy_threshold,2)), 'Time: ',str(round(time.time() - self.tracker.startTime_for_tictoc,1)), 'Elapsed: ', round(self.tracker.elapsed_time,2), 'Pause: ', round(self.tracker.pause_time_after_phrase,2), 'Phrase: ', round(self.tracker.pure_phrase_time,2) )
+            try:
+                #state machine
+                lastState = state
+                if state == "startup":
+                    state = self.state_startup()
+                elif state == "silence":
+                    state = self.state_adjustSilence(energy)
+                elif state == "init":
+                    state = self.state_init()
+                elif state == "hotword":            
+                    state = self.state_hotword(energy, listening_callback)
+                elif state ==  "phrase":
+                    state = self.state_phrase()
+                elif state == "recognition":
+                    state = self.state_recognition(detected_callback)
+                elif state == "end":
+                    state = "init" #start all over again
+                else:
+                    raise Exception("Unknown state ", state)
+                    
+                #print out
+                if lastState != state:# or settings.isDebug():
+                    print('Current state', state, "Buffer: ", len(self.frames), ' Energy:', str(round(energy,2)), '>', str(round(self.energy_threshold,2)), 'Time: ',str(round(time.time() - self.tracker.startTime_for_tictoc,1)), 'Elapsed: ', round(self.tracker.elapsed_time,2), 'Pause: ', round(self.tracker.pause_time_after_phrase,2), 'Phrase: ', round(self.tracker.pure_phrase_time,2) )
+            except:
+                print("Fatal error in state machine. Restart...")
+                time.sleep(3)
+                state = "startup"
 
         print("finished.")
