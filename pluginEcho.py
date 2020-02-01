@@ -5,11 +5,12 @@ import playsound
 
 def echoStoreWav(audio=None, fileName = None):
     try:
+        print("Start creating file")
         if fileName is None: 
             fileName = settings.LISTEN_WRITEWAV
              
         if fileName is not None and len(fileName)>0:
-                       
+            print("Creating File: ",fileName)           
             if audio is not None:
                 wavdata = audio.get_wav_data()
                 f = open(fileName, 'wb')
@@ -20,6 +21,7 @@ def echoStoreWav(audio=None, fileName = None):
         else:
             raise Exception("Keine wav-Datei zur Speicherung angegeben.")
     except Exception as e:
+        print("Exception in echoStoreWav", e)
         return {'result': False, 'message': 'Kann echo nicht speichern. Grund: '+ str(e)}
     return {'result': True, 'message': 'Audio gespeichert'}
 

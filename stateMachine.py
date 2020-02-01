@@ -82,9 +82,8 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
         if resultSphinx>0 or resultSnowboy>0:
             self.infos[-1] = (self.infos[-1][0], True) 
             print("Snowboy="+ str(resultSnowboy) + "  Sphinx=" + str(resultSphinx) + "  Energy= " + str(energy) +"  Threshold=" + str( self.energy_threshold)+ " Time: "+str(self.tracker.high_energy_time) +"sec > "+ str(settings.LISTEN_HOTWORD_MIN_DURATION )+"sec")
-            if settings.isDebug():
-                self.storeWav()
-                print("Stored to file")
+            #if settings.isDebug():
+                #self.storeWav()
         
         if (self.tracker.high_energy_time > settings.LISTEN_HOTWORD_MIN_DURATION) and (resultSnowboy > 0 or resultSphinx > 0):
             print("Keyword detected at time: "+ time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())), "Snowboy", resultSnowboy, "Sphinx", resultSphinx)
@@ -112,9 +111,14 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
             checkPhrase = self.tracker.high_energy_time_since_hotword > settings.LISTEN_HIGH_ENERGY_TIME_SINCE_HOTWORD_THRESHOLD  
             checkTotal = self.tracker.time_since_hotword > settings.LISTEN_TIME_SINCE_HOTWORD_THRESHOLD    
             checkPercentage = self.tracker.energy_percentage > settings.LISTEN_PHRASE_PERCENTAGE
+
+            if settings.isDebug():
+                print("Storing wav")
+                self.storeWav()
             
+            print("Elapsed Time     ", self.tracker.elapsed_time)
             print("Checking Pause:  ", checkPause,      '   ', self.tracker.pause_time_after_phrase , '>', settings.LISTEN_PAUSE_TIME_AFTER_PHRASE_THRESHOLD)
-            print("Checking Phrase: ", checkPhrase,     '   ', self.tracker.high_energy_time_since_hotword , '>', settings.LISTEN_HIGH_ENERGY_TIME_SINCE_HOTWORD_THRESHOLD)
+            print("Checking Phrase: ", checkPhrase,     '   ', self.tracker.high_energy_time_since_hotword , '>', settings.LISTEN_HIGH_ENERGY_TIME_SINCE_HOTWORD_THRESHOLD, self.tracker.high_energy_time)
             print("Checking Total:  ", checkTotal,      '   ', self.tracker.time_since_hotword ,'>', settings.LISTEN_TIME_SINCE_HOTWORD_THRESHOLD)
             print("Checking Percent:", checkPercentage, '   ', self.tracker.energy_percentage ,'>', settings.LISTEN_PHRASE_PERCENTAGE)
             
