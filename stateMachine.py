@@ -188,8 +188,9 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
                 #print out
                 if lastState != state:# or settings.isDebug():
                     print('Current state', state, "Buffer: ", len(self.frames), ' Energy:', str(round(energy,2)), '>', str(round(self.energy_threshold,2)), 'Time: ',str(round(time.time() - self.tracker.startTime_for_tictoc,1)), 'Elapsed: ', round(self.tracker.elapsed_time,2), 'Pause: ', round(self.tracker.pause_time_after_phrase,2), 'Phrase: ', round(self.tracker.pure_phrase_time,2) )
-            except:
+            except Exception as e:
                 print("Fatal error in state machine. Restart...")
+                print(e)
                 time.sleep(3)
                 state = "startup"
 
