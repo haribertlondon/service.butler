@@ -153,8 +153,11 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
         if detected_callback: #and not settings.isDebug():
             foundMatch = detected_callback(response)
             
-            if foundMatch and settings.isDebug():
-                self.storeWav(settings.LISTEN_CYCLEWAV, self.tracker.time_hotword_detected + 0.5, 30) #store 
+            #if foundMatch and settings.isDebug():
+            if foundMatch:
+                self.storeWav(settings.LISTEN_CYCLEWAV+'ok_', self.tracker.time_hotword_detected + 0.5, 100) #store 
+            else:
+                self.storeWav(settings.LISTEN_CYCLEWAV+'fail_', self.tracker.time_hotword_detected + 0.5, 100) #store
 
         return "end"
  
