@@ -160,7 +160,7 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
                     self.storeWav(settings.LISTEN_CYCLEWAV+'fail_', self.tracker.time_hotword_detected + 0.5, 100) #store
                     
                 if foundMatch:
-                    self.storeWav(settings.LISTEN_CYCLEWAV+'full_ok_', None, 100) #store 
+                    self.storeWav(settings.LISTEN_CYCLEWAV+'full_ok_', None, 100) #store  
                 else:
                     self.storeWav(settings.LISTEN_CYCLEWAV+'full_fail_', None, 100) #store
 
