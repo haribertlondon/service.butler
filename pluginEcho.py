@@ -2,15 +2,50 @@ import settings
 from pydub import AudioSegment
 import pydub.playback 
 import playsound
+import time
+import os
+
+def removeOldFiles(fileNamePart, path, maxLen):
+    try:
+        full = os.listdir(path)
+        print("-----full----")
+        print(full)
+        lst = []
+        for item in full:
+            if fileNamePart in item and ".wav" in item:
+                lst.append(item)
+        lst = sorted(lst)
+        print("-----lst----")
+        print(lst)
+        
+        maxN = len(lst)-maxLen
+        if maxN>0:
+            lst = lst[:maxN]
+            for item in lst:
+                print("Deleting wav file: ", item)
+                os.remove(item)
+        else:
+            print("Only "+str(len(lst))+" files found. Nothing must be deleted.")
+    except Exception as e:
+        print("Error in CycleWav: Remove Old Files ", e)
+    
+
+def echoStoreWavCycleBuffer(audio=None, fileNamePart="cycle_", path = "./", maxLen = 20):
+    removeOldFiles(fileNamePart, path, maxLen)
+    fileName = os.path.join(path , fileNamePart+time.strftime("%Y_%m_%d-%H_%M_%S")+".wav")
+    
+    result = echoStoreWav(audio, fileName)        
+    print(result)
+    return result
 
 def echoStoreWav(audio=None, fileName = None):
     try:
-        print("Start creating file")
         if fileName is None: 
             fileName = settings.LISTEN_WRITEWAV
+            
+        print("Store audio data as wav: ",fileName)
              
         if fileName is not None and len(fileName)>0:
-            print("Creating File: ",fileName)           
             if audio is not None:
                 wavdata = audio.get_wav_data()
                 f = open(fileName, 'wb')

@@ -35,6 +35,7 @@ MAIL_SERVER_SETTINGS_FILE = '../mail.jpg'
 HTTP_TIMEOUT = 20
 
 LISTEN_WRITEWAV = "speech.wav"
+LISTEN_CYCLEWAV = "cycle_speech_"
 LISTEN_HOTWORD = ["termin", "hermine", "termine", "vde", "kodi", "jarvis", "corrin", "gaudi", "audi", "tony", "rowdy", "godi", "tonie", "toni", "gorie", "gori","curry", "(k|g|p|h|c)(au|o|ow)(l|d|r|rr|n)(i|y|ie|ey)", "pauli", "howdy"]
 LISTEN_GOOGLEKEY = ""
 LISTEN_LANGUAGE= 'de-DE' #["en-US",'de']

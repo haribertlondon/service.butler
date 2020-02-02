@@ -38,21 +38,36 @@ import gpio
          
 def detected_callback(response): #audio):
     try:
+        validCommand = False
         result = ai.speechInterprete(response)
                 
         print('Result=', result)
-        if result and isinstance(result, dict) and 'message' in result:
-            if result['message'] != 'Silence!' and result['message'] != 'OK':
-                texttospeech.sayString(result['message'])
-            else: 
-                #silence
-                print(result['message'])
-        else:
-            texttospeech.sayString('Sum Sum Sum')
+        
+        #check result
+        try:
+            if result is not None and isinstance(result, dict): 
+                if 'result' in result and result['result']:
+                    validCommand = True
+                else:
+                    raise Exception("Command was not successful")
+            
+                if 'message' in result:
+                    if result['message'] == 'Silence!' or result['message'] == 'OK':
+                        print(result) #if everything is ok, no output
+                    else:
+                        texttospeech.sayString(result['message']) 
+                else:
+                    raise Exception("No message text found")
+            else:
+                raise Exception("Result is not dictionary")
+        except Exception as e:
+            print("Command not executed. ",  e, result)
     
     except Exception as e:
         print("Fatal error in ai.callback: ", e)
         traceback.print_exc(file=sys.stdout)
+        
+    return validCommand
         
         
 def listening_callback():

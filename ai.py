@@ -90,19 +90,19 @@ def speechInterprete(guess):
                 
     matches = re.findall(u"^Start[a-z]* dich neu$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
-        pluginUpdate.restartScript()
+        result = pluginUpdate.restartScript()
             
     matches = re.findall(u"^Start[a-z]* (Kodi|Audi|Pauli) neu$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
-        pluginUpdate.restartKodi()
+        result = pluginUpdate.restartKodi()
         
     matches = re.findall(u"^Start[a-z]* (den )?(Raspberry Pi|Raspberry|System|Raspi|Computer) neu$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
-        pluginUpdate.restartRaspi()
+        result = pluginUpdate.restartRaspi()
         
     matches = re.findall(u"^(Überasch[a-z]* mich|Spiel[a-z]* etwas|Spiel[a-z]* was|Zeig[a-z]* mir [a-z]*was|Spiel[a-z]* irgendetwas|Spiel[a-z]* irgendwas|Zufallswiedergabe|Unterhalt[a-z]* mich)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
-        pluginKodi.kodiSurprise()
+        result = pluginKodi.kodiSurprise()
 
     matches = re.findall(u"^(Pause|Break)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -232,7 +232,7 @@ def speechInterprete(guess):
         
     matches = re.findall(u"^(Mach[a-z]* |Führ[a-z]* )ein Update( durch| aus)?$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
-        pluginUpdate.performUpdate()        
+        result = pluginUpdate.performUpdate()
         
     matches = re.findall(u"^(?:Schick[a-z]* |Send[a-z]* )?(?:eine )?(?:Mail |Erinnerung |eMail |Erinnere mich )(?:an |mit )?(.*)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -254,8 +254,7 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiVolumeUp()
 
-
-    return result
+    return result 
 
 if __name__ == "__main__":
     #guess =  {"error": None, "transcription": settings.LISTEN_HOTWORD + " " + "Spiele Modern Family weiter" }    

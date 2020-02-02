@@ -10,6 +10,7 @@ class TimeTracker():
         
     def reset(self):                
         self.elapsed_time = 0.0
+        self.time_hotword_detected = 0.0
         self.time_since_hotword = 0.0    
         self.pause_time_after_phrase = 0.0
         self.high_energy_time_since_hotword = 0.0
@@ -31,6 +32,8 @@ class TimeTracker():
             self.time_since_hotword += seconds
             if isEnergy:
                 self.high_energy_time_since_hotword += seconds
+        else:
+            self.time_hotword_detected += seconds
              
         if isEnergy:
             self.high_energy_time += seconds
@@ -82,8 +85,6 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
         if resultSphinx>0 or resultSnowboy>0:
             self.infos[-1] = (self.infos[-1][0], True) 
             print("Snowboy="+ str(resultSnowboy) + "  Sphinx=" + str(resultSphinx) + "  Energy= " + str(energy) +"  Threshold=" + str( self.energy_threshold)+ " Time: "+str(self.tracker.high_energy_time) +"sec > "+ str(settings.LISTEN_HOTWORD_MIN_DURATION )+"sec")
-            #if settings.isDebug():
-                #self.storeWav()
         
         if (self.tracker.high_energy_time > settings.LISTEN_HOTWORD_MIN_DURATION) and (resultSnowboy > 0 or resultSphinx > 0):
             print("Keyword detected at time: "+ time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())), "Snowboy", resultSnowboy, "Sphinx", resultSphinx)
@@ -113,8 +114,7 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
             checkPercentage = self.tracker.energy_percentage > settings.LISTEN_PHRASE_PERCENTAGE
 
             if settings.isDebug():
-                print("Storing wav")
-                self.storeWav()
+                self.storeWav(settings.LISTEN_WRITEWAV, None, 0)
             
             print("Elapsed Time     ", self.tracker.elapsed_time)
             print("Checking Pause:  ", checkPause,      '   ', self.tracker.pause_time_after_phrase , '>', settings.LISTEN_PAUSE_TIME_AFTER_PHRASE_THRESHOLD)
@@ -151,7 +151,10 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
             print(e)
 
         if detected_callback: #and not settings.isDebug():
-            detected_callback(response)  
+            foundMatch = detected_callback(response)
+            
+            if foundMatch and settings.isDebug():
+                self.storeWav(settings.LISTEN_CYCLEWAV, self.tracker.time_hotword_detected + 0.5, 30) #store 
 
         return "end"
  

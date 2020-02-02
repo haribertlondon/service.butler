@@ -143,10 +143,28 @@ class HotwordDetector(object):
         target_energy = energy * settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_RATIO
         self.energy_threshold = self.energy_threshold * damping + target_energy * (1.0 - damping) #y(n) = damping*y(n-1) + (1-damping)*x(n)
         
-    def storeWav(self):
-        frame_data = getByteArray(self.frames)
+    def storeWav(self, fileName = None, maxDuration = None, useCycleBufferLen = 0):
+        
+        if maxDuration is not None:
+            maxBufferLen = round(maxDuration/self.seconds_per_buffer)
+        
+            if maxBufferLen <= 0 or maxBufferLen >= len(self.frames):        
+                maxBufferLen = None
+        else:
+            maxBufferLen = None
+            
+        if maxDuration is None or maxBufferLen is None:
+            temp = self.frames[:]
+        else:
+            temp = self.frames[:maxBufferLen]
+              
+        frame_data = getByteArray(temp)
         audio = sr.AudioData(frame_data, self.sample_rate, self.sample_width)
-        pluginEcho.echoStoreWav(audio) 
+        
+        if useCycleBufferLen > 0:
+            pluginEcho.echoStoreWavCycleBuffer(audio, fileName, "./", useCycleBufferLen)
+        else:
+            pluginEcho.echoStoreWav(audio, fileName) 
         
     def recognize(self):
         frame_data = getByteArray(self.frames)

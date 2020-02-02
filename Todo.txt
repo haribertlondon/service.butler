@@ -1,11 +1,11 @@
 #------TODO-------
+Deep Learning Hotword
 "Spiele Favorite xxx"
 Heute Show per zdf
 #bessere Filmsuche IV = 4 = vier = Four
 Spiele einen schwedischen/Deutschen Film
 "Starte den Tag": Tagesschau+Markus Lanz 
 TV: Sound-Probleme
-Sprachausgabe: gtts ist sehr schlecht 
 Sprachausgabe nicht so verzögern
 Show Mails (Mail Kodi addon)
 Google-Bilder-Suche ->Browser anzeigen
@@ -27,6 +27,7 @@ Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man 
 #geschichte erzählen
 
 #--------TEST---------------
+Sprachausgabe: gtts ist sehr schlecht 
 Snowboy Sensitivität weiter optimieren
 Überasch mich/Spiele etwas: Spiele Maybrit, eine Doku, Daily Show,... => Mixed Playlist
 #screensaver "Schlaf gut" does not work properly?
