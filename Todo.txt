@@ -1,5 +1,7 @@
 #------TODO-------
 Deep Learning Hotword
+Use mycroft instead of snowboy.
+Mycroft for the whole AI?
 "Spiele Favorite xxx"
 Heute Show per zdf
 #bessere Filmsuche IV = 4 = vier = Four

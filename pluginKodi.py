@@ -277,19 +277,22 @@ def kodiPlayItemsAsPlaylist(items, typeStr):
         
         if len(items)>0:
             result = postKodiRequest('open', None, items[0])
-            
-            #playerID = getActivePlayerID_wait(10) #max wait 10 sec
-            
-            #playlistIDs = kodiGetActivePlaylistID(playerID)
-            #print("Playlists found ", playlistIDs)        
-            
-            #try:
-            #    playlistID = playlistIDs['data']['playlistid']
-            #except:
-            #    playlistID = 0
-                    
+
             if result['result'] and len(items)>1:
-                for i in range(2): #add to playlist number 0 and 1, since sometimes the playlist id changes. The code above also sometimes does not work!
+                
+                playerID = getActivePlayerID_wait(15) #max wait 15 sec
+            
+                playlistIDdic = kodiGetActivePlaylistID(playerID)
+                print("Playlists found ", playlistIDdic)        
+                
+                try:
+                    playlistID = playlistIDdic['data']['playlistid']
+                except:
+                    playlistID = 0
+                    
+                playlistIDs = list(set([0,1,playlistID]))
+                
+                for i in playlistIDs: #add to playlist number 0 and 1, since sometimes the playlist id changes. The code above also sometimes does not work!
                     result = kodiAddToPlaylist(items[1:], i, typeStr)
         else:
             raise Exception("No items found")
