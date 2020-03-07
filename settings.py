@@ -25,7 +25,7 @@ LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU = 15 #seconds
 LISTEN_ENERGY_THRESHOLD = 300 #will be modified dynamically. This is the start value
 LISTEN_SNOWBOY_SENSITIVITY = "0.57" #"0.58" # was "0.4" in the example
 LISTEN_AUDIO_GAIN = 1.3
-LISTEN_HOTWORD_METHODS = 1 #1=snowboy 2=sphinx 3=bothOR 4=bothAND
+LISTEN_HOTWORD_METHODS = [ 3 ] #1=snowboy 2=sphinx 3=precise
 x=1e-33 #x=0.5e-10
 LISTEN_SPHINX_KEYWORDS = [("kodi", x)] #LISTEN_SPHINX_KEYWORDS = [("parker", x), ("kodi", x), ("hermine", x)]
 

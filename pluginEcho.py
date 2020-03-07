@@ -8,15 +8,15 @@ import os
 def removeOldFiles(fileNamePart, path, maxLen):
     try:
         full = os.listdir(path)
-        print("-----full----")
-        print(full)
+        #print("-----full----")
+        #print(full)
         lst = []
         for item in full:
             if fileNamePart in item and ".wav" in item:
                 lst.append(item)
         lst = sorted(lst)
-        print("-----lst----")
-        print(lst)
+        #print("-----lst----")
+        #print(lst)
         
         maxN = len(lst)-maxLen
         if maxN>0:

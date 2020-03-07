@@ -6,6 +6,9 @@ import pluginEcho
 import mysphinx
 import settings
 import audioop
+import precise_wrapper
+
+XXX = 2048
 
 try:    
     import speech_recognition as sr #@UnusedImport #check if package is installed
@@ -58,6 +61,13 @@ class HotwordDetector(object):
         if type(sensitivity) is not list:
             sensitivity = [sensitivity]
         model_str = ",".join(decoder_model)
+		
+        print("Starting precise engine: ", settings.LISTEN_CHUNKSIZE)
+        bin = "/home/pi/precise_runner2/precise/precise-engine"
+        model = "kodi-hotword.pb"
+        engine = precise_wrapper.PreciseEngine(bin, model, chunk_size=XXX)
+        self.precise = precise_wrapper.PreciseRunner(engine, on_prediction=None, on_activation=None, trigger_level=3, sensitivity=0.5)
+        engine.start()
         
         try:    
             self.detector = snowboydetect.SnowboyDetect(resource_filename=str(settings.LISTEN_SNOWBOY_RESOURCE).encode(), model_str=model_str.encode())
@@ -117,6 +127,31 @@ class HotwordDetector(object):
             print("Snowboy Exception. Reason ", e)
             result = 0
         return result
+		
+		
+    def hotword_precise(self):
+        try:      
+            #print("---->"+str(len(self.frames[0])))		
+            frame_data = getByteArray(self.frames)
+            #flat_list = [item for sublist in self.frames for item in sublist]    
+            #frame_data = b"".join(flat_list)
+
+            if len(frame_data) > XXX:
+                frame_data = frame_data[-XXX:]
+            
+            a = self.precise.step(frame_data)
+            #print(a)
+            #audio = sr.AudioData(frame_data, self.sample_rate, self.sample_width)
+            #a = self.sphinxrecognizer.recognize_sphinx2(audio_data = audio, onlykeywords = True)                    
+        except Exception as e:                        
+            print("Precise Exception. Reason ", e)
+            a = 0  
+        
+        if a is not None and a>0:
+            print("Detected the word with precise: " + str(a) )
+            return 1
+        else:
+            return 0
         
     def hotword_sphinx(self):
         try:       

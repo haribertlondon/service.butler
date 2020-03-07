@@ -72,22 +72,27 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
         if settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU>0:
             self.applyLowPassFilter(energy, settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU) #tau = 4sec => reach 4*6=24sec        
                 
-        if (settings.LISTEN_HOTWORD_METHODS in [1,3,4]) and settings.hasSnowboy(): # and energy>self.energy_threshold:
+        if (1 in settings.LISTEN_HOTWORD_METHODS) and settings.hasSnowboy(): # and energy>self.energy_threshold:
             resultSnowboy = self.hotword_snowboy()
         else:
             resultSnowboy = 0
                     
-        if settings.LISTEN_HOTWORD_METHODS in [2,3,4] or not settings.hasSnowboy():
+        if (2 in settings.LISTEN_HOTWORD_METHODS) or not settings.hasSnowboy():
             resultSphinx = self.hotword_sphinx()
         else:
             resultSphinx = 0  
+			
+        if (3 in settings.LISTEN_HOTWORD_METHODS):
+            resultPrecise = self.hotword_precise()
+        else:
+            resultPrecise = 0
 
-        if resultSphinx>0 or resultSnowboy>0:
+        if resultSphinx>0 or resultSnowboy>0 or resultPrecise > 0:
             self.infos[-1] = (self.infos[-1][0], True) 
-            print("Snowboy="+ str(resultSnowboy) + "  Sphinx=" + str(resultSphinx) + "  Energy= " + str(energy) +"  Threshold=" + str( self.energy_threshold)+ " Time: "+str(self.tracker.high_energy_time) +"sec > "+ str(settings.LISTEN_HOTWORD_MIN_DURATION )+"sec")
+            print("Snowboy="+ str(resultSnowboy) + "  Sphinx=" + str(resultSphinx)  + "  Precise=" + str(resultPrecise) + "  Energy= " + str(energy) +"  Threshold=" + str( self.energy_threshold)+ " Time: "+str(self.tracker.high_energy_time) +"sec > "+ str(settings.LISTEN_HOTWORD_MIN_DURATION )+"sec")
         
-        if (self.tracker.high_energy_time > settings.LISTEN_HOTWORD_MIN_DURATION) and (resultSnowboy > 0 or resultSphinx > 0):
-            print("Keyword detected at time: "+ time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())), "Snowboy", resultSnowboy, "Sphinx", resultSphinx)
+        if (self.tracker.high_energy_time > settings.LISTEN_HOTWORD_MIN_DURATION) and (resultPrecise > 0 or resultSnowboy > 0 or resultSphinx > 0):
+            print("Keyword detected at time: "+ time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())), "Snowboy", resultSnowboy, "Sphinx", resultSphinx, "Precise", resultPrecise)
             
             if listening_callback is not None:
                 listening_callback()
@@ -221,5 +226,6 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
                 print(e)
                 time.sleep(3)
                 state = "startup"
+                raise
 
         print("finished.")
