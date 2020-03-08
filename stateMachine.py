@@ -64,6 +64,9 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
         print("State-Init")
         gpio.setMultipleLed(gpio.ALL_LEDS, gpio.LED_OFF)
         self.resetFrameBuffer()
+        if self.precise_engine: #clear buffer from last run by restarting engine
+            self.precise_engine.stop()
+            self.precise_engine.start()
         return "hotword" 
     
     def state_hotword(self, energy, listening_callback):
@@ -111,7 +114,7 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
                 return "init"
         elif self.tracker.pause_time_after_phrase > settings.LISTEN_PAUSE_TIME_AFTER_PHRASE_THRESHOLD:
             
-            self.tracker.energy_percentage = (self.tracker.high_energy_time_since_hotword+1e-50) / (self.tracker.time_since_hotword-settings.LISTEN_PAUSE_TIME_AFTER_PHRASE_THRESHOLD+1e-40)
+            self.tracker.energy_percentage = max(0, (self.tracker.high_energy_time_since_hotword+1e-50) / (self.tracker.time_since_hotword-settings.LISTEN_PAUSE_TIME_AFTER_PHRASE_THRESHOLD+1e-40) )
              
             checkPause = self.tracker.pause_time_after_phrase > settings.LISTEN_PAUSE_TIME_AFTER_PHRASE_THRESHOLD
             checkPhrase = self.tracker.high_energy_time_since_hotword > settings.LISTEN_HIGH_ENERGY_TIME_SINCE_HOTWORD_THRESHOLD  
@@ -160,14 +163,14 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
             
             if True:#foundMatch and settings.isDebug():
                 if foundMatch:
-                    self.storeWav(settings.LISTEN_CYCLEWAV+'ok_', self.tracker.time_hotword_detected + 0.5, 100) #store 
+                    self.storeWav(settings.LISTEN_TRAINDATA_PATH+'wake-word/wake-word_', self.tracker.time_hotword_detected + 0.5, 3000) #store 
                 else:
-                    self.storeWav(settings.LISTEN_CYCLEWAV+'fail_', self.tracker.time_hotword_detected + 0.5, 100) #store
+                    self.storeWav(settings.LISTEN_TRAINDATA_PATH+'not-wake-word/not-wake-word_', self.tracker.time_hotword_detected + 0.5, 3000) #store
                     
                 if foundMatch:
-                    self.storeWav(settings.LISTEN_CYCLEWAV+'full_ok_', None, 100) #store  
+                    self.storeWav(settings.LISTEN_TRAINDATA_PATH+'full-phrase-good/full-phrase-good_', None, 3000) #store  
                 else:
-                    self.storeWav(settings.LISTEN_CYCLEWAV+'full_fail_', None, 100) #store
+                    self.storeWav(settings.LISTEN_TRAINDATA_PATH+'full-phrase-fail/full-phrase-fail_', None, 3000) #store
 
         return "end"
  

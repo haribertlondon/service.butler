@@ -6,15 +6,18 @@ import pluginEcho
 import mysphinx
 import settings
 import audioop
-import precise_wrapper
 
-XXX = 2048
+try:
+    from precise_runner import PreciseEngine, PreciseRunner
+except:
+    raise
 
 try:    
     import speech_recognition as sr #@UnusedImport #check if package is installed
 except:
     print("No speech_recognition installed on system. Try to use fallback...")
     import resources.lib.speech_recognition as sr #@Reimport #if not, use the provides ones
+
 try:
     if settings.isPython3:
         print("Load Python3 Snowboy...")
@@ -47,6 +50,16 @@ class RingBuffer(object):
         self._buf.clear()
         return tmp
 
+class MyPreciseRunner(PreciseRunner): #overwrite the Runner to run the check in my own main cycle
+    def step(self, chunk):
+        prob = self.engine.get_prediction(chunk)
+        if prob > 0.4:
+            print("Precise Hotword", prob)
+        if self.detector.update(prob):
+            return 1
+        else:
+            return 0
+
 
 class HotwordDetector(object):   
     def __init__(self, decoder_model, sensitivity=[], audio_gain=1.0):
@@ -61,14 +74,8 @@ class HotwordDetector(object):
         if type(sensitivity) is not list:
             sensitivity = [sensitivity]
         model_str = ",".join(decoder_model)
-		
-        print("Starting precise engine: ", settings.LISTEN_CHUNKSIZE)
-        bin = "/home/pi/precise_runner2/precise/precise-engine"
-        model = "kodi-hotword.pb"
-        engine = precise_wrapper.PreciseEngine(bin, model, chunk_size=XXX)
-        self.precise = precise_wrapper.PreciseRunner(engine, on_prediction=None, on_activation=None, trigger_level=3, sensitivity=0.5)
-        engine.start()
-        
+
+
         try:    
             self.detector = snowboydetect.SnowboyDetect(resource_filename=str(settings.LISTEN_SNOWBOY_RESOURCE).encode(), model_str=model_str.encode())
             self.detector.SetAudioGain(audio_gain)
@@ -91,6 +98,18 @@ class HotwordDetector(object):
 
         self.chunksize = settings.LISTEN_CHUNKSIZE
         self.seconds_per_buffer = float(self.chunksize) / self.sample_rate
+        
+        try:
+            self.precise_chunk = settings.LISTEN_PRECISE_CHUNKSIZE
+            print("Starting precise engine: ", self.precise_chunk)
+            
+            self.precise_engine = PreciseEngine(settings.LISTEN_PRECISE_BINARY, settings.LISTEN_PRECISE_MODEL, chunk_size = self.precise_chunk)
+            self.precise = MyPreciseRunner(self.precise_engine, on_prediction=None, on_activation=None, trigger_level=3, sensitivity=0.5)
+        except:
+            self.precise = None
+            raise
+		
+
         self.audio_format = pyaudio.paInt16        
         self.ring_buffer = RingBuffer( self.num_channels * self.sample_rate * 5)
         self.pythonaudio = pyaudio.PyAudio()
@@ -115,6 +134,8 @@ class HotwordDetector(object):
         self.sample_width = pyaudio.get_sample_size(self.audio_format)
         self.energy_threshold = settings.LISTEN_ENERGY_THRESHOLD 
         self.stream_in = self.pythonaudio.open( input=True,  output=False, input_device_index=settings.LISTEN_MIC_INDEX, format= self.audio_format, channels=self.num_channels, rate=self.sample_rate, frames_per_buffer=self.chunksize, stream_callback=audio_callback)
+        print("Class settings:")
+        print(self.__dict__)
         
     def hotword_snowboy(self):
         try:
@@ -127,7 +148,7 @@ class HotwordDetector(object):
             print("Snowboy Exception. Reason ", e)
             result = 0
         return result
-		
+        
 		
     def hotword_precise(self):
         try:      
@@ -136,13 +157,14 @@ class HotwordDetector(object):
             #flat_list = [item for sublist in self.frames for item in sublist]    
             #frame_data = b"".join(flat_list)
 
-            if len(frame_data) > XXX:
-                frame_data = frame_data[-XXX:]
+            if len(frame_data) > self.precise_chunk:
+                frame_data = frame_data[-self.precise_chunk:]
             
-            a = self.precise.step(frame_data)
-            #print(a)
-            #audio = sr.AudioData(frame_data, self.sample_rate, self.sample_width)
-            #a = self.sphinxrecognizer.recognize_sphinx2(audio_data = audio, onlykeywords = True)                    
+            if len(frame_data) == self.precise_chunk:
+                a = self.precise.step(frame_data)
+            else:
+                raise Exception("Precise: Buffer size did not match "+str(len(frame_data)) + " != " + str(self.precise_chunk))
+				
         except Exception as e:                        
             print("Precise Exception. Reason ", e)
             a = 0  

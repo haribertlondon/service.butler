@@ -1,7 +1,4 @@
 #------TODO-------
-Deep Learning Hotword
-Use mycroft instead of snowboy.
-Mycroft for the whole AI?
 "Spiele Favorite xxx"
 Heute Show per zdf
 #bessere Filmsuche IV = 4 = vier = Four
@@ -29,6 +26,9 @@ Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man 
 #geschichte erzählen
 
 #--------TEST---------------
+Deep Learning Hotword
+Use mycroft instead of snowboy.
+Mycroft for the whole AI?
 Sprachausgabe: gtts ist sehr schlecht 
 Snowboy Sensitivität weiter optimieren
 Überasch mich/Spiele etwas: Spiele Maybrit, eine Doku, Daily Show,... => Mixed Playlist
