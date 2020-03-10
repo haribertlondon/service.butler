@@ -1,4 +1,5 @@
 #------TODO-------
+Entpacke C:\Users\-..\AppData\Roaming\Kodi\addons\service.butler\resources\lib\precise-engine\tensorflow\python automatisch beim service-Start (z.B nach Update)
 "Spiele Favorite xxx"
 Heute Show per zdf
 #bessere Filmsuche IV = 4 = vier = Four

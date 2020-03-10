@@ -377,7 +377,7 @@ def kodiPlayRandomMovieByGenre(genre, unwatched, onlyTrailer):
 def kodiPlayYoutube(searchStr):
     searchStr = searchStr.replace(" ","+")
     try:
-        url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&order=relevance&q='+searchStr+'&key=AIzaSyDCgSFYMKR4IJsIM-BkZXMuqaVHkqRjXzI'
+        url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&order=relevance&q='+searchStr+'&key=AIzaSyCeB-nCAVPvoiQegHVBhFdqNwdb9OJQGBo'
         js = htmlrequests.downloadJsonDic(url,None)
         #videoId = None
         lst = []
@@ -557,8 +557,8 @@ if __name__ == "__main__":
     #playerID = getActivePlayerID()
     #a = kodiGetActivePlaylistID(playerID)
     #print(a)
-    #a = kodiPlayYoutube("The Daily Show")
-    a = kodiPlayFavorites("Concerts")
+    a = kodiPlayYoutube("The Daily Show")
+    #a = kodiPlayFavorites("Concerts")
     #a = kodiPlayFavorites("SWR2")
     print(">",a)
     #a = kodiPlayLastMovie()
