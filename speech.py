@@ -6,9 +6,22 @@ import pluginEcho
 import mysphinx
 import settings
 import audioop
+import zipfile
+import os
 
-try:
-    from precise_runner import PreciseEngine, PreciseRunner
+try:    
+    #the following file was too large for github. Therefore it was zipped and we need to unzip it now
+    zipfolder = "./resources/lib/precise-engine/tensorflow/python/"    
+    zipfilename = "_pywrap_tensorflow_internal.zip"
+    unzipfilename = "_pywrap_tensorflow_internal.so"
+    print(zipfolder+unzipfilename)
+    if not os.path.isfile(zipfolder+unzipfilename):
+        print("Creating file "+unzipfilename+" by unzipping")
+        with zipfile.ZipFile(zipfolder+zipfilename, 'r') as zip_ref:
+            zip_ref.extractall(zipfolder)
+    else:
+        print("File "+unzipfilename+" was already unzipped")
+    from precise_runner import PreciseEngine, PreciseRunner #@UnresolvedImport
 except:
     raise
 
@@ -108,7 +121,6 @@ class HotwordDetector(object):
         except:
             self.precise = None
             raise
-		
 
         self.audio_format = pyaudio.paInt16        
         self.ring_buffer = RingBuffer( self.num_channels * self.sample_rate * 5)
@@ -149,7 +161,7 @@ class HotwordDetector(object):
             result = 0
         return result
         
-		
+
     def hotword_precise(self):
         try:      
             #print("---->"+str(len(self.frames[0])))		
@@ -164,7 +176,7 @@ class HotwordDetector(object):
                 a = self.precise.step(frame_data)
             else:
                 raise Exception("Precise: Buffer size did not match "+str(len(frame_data)) + " != " + str(self.precise_chunk))
-				
+
         except Exception as e:                        
             print("Precise Exception. Reason ", e)
             a = 0  

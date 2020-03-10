@@ -1,5 +1,5 @@
 #------TODO-------
-Entpacke C:\Users\-..\AppData\Roaming\Kodi\addons\service.butler\resources\lib\precise-engine\tensorflow\python automatisch beim service-Start (z.B nach Update)
+Training with precise after some time
 "Spiele Favorite xxx"
 Heute Show per zdf
 #bessere Filmsuche IV = 4 = vier = Four
@@ -27,6 +27,8 @@ Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man 
 #geschichte erzählen
 
 #--------TEST---------------
+Youtube Api Key Fix
+Entpacke C:\Users\-..\AppData\Roaming\Kodi\addons\service.butler\resources\lib\precise-engine\tensorflow\python automatisch beim service-Start (z.B nach Update)
 Deep Learning Hotword
 Use mycroft instead of snowboy.
 Mycroft for the whole AI?
