@@ -22,8 +22,22 @@ try:
     else:
         print("File "+unzipfilename+" was already unzipped")
     from precise_runner import PreciseEngine, PreciseRunner #@UnresolvedImport
-except:
-    raise
+    
+    class MyPreciseRunner(PreciseRunner): #overwrite the Runner to run the check in my own main cycle
+        def step(self, chunk):
+            prob = self.engine.get_prediction(chunk)
+            if prob > 0.4:
+                print("Precise Hotword", prob)
+            if self.detector.update(prob):
+                return 1
+            else:
+                return 0
+    
+except Exception as e:
+    if settings.isDebug():
+        print("Could not load precise detect", e)
+    else:
+        raise
 
 try:    
     import speech_recognition as sr #@UnusedImport #check if package is installed
@@ -63,15 +77,7 @@ class RingBuffer(object):
         self._buf.clear()
         return tmp
 
-class MyPreciseRunner(PreciseRunner): #overwrite the Runner to run the check in my own main cycle
-    def step(self, chunk):
-        prob = self.engine.get_prediction(chunk)
-        if prob > 0.4:
-            print("Precise Hotword", prob)
-        if self.detector.update(prob):
-            return 1
-        else:
-            return 0
+
 
 
 class HotwordDetector(object):   
@@ -118,9 +124,12 @@ class HotwordDetector(object):
             
             self.precise_engine = PreciseEngine(settings.LISTEN_PRECISE_BINARY, settings.LISTEN_PRECISE_MODEL, chunk_size = self.precise_chunk)
             self.precise = MyPreciseRunner(self.precise_engine, on_prediction=None, on_activation=None, trigger_level=3, sensitivity=0.5)
-        except:
+        except Exception as e:
             self.precise = None
-            raise
+            self.precise_engine = None
+            print(e)
+            if not settings.isDebug():
+                raise
 
         self.audio_format = pyaudio.paInt16        
         self.ring_buffer = RingBuffer( self.num_channels * self.sample_rate * 5)

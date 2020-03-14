@@ -510,13 +510,20 @@ def kodiPlayFavorites(favTitle):
 
 def kodiSurprise():
     for _ in range(1,10):
-        result = kodiTrySurprise()
+        result = kodiTrySurprise([0,1,2,3,4,5,6,7,8,9,10,11])
         if result.get('result', True):
             return result
     return { 'result': False,  'message' : u"Konnte keine zufällige Medien starten"}
 
-def kodiTrySurprise():
-    a = random.randint(0, 11)
+def kodiSurpriseTalk():
+    for _ in range(1,10):
+        result = kodiTrySurprise([2,3])
+        if result.get('result', True):
+            return result
+    return { 'result': False,  'message' : u"Konnte keine zufällige Medien starten"}
+
+def kodiTrySurprise(selection):
+    a = selection[random.randint(0, len(selection))]
     if a == 0:        
         return kodiPlayYoutube("The Daily Show")
     elif a == 1:
@@ -539,6 +546,8 @@ def kodiTrySurprise():
         return kodiPlayAvailableMovieTrailers()
     elif a == 10:
         return kodiPlayFavorites("Concerts")
+    elif a == 11:
+        return kodiPlayYoutube("Spiegel tv")
         
     return { 'result': False,  'message' : u"Konnte keine zufällige Medien starten"}
  

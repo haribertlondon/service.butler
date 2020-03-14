@@ -77,6 +77,9 @@ def hasSnowboy():
     s = socket.gethostname() 
     return s != "Ankermann"
 
+def hasPreciseEngine():
+    return hasSnowboy()
+
 def isDebug():
     return socket.gethostname() == "Ankermann"
 

@@ -116,6 +116,10 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube("Extra 3")
         
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Spiegel TV", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayYoutube("Spiegel T")
+        
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(ein[a-z]* )?Doku(mentation)?", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube("Dokumentation deutsch")
@@ -128,9 +132,13 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube("Maybrit Illner")
         
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(ein )?(Live )?(Konzert|Concert)", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(ein[en]* )?(Live )?(Konzert|Concert)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayFavorites("Concerts")
+        
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(ein[en]* )?Talk[ ]*Show", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        pluginKodi.kodiSurpriseTalk()
         
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Markus Lanz", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -160,7 +168,11 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPlayRandomMovieByGenre(matches[0], False, False)
 
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?(letzte )?Tagesschau", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?(letzte )?(Tagesschau|Nachrichten)", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayTagesschau('tagesschau')
+        
+    matches = re.findall(u"^(Starte[a-z]* den Tag|Guten Morgen|Was gibt[ e]*s Neues)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayTagesschau('tagesschau')
 
@@ -176,7 +188,7 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPlayTVShowLastEpisodeByName(matches[0])
         
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?neu[a-z]* Trailer", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(neu[a-z]*|aktuell[a-z]*) Trailer", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube("Neue KINO TRAILER")
         
@@ -268,6 +280,7 @@ if __name__ == "__main__":
     #guess =  {"error": None, "transcription": "Kodi Spiele SWR3" }
     #guess =  {"error": None, "transcription": "Kodi Leiser" }
     #guess =  {"error": None, "transcription": "Termine Stoppe" }
-    guess =  {"error": None, "transcription": u"Kodi Überasch mich" }
+    #guess =  {"error": None, "transcription": u"Kodi Überasch mich" }
+    guess =  {"error": None, "transcription": u"Kodi Spiele eine Talkshow" }
     a = speechInterprete(guess)
     print(a)

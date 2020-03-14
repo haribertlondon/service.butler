@@ -85,7 +85,7 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
         else:
             resultSphinx = 0  
 			
-        if (3 in settings.LISTEN_HOTWORD_METHODS):
+        if (3 in settings.LISTEN_HOTWORD_METHODS and not settings.isDebug()):
             resultPrecise = self.hotword_precise()
         else:
             resultPrecise = 0

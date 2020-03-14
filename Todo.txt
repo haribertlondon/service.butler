@@ -1,17 +1,15 @@
 #------TODO-------
+Spiele Hans Zimmer (Music videos)
 Training with precise after some time
 "Spiele Favorite xxx"
-Heute Show per zdf
+Heute Show per zdf plugin
 #bessere Filmsuche IV = 4 = vier = Four
 Spiele einen schwedischen/Deutschen Film
-"Starte den Tag": Tagesschau+Markus Lanz 
 TV: Sound-Probleme
 Sprachausgabe nicht so verzögern
 Show Mails (Mail Kodi addon)
 Google-Bilder-Suche ->Browser anzeigen
 "Spiele Come fly with me" findet keine Folge wenn schon alle Folgen geschaut
-Spiele Hans Zimmer
-
 Sag was nettes erweitern 
 Play random unwatched episode of TV show
 Filme-Liste cachen, dass man nicht so lange warten muss
@@ -22,11 +20,13 @@ Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man 
 "Sende Bug"
 #als kodi plugin laufen lassen (dann kann man besser beenden, starten)
 #mehrere keywords fuer kodi, tannenbaum, chefkoch
-#wecker 
 #kochbuch
 #geschichte erzählen
 
 #--------TEST---------------
+Youtube: Spiegel TV
+"Starte den Tag": Tagesschau+Markus Lanz 
+Spiele eine Talkshow
 Youtube Api Key Fix
 Entpacke C:\Users\-..\AppData\Roaming\Kodi\addons\service.butler\resources\lib\precise-engine\tensorflow\python automatisch beim service-Start (z.B nach Update)
 Deep Learning Hotword
