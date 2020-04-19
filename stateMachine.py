@@ -121,6 +121,9 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
             checkTotal = self.tracker.time_since_hotword > settings.LISTEN_TIME_SINCE_HOTWORD_THRESHOLD    
             checkPercentage = self.tracker.energy_percentage > settings.LISTEN_PHRASE_PERCENTAGE
 
+            if checkPhrase:
+                gpio.setLedState(gpio.LED_YELLOW, gpio.LED_ON, gpio.ONLY_ONE_LED)
+                
             if settings.isDebug():
                 self.storeWav(settings.LISTEN_WRITEWAV, None, 0)
             
