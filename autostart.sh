@@ -5,22 +5,29 @@
 #    @reboot /home/pi/service.butler/autostart.sh &
 
 #wait for boot
-sleep 20
 
-echo "running rc.local" > /tmp/rc_test.txt
-echo $(date) >> /tmp/rc_test.txt
+echo "Running autostart script"
+
+echo $(date)
+
+echo "I am sleeping for 30sec..."
+sleep 30
+
+echo $(date)
 
 #wait for internet connection
 while ! /sbin/ifconfig eth0 | grep 'inet [0-9]*'; do
     sleep 3
 done
 
-echo "Found ethernet connection" >> /tmp/rc_test.txt
-echo $(date) >> /tmp/rc_test.txt
+sleep 5
+
+echo "Found ethernet connection"
+echo $(date)
 
 
-echo "Start kodi" >> /tmp/rc_test.txt
-echo $(date) >> /tmp/rc_test.txt
+echo "Start kodi"
+echo $(date)
 
 
 if pgrep kodi.*bin.* > /dev/null
@@ -35,17 +42,19 @@ else
     echo Kodi Started
 fi
 
-echo "Start service" >> /tmp/rc_test.txt
-echo $(date) >> /tmp/rc_test.txt
+echo "Start service"
+echo $(date)
 
 
 if pgrep -f [^g].*python.*service.* > /dev/null
 then
     echo Service Found
 else
+    echo Change to Service Dir
+    cd /home/pi/service.butler 
+    #screen -d -m python3 service.py
     echo Starting Service
-    cd /home/pi/service.butler; 
-    screen -d -m python3 service.py
+    python3 service.py
 fi
 
  

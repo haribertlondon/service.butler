@@ -15,6 +15,7 @@ try:
     zipfilename = "_pywrap_tensorflow_internal.zip"
     unzipfilename = "_pywrap_tensorflow_internal.so"
     print(zipfolder+unzipfilename)
+    os.system("chmod u+x resources/lib/precise-engine/precise-engine")
     if not os.path.isfile(zipfolder+unzipfilename):
         print("Creating file "+unzipfilename+" by unzipping")
         with zipfile.ZipFile(zipfolder+zipfilename, 'r') as zip_ref:
