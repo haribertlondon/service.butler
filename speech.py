@@ -26,10 +26,14 @@ try:
     
     class MyPreciseRunner(PreciseRunner): #overwrite the Runner to run the check in my own main cycle
         def step(self, chunk):
+            #print("X")
             prob = self.engine.get_prediction(chunk)
-            if prob > 0.4:
-                print("Precise Hotword", prob)
-            if self.detector.update(prob):
+            #print("Y")
+            
+            if prob >= 0.05:
+                print("Precise Hotword prob: ", round(prob*100), "%" )
+            #if self.detector.update(prob):
+            if prob > settings.LISTEN_PRECISE_SENSITIVITY:
                 return 1
             else:
                 return 0
@@ -168,24 +172,30 @@ class HotwordDetector(object):
                 result = self.detector.RunDetection(frame_data)
         except Exception as e:
             print("Snowboy Exception. Reason ", e)
-            result = 0
+            result = step
+
         return result
         
 
     def hotword_precise(self):
         try:      
             #print("---->"+str(len(self.frames[0])))		
+            #print("A")
             frame_data = getByteArray(self.frames)
+            #print("B")
+
             #flat_list = [item for sublist in self.frames for item in sublist]    
             #frame_data = b"".join(flat_list)
 
             if len(frame_data) > self.precise_chunk:
                 frame_data = frame_data[-self.precise_chunk:]
-            
+            #print("C")
+
             if len(frame_data) == self.precise_chunk:
                 a = self.precise.step(frame_data)
             else:
                 raise Exception("Precise: Buffer size did not match "+str(len(frame_data)) + " != " + str(self.precise_chunk))
+            #print("D")
 
         except Exception as e:                        
             print("Precise Exception. Reason ", e)

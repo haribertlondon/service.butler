@@ -3,7 +3,7 @@
 import socket
 import sys
 
-LISTEN_CHUNKSIZE = 1024
+LISTEN_CHUNKSIZE = int(1024)
 LISTEN_SAMPLERATE = 44100
 LISTEN_MIC_INDEX = None
 
@@ -12,7 +12,7 @@ LISTEN_HOTWORD_MAX_DURATION = 0.8
 LISTEN_HOTWORD_MIN_DURATION = 0.025  #at least 50% of the voice needs to be above the energy_threshold
 LISTEN_PHRASE_TOTALTIMEOUT = 5.0 #makes sense with snowboy hotword detection
 LISTEN_PHRASE_PUREPHRASETIME = 0.05 #short expression, like for "Play" 0.65 is too long
-LISTEN_PAUSE_TIME_AFTER_PHRASE_THRESHOLD = 1.0 #pause after phrase
+LISTEN_PAUSE_TIME_AFTER_PHRASE_THRESHOLD = 1.7 #pause after phrase
 LISTEN_HIGH_ENERGY_TIME_SINCE_HOTWORD_THRESHOLD = LISTEN_PHRASE_PUREPHRASETIME + LISTEN_HOTWORD_MIN_DURATION
 LISTEN_TIME_SINCE_HOTWORD_THRESHOLD = LISTEN_PHRASE_PUREPHRASETIME + LISTEN_HOTWORD_MIN_DURATION + LISTEN_PAUSE_TIME_AFTER_PHRASE_THRESHOLD
 LISTEN_PHRASE_PERCENTAGE = 0.15
@@ -20,7 +20,7 @@ LISTEN_PHRASE_PERCENTAGE = 0.15
 LISTEN_ADJUSTSILENCE_DURATION = 1.0
 LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_RATIO = 1.5
 LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_FAST_TAU = 0.8 #seconds 0.8sec was taken from snowboy example/source code
-LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU = 15 #seconds 
+LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_DAMPING_SLOW_TAU = 1.0 #seconds 
 
 LISTEN_ENERGY_THRESHOLD = 300 #will be modified dynamically. This is the start value. not really relevant
 LISTEN_AUDIO_GAIN = 1.3
@@ -29,13 +29,14 @@ LISTEN_WRITEWAV = "speech.wav"
 LISTEN_TRAINDATA_PATH = "../auto-train-data/"
 LISTEN_GOOGLEKEY = ""
 LISTEN_LANGUAGE= 'de-DE' #["en-US",'de']
-LISTEN_HOTWORD = ["termin", "hermine", "termine", "vde", "kodi", "jarvis", "corrin", "gaudi", "audi", "tony", "rowdy", "godi", "tonie", "toni", "gorie", "gori","curry", "(k|g|p|h|c)(au|o|ow)(l|d|r|rr|n)(i|y|ie|ey)", "pauli", "howdy"]
+LISTEN_HOTWORD = ["termin", "hermine", "termine", "vde", "kodi", "jarvis", "corrin", "gaudi", "audi", "tony", "rowdy", "godi", "tonie", "toni", "gorie", "gori","curry", "(k|g|p|h|c)(au|o|ow)(l|d|r|rr|n)(i|y|ie|ey)", "pauli", "howdy", "corny"]
 
 
 #------------HOTWORD-ENGINES-------------
 LISTEN_PRECISE_BINARY = "resources/lib/precise-engine/precise-engine"
-LISTEN_PRECISE_MODEL = "kodi-hotword.pb"
-LISTEN_PRECISE_CHUNKSIZE = 2048 #settings.LISTEN_CHUNKSIZE * ( int( settings.LISTEN_HOTWORD_MAX_DURATION / self.seconds_per_buffer ) + 1)
+LISTEN_PRECISE_MODEL = "hotword-kodi3.pb"
+LISTEN_PRECISE_CHUNKSIZE = int(2048) #settings.LISTEN_CHUNKSIZE * ( int( settings.LISTEN_HOTWORD_MAX_DURATION / self.seconds_per_buffer ) + 1)
+LISTEN_PRECISE_SENSITIVITY = 0.25 #lower value means more tolerant
 #------------SNOWBOY---------------------
 LISTEN_SNOWBOY_SENSITIVITY = "0.57" #"0.58" # was "0.4" in the example
 LISTEN_SNOWBOY_RESOURCE = './resources/lib/snowboyrpi8/resources/common.res'

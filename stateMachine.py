@@ -65,8 +65,10 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
         gpio.setMultipleLed(gpio.ALL_LEDS, gpio.LED_OFF)
         self.resetFrameBuffer()
         if self.precise_engine: #clear buffer from last run by restarting engine
-            self.precise_engine.stop()
-            self.precise_engine.start()
+            print("Clear buffer")
+            #self.precise_engine.stop()
+            #self.precise_engine.start()
+            print("Buffer cleared")
         return "hotword" 
     
     def state_hotword(self, energy, listening_callback):
@@ -94,7 +96,7 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
             self.infos[-1] = (self.infos[-1][0], True) 
             print("Snowboy="+ str(resultSnowboy) + "  Sphinx=" + str(resultSphinx)  + "  Precise=" + str(resultPrecise) + "  Energy= " + str(energy) +"  Threshold=" + str( self.energy_threshold)+ " Time: "+str(self.tracker.high_energy_time) +"sec > "+ str(settings.LISTEN_HOTWORD_MIN_DURATION )+"sec")
         
-        if (self.tracker.high_energy_time > settings.LISTEN_HOTWORD_MIN_DURATION) and (resultPrecise > 0 or resultSnowboy > 0 or resultSphinx > 0):
+        if (self.tracker.high_energy_time >= settings.LISTEN_HOTWORD_MIN_DURATION) and (resultPrecise > 0 or resultSnowboy > 0 or resultSphinx > 0):
             print("Keyword detected at time: "+ time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())), "Snowboy", resultSnowboy, "Sphinx", resultSphinx, "Precise", resultPrecise)
             
             if listening_callback is not None:
@@ -183,6 +185,8 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
         self.tracker = TimeTracker(self.seconds_per_buffer)        
  
         self.cycleTime = self.seconds_per_buffer * 1.01
+
+        self.precise_engine.start()
 
         while True:
 

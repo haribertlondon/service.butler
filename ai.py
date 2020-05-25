@@ -40,9 +40,9 @@ def speechInterprete(guess):
     
     global matchCounter
     matchCounter = 0
-    
-    a = pluginKodi.kodiShowMessage(guess["transcription"])
-    print(a)
+
+    #a = pluginKodi.kodiShowMessage(guess["transcription"])    
+    #print(a)
     
     #remove hotword at beginning
     command = guess["transcription"].lower().strip()   
@@ -60,18 +60,21 @@ def speechInterprete(guess):
             hotword_found = True
             break
 
+    print("==========================> Hotword found", hotword_found, "Command >" + command + "<")
+
     if hotword_found and len(command)==0: #only hotword was detected. => Do not say anything
         print("Hotword detected but no more text came. Aborting")
         return {'result': False, 'message': 'Silence!'}
 
 
     if not hotword_found:
-        matches = re.findall(u"^(Erz.{0,10}hl[a-z]*|Stell|Führ|Schick|Google|Spring|Geh|Sag|Pause|Stop|Halt|Stop|Spiel|Start|Öffne|Play|Radio|Was|Spule|Mach|Was|Gute)", command, flags = re.IGNORECASE) 
+        matches = re.findall(u"^(Erz.{0,10}hl[a-z]*|Stell|Führ|Schick|Google|Spring|Geh|Sag|Tages|Extra|Überasch|Daily|Pause|Stop|Halt|Stop|Spiel|Start|Öffne|Play|Radio|Was|Spule|Mach|Was|Gute)", command, flags = re.IGNORECASE) 
         if not matches:
             print("No hotwords found and also no keywords")
             return {'result': False, 'message': 'Silence!'}
         else:
             print("Keyword not detected but found ", matches)
+
 
     a = pluginKodi.kodiShowMessage(guess["transcription"])
     print(a)
@@ -118,7 +121,7 @@ def speechInterprete(guess):
         
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Spiegel TV", command, flags = re.IGNORECASE)
     if checkMatch(matches):
-        result = pluginKodi.kodiPlayYoutube("Spiegel T")
+        result = pluginKodi.kodiPlayYoutube("Spiegel TV")
         
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(ein[a-z]* )?Doku(mentation)?", command, flags = re.IGNORECASE)
     if checkMatch(matches):

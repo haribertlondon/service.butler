@@ -52,9 +52,9 @@ then
 else
     echo Change to Service Dir
     cd /home/pi/service.butler 
-    #screen -d -m python3 service.py
     echo Starting Service
-    python3 service.py
+    screen -d -m python3 service.py
+    #python3 service.py
 fi
 
  
