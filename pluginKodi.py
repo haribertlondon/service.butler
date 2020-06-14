@@ -87,6 +87,8 @@ def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
         post = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "properties" : ["playcount", "genre", "trailer"], "limits": { "start" : 0, "end": 10 }, "filter": {"field": "genre", "operator": "contains", "value": "'+searchStr+'"}, "sort": { "order": "ascending", "method": "random", "ignorearticle": true } }, "id": "libMovies"}'
     elif command == 'favorites':
         post = '{"jsonrpc": "2.0", "method": "Favourites.GetFavourites", "params": { "properties" : ["path", "windowparameter"]}, "id": "libMovies"}'
+    elif command == 'podcast':
+        post = '{"jsonrpc": "2.0", "method": "Files.GetDirectory", "params": { "directory" : "'+searchStr+'","media":"files"}, "id": "libMovies"}'
     else:
         print('Command not found', command)
      
@@ -374,6 +376,21 @@ def kodiPlayRandomMovieByGenre(genre, unwatched, onlyTrailer):
         print(e)
         return result
   
+def kodiPlayPodcast():
+    url = r"plugin://plugin.video.itunes_podcasts/video/podcast/items/104913043/" #swr2 wissen
+    
+    try:
+        js = postKodiRequest("podcast", None, url)
+        lst = js["data"]["files"]
+        random.shuffle(lst)
+        lst = lst[:10]
+        return kodiPlayItemsAsPlaylist(lst, None)
+    except:
+        js = {'result': False, 'message' : 'Keinen Podcast gefunden'}
+        #raise Exception("Kein Podcast gefunden")
+    return js
+        
+    
  
 def kodiPlayYoutube(searchStr):
     searchStr = searchStr.replace(" ","+")
@@ -570,7 +587,8 @@ if __name__ == "__main__":
     #playerID = getActivePlayerID()
     #a = kodiGetActivePlaylistID(playerID)
     #print(a)
-    a = kodiPlayYoutube("The Daily Show")
+    #a = kodiPlayYoutube("The Daily Show")
+    a = kodiPlayPodcast()
     #a = kodiPlayFavorites("Concerts")
     #a = kodiPlayFavorites("SWR2")
     print(">",a)

@@ -150,6 +150,10 @@ def speechInterprete(guess):
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(die )?heute Show", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube("Heute Show")
+        
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(ein[en]* )?Podcast", command, flags = re.IGNORECASE)
+    if checkMatch(matches):
+        result = pluginKodi.kodiPlayPodcast()
 
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Youtube(?: mit)? (?:dem|der|den|die|das)?(.*)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -284,6 +288,6 @@ if __name__ == "__main__":
     #guess =  {"error": None, "transcription": "Kodi Leiser" }
     #guess =  {"error": None, "transcription": "Termine Stoppe" }
     #guess =  {"error": None, "transcription": u"Kodi Überasch mich" }
-    guess =  {"error": None, "transcription": u"Kodi Spiele eine Talkshow" }
+    guess =  {"error": None, "transcription": u"Kodi Spiele einen Podcast" }
     a = speechInterprete(guess)
     print(a)
