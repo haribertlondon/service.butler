@@ -1,0 +1,1 @@
+{"hop_t": 0.05, "window_t": 0.1, "buffer_t": 1.5, "vectorizer": 2, "threshold_config": [[6, 4]], "sample_depth": 2, "sample_rate": 16000, "n_mfcc": 13, "use_delta": false, "threshold_center": 0.2, "n_fft": 512, "n_filt": 20}
