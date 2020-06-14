@@ -6,6 +6,7 @@ import sys
 import json        
 import time
 import random
+import re
         
 
 def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
@@ -378,8 +379,9 @@ def kodiPlayYoutube(searchStr):
     searchStr = searchStr.replace(" ","+")
     try:
         url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&order=relevance&q='+searchStr+'&key=AIzaSyCWRdUIzgMLnhoyX1BcRbm9iwiBRKmqM1A'
-        url[-1] = '0'
+        url = re.sub("A$","0", url)
         js = htmlrequests.downloadJsonDic(url,None)
+        print(js)
         #videoId = None
         lst = []
         for item in js['items']:
@@ -389,13 +391,14 @@ def kodiPlayYoutube(searchStr):
         if len(lst) > 0:
             result = kodiPlayItemsAsPlaylist(lst, "file")
         else:
+            js = {'result': False, 'message' : 'Kein Youtube Video gefunden'}
             raise Exception("Kein Video gefunden")
             
             
     except Exception as e:
-        print("---------------------------",e)
-        result = {'result': False, 'message' : 'Youtube kann nicht gestartet werden '+str(e)}
-    print(js)
+        print("Youtube Exception: ",e)
+        result = js
+    
     return result
 
 def kodiPlayRadio(channel):   
