@@ -1,14 +1,8 @@
 #------TODO-------
 Spiele Hans Zimmer (Music videos)
-Training with precise after some time
-"Spiele Favorite xxx"
-Heute Show per zdf plugin
 #bessere Filmsuche IV = 4 = vier = Four
 Spiele einen schwedischen/Deutschen Film
-TV: Sound-Probleme
 Sprachausgabe nicht so verzögern
-Show Mails (Mail Kodi addon)
-Google-Bilder-Suche ->Browser anzeigen
 "Spiele Come fly with me" findet keine Folge wenn schon alle Folgen geschaut
 Sag was nettes erweitern 
 Play random unwatched episode of TV show
@@ -17,29 +11,23 @@ Toleranz für Serien/Film-Suche optimieren (standard ist 0.6)
 Wecker in x Minuten
 Sleeper in 40 Minuten
 Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man das in Thread auslagern?
-"Sende Bug"
-#als kodi plugin laufen lassen (dann kann man besser beenden, starten)
-#mehrere keywords fuer kodi, tannenbaum, chefkoch
-#kochbuch
-#geschichte erzählen
+als kodi plugin laufen lassen (dann kann man besser beenden, starten)
+kochbuch
+geschichte erzählen
 
 #--------TEST---------------
+Spiele einen Podcast
+Spiele den Podcast Dick und Doof
 Youtube: Spiegel TV
 "Starte den Tag": Tagesschau+Markus Lanz 
 Spiele eine Talkshow
 Youtube Api Key Fix
 Entpacke C:\Users\-..\AppData\Roaming\Kodi\addons\service.butler\resources\lib\precise-engine\tensorflow\python automatisch beim service-Start (z.B nach Update)
-Deep Learning Hotword
-Use mycroft instead of snowboy.
-Mycroft for the whole AI?
-Sprachausgabe: gtts ist sehr schlecht 
-Snowboy Sensitivität weiter optimieren
 Überasch mich/Spiele etwas: Spiele Maybrit, eine Doku, Daily Show,... => Mixed Playlist
 #screensaver "Schlaf gut" does not work properly?
 Spiele Live Concert aus Kodi heraus (Filme Live)
 "spiele action trailer"
 Spiele eine Dokumentation
-Heute Show
 Markus Lanz
 "Spiele den Film Identität" vertägt keine Umlaute
 "Spiele Come fly with me" wirft einen error
@@ -48,6 +36,14 @@ Spiele eine Doku
 Spiele eine Liebesfilm
 Spiele aktuelle Trailer
 #--------DONE---------------
+TV: Sound-Probleme
+Snowboy Sensitivität weiter optimieren
+Sprachausgabe: gtts ist sehr schlecht
+Mycroft for the whole AI?
+Use mycroft instead of snowboy.
+Deep Learning Hotword
+Heute Show
+Training with precise after some time
 Youtube geht nicht?
 #adjust silence nur einmal beim Startup
 Use python3
@@ -131,3 +127,12 @@ Spiele letzte Tagessachu und nicht die letzte um 20-15
 #am Raspberry testen
 #mixed language support
 #dateien auslagern
+
+DONT
+--------------------
+"Spiele Favorite xxx"
+Show Mails (Mail Kodi addon)
+Google-Bilder-Suche ->Browser anzeigen
+"Sende Bug"
+#mehrere keywords fuer kodi, tannenbaum, chefkoch
+Heute Show per zdf plugin
