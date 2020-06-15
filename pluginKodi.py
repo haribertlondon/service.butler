@@ -375,9 +375,45 @@ def kodiPlayRandomMovieByGenre(genre, unwatched, onlyTrailer):
     except Exception as e:
         print(e)
         return result
+    
+def kodiPlayPodcast(s=""):
+
+    urls = {
+    "SWR2 Wissen": "plugin://plugin.video.itunes_podcasts/video/podcast/items/104913043",
+    'Paul Celan und die grauere Sprache': 'plugin://plugin.video.itunes_podcasts/video/podcast/items/104913043/https%3A%2F%2Favdlswr-a.akamaihd.net%2Fswr%2Fswr2%2Fwissen%2Fsendungen%2Fwissen%2Fswr2wissen-20200416-paul-celan-und-die-grauere-sprache.m.mp3',
+    'Dick und Doof': 'plugin://plugin.video.itunes_podcasts/audio/podcast/items/1475075289/',
+    'Synapsen. Ein Wissenschaftspodcast von NDR Info': 'plugin://plugin.video.itunes_podcasts/audio/podcast/items/1513168570/',
+    'Mordlust': 'plugin://plugin.video.itunes_podcasts/video/podcast/items/1413425371/',
+    '2 Verbrecher': 'plugin://plugin.video.itunes_podcasts/video/podcast/items/1515133182/',
+    'Schneller schlau - Der tägliche Podcast von P.M.': 'plugin://plugin.video.itunes_podcasts/video/podcast/items/1506556688/'}
+    
+    url = ""
+    s = s.strip()
+    
+    #find if one word is in the titles
+    if s != "":        
+        for key , item in urls.items():
+            if s.lower() in key.lower():
+                url = item
+    
+    #find the best match
+    if s != "" and url == "":
+        bestratio = 0
+        for key , item in urls.items():
+            ratio = difflib.SequenceMatcher(None, key, s).ratio()
+            if ratio > bestratio:
+                bestratio = ratio
+                url = item
+                
+    #search random podcast    
+    if url == "":      
+        url = urls[random.choice(list(urls))]    
+    
+    #go
+    return kodiPlayPodcastUrl(url)   
+        
   
-def kodiPlayPodcast():
-    url = r"plugin://plugin.video.itunes_podcasts/video/podcast/items/104913043/" #swr2 wissen
+def kodiPlayPodcastUrl(url):
     
     try:
         js = postKodiRequest("podcast", None, url)
@@ -588,7 +624,7 @@ if __name__ == "__main__":
     #a = kodiGetActivePlaylistID(playerID)
     #print(a)
     #a = kodiPlayYoutube("The Daily Show")
-    a = kodiPlayPodcast()
+    a = kodiPlayPodcast("Doof2")
     #a = kodiPlayFavorites("Concerts")
     #a = kodiPlayFavorites("SWR2")
     print(">",a)

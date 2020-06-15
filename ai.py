@@ -151,9 +151,9 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube("Heute Show")
         
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(ein[en]* )?Podcast", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(ein[en]* )?Podcast(.*)?", command, flags = re.IGNORECASE)
     if checkMatch(matches):
-        result = pluginKodi.kodiPlayPodcast()
+        result = pluginKodi.kodiPlayPodcast(matches[0][1])
 
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Youtube(?: mit)? (?:dem|der|den|die|das)?(.*)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
