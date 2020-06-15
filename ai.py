@@ -99,7 +99,7 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginUpdate.restartKodi()
         
-    matches = re.findall(u"^Start[a-z]* (den )?(Raspberry Pi|Raspberry|System|Raspi|Computer) neu$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^Start[a-z]* (den |das )?(Raspberry Pi|Raspberry|System|Raspi|Computer) neu$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginUpdate.restartRaspi()
         
