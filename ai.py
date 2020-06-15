@@ -240,10 +240,9 @@ def speechInterprete(guess):
         result = {'result': True, 'message': 'Hallo Lieber Benedikt. Es hat mir heute sehr sehr gut geschmeckt.'}
     
     matches = re.findall(u"^(Gut[a-z]* Nacht|Schlaf[a-z]* gut|Geschlafen|Geh[a-z]* schlafen|Auf wiedersehen|Tschüss|Ruhe|Halts maul|Klappe)$", command, flags = re.IGNORECASE)
-    if checkMatch(matches):
-        result = pluginKodi.kodiStop()
-        if checkResult(result):
-            result = pluginUpdate.turnTVOnOff(False)
+    if checkMatch(matches): 
+        pluginKodi.kodiStop() #ignore result: If already stopped, the result is invalid
+        result = pluginUpdate.turnTVOnOff(False)
         
     matches = re.findall(u"^(?:Stell[a-z]* |Setz[a-z]* )Empfindlichkeit auf (.*)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -288,6 +287,6 @@ if __name__ == "__main__":
     #guess =  {"error": None, "transcription": "Kodi Leiser" }
     #guess =  {"error": None, "transcription": "Termine Stoppe" }
     #guess =  {"error": None, "transcription": u"Kodi Überasch mich" }
-    guess =  {"error": None, "transcription": u"Kodi Spiele einen Podcast" }
+    guess =  {"error": None, "transcription": u"geschlafen" }
     a = speechInterprete(guess)
     print(a)
