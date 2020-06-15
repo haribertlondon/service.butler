@@ -68,7 +68,7 @@ def speechInterprete(guess):
 
 
     if not hotword_found:
-        matches = re.findall(u"^(Erz.{0,10}hl[a-z]*|Stell|Führ|Schick|Google|Spring|Geh|Sag|Tages|Extra|Überasch|Daily|Pause|Stop|Halt|Stop|Spiel|Start|Öffne|Play|Radio|Was|Spule|Mach|Was|Gute)", command, flags = re.IGNORECASE) 
+        matches = re.findall(u"^(Erz.{0,10}hl[a-z]*|Stell|Gut[a-z]*|Schlaf|Klappe|Halts|Auf|Tschüss|Führ|Schick|Google|Spring|Geh|Geschlafen|Sag|Tages|Extra|Überasch|Daily|Pause|Stop|Halt|Stop|Spiel|Start|Öffne|Play|Radio|Was|Spule|Mach|Was|Gute)", command, flags = re.IGNORECASE) 
         if not matches:
             print("No hotwords found and also no keywords")
             return {'result': False, 'message': 'Silence!'}
@@ -151,7 +151,7 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube("Heute Show")
         
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(ein[en]* )?Podcast(.*)?", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(ein[en]* |den[ein]* )?Podcast(.*)?", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayPodcast(matches[0][1])
 
