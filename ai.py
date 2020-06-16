@@ -68,7 +68,7 @@ def speechInterprete(guess):
 
 
     if not hotword_found:
-        matches = re.findall(u"^(Erz.{0,10}hl[a-z]*|Stell|Gut[a-z]*|Schlaf|Klappe|Halts|Auf|Tschüss|Führ|Schick|Google|Spring|Geh|Geschlafen|Sag|Tages|Extra|Überasch|Daily|Pause|Stop|Halt|Stop|Spiel|Start|Öffne|Play|Radio|Was|Spule|Mach|Was|Gute)", command, flags = re.IGNORECASE) 
+        matches = re.findall(u"^(Erz.{0,10}hl[a-z]*|Stell|Gut[a-z]*|Zufallswiedergabe|Unterhalte|Zeig|Überasch|Schlaf|Klappe|Halts|Auf|Tschüss|Führ|Schick|Google|Spring|Geh|Geschlafen|Sag|Tages|Extra|Daily|Pause|Stop|Halt|Stop|Spiel|Start|Öffne|Play|Radio|Was|Spule|Mach|Was|Gute)", command, flags = re.IGNORECASE) 
         if not matches:
             print("No hotwords found and also no keywords")
             return {'result': False, 'message': 'Silence!'}
@@ -287,6 +287,6 @@ if __name__ == "__main__":
     #guess =  {"error": None, "transcription": "Kodi Leiser" }
     #guess =  {"error": None, "transcription": "Termine Stoppe" }
     #guess =  {"error": None, "transcription": u"Kodi Überasch mich" }
-    guess =  {"error": None, "transcription": u"geschlafen" }
+    guess =  {"error": None, "transcription": u"Überasch mich" }
     a = speechInterprete(guess)
     print(a)

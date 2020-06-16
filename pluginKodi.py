@@ -429,6 +429,7 @@ def kodiPlayPodcastUrl(url):
     
  
 def kodiPlayYoutube(searchStr):
+    print("Kodi: Play Youtube"+str(searchStr))
     searchStr = searchStr.replace(" ","+")
     try:
         url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&order=relevance&q='+searchStr+'&key=AIzaSyCWRdUIzgMLnhoyX1BcRbm9iwiBRKmqM1A'
@@ -475,6 +476,7 @@ def kodiPlayRadio(channel):
  
 def kodiPlayTagesschau(showStr):
     try:
+        print("Kodi: Play Tagesschau"+str(showStr))
         js = htmlrequests.downloadJsonDic('http://www.tagesschau.de/api/multimedia/sendung/letztesendungen100.json',b'')            
         if showStr == "tagesschau": #show latest tagesschau
             ts = js['latestBroadcast']['sophoraId']

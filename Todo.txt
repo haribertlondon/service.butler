@@ -14,7 +14,7 @@ Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man 
 als kodi plugin laufen lassen (dann kann man besser beenden, starten)
 kochbuch
 geschichte erzählen
-
+"Spul vor" funktioniert nicht
 #--------TEST---------------
 Spiele einen Podcast
 Spiele den Podcast Dick und Doof
