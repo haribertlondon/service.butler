@@ -41,6 +41,10 @@ def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
         post = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "properties" : ["playcount", "genre", "trailer"], "limits": { "start" : 0, "end": 10 }, "filter": {"and": [{"field": "playcount", "operator": "is", "value": "0"}, {"field": "genre", "operator": "contains", "value": "'+searchStr+'"}]}, "sort": { "order": "ascending", "method": "random", "ignorearticle": true } }, "id": "libMovies"}'
     elif command == 'info':
         post = '{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title", "season", "episode", "showtitle", "rating"], "playerid": '+str(playerID)+' }, "id": "VideoGetItem"}'
+    elif command == "getItems":
+        post = '{"jsonrpc":"2.0", "method": "Playlist.GetItems", "params": {"properties": ["playcount", "file", "lastplayed"], "playlistid": '+str(playlistID)+'},"id":1}'
+    elif command == "getWatched":
+        post = '{ "jsonrpc": "2.0", "method": "Files.GetFileDetails", "params": { "file": "G:\\path\\to\\files\\Whatever.mp4", "media": "files", "properties": ["playcount", "file"] } , "id": 1 }'
     elif command == 'stop':
         post = '{ "jsonrpc": "2.0", "method": "Player.Stop", "params": {"playerid": '+str(playerID)+' },"id":1}'
     elif command == 'lastepisode':         
@@ -279,6 +283,31 @@ def kodiPlayItemsAsPlaylist(items, typeStr):
         items = items2
         
         if len(items)>0:
+            
+#             playerID = getActivePlayerID()
+#             playlistID = kodiGetActivePlaylistID(playerID)
+#             
+#             try:
+#                 playlistID = playlistID['data']['playlistid']
+#             except:
+#                 playlistID = -1
+#                 
+#             if playlistID >= 0:
+#                 result = kodiStop(playerID)
+#                 result = kodiClearPlaylist(playlistID)
+#             else:
+#                 playlistID = 0
+#             
+#             result = kodiAddToPlaylist(items, playlistID, typeStr)
+#             
+#             result = postKodiRequest("getItems", None, None, 1, 1)
+#             
+#             
+#             print(result)
+#             
+#             result = kodiPlayPlaylist(playlistID, 0)
+#             print(result)
+#             print("Fertig")
             result = postKodiRequest('open', None, items[0])
 
             if result['result'] and len(items)>1:
@@ -478,18 +507,19 @@ def kodiPlayTagesschau(showStr):
     try:
         print("Kodi: Play Tagesschau"+str(showStr))
         js = htmlrequests.downloadJsonDic('http://www.tagesschau.de/api/multimedia/sendung/letztesendungen100.json',b'')            
-        if showStr == "tagesschau": #show latest tagesschau
-            ts = js['latestBroadcast']['sophoraId']
+        print(js)
+        baseUrl = "plugin://plugin.video.tagesschau/?action=play_video&feed=latest_broadcasts&tsid="
+        tsTagesschau = baseUrl + js['latestBroadcast']['sophoraId']
+        tsTagesthemen = baseUrl + str([x for x in js['latestBroadcastsPerType'] if "tagesthemen" in x['title'] ][0]['sophoraId'])
+        if "schau" in showStr : #show latest tagesschau
+            lst = [{'file': tsTagesschau}, {'file': tsTagesthemen}]
         else:
-            ts = [x for x in js['latestBroadcastsPerType'] if showStr in x['title'] ][0]['sophoraId'] 
-        print(ts)
-                
-        if (sys.version_info > (3, 0)):
-            strts = ts #str(ts, 'utf-8')
-        else:
-            strts = ts.encode('utf-8') #python 2
+            lst = [{'file': tsTagesthemen}, {'file': tsTagesschau }]
         
-        result = postKodiRequest("tagesschau", None, strts)
+        print(lst)
+                
+        
+        result = kodiPlayItemsAsPlaylist(lst, "file")  #postKodiRequest("tagesschau", None, strts)
     except Exception as e:
         print(e)
         result = {'result': False, 'message' : 'Tagesschau kann nicht gestartet werden '+str(e)}
@@ -625,8 +655,8 @@ if __name__ == "__main__":
     #playerID = getActivePlayerID()
     #a = kodiGetActivePlaylistID(playerID)
     #print(a)
-    #a = kodiPlayYoutube("The Daily Show")
-    a = kodiPlayPodcast("Doof2")
+    a = kodiPlayTagesschau("Tagesschau")
+    #a = kodiPlayPodcast("Doof2")
     #a = kodiPlayFavorites("Concerts")
     #a = kodiPlayFavorites("SWR2")
     print(">",a)

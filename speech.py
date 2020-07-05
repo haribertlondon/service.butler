@@ -172,7 +172,7 @@ class HotwordDetector(object):
                 result = self.detector.RunDetection(frame_data)
         except Exception as e:
             print("Snowboy Exception. Reason ", e)
-            result = step
+            result = 0
 
         return result
         
@@ -232,7 +232,7 @@ class HotwordDetector(object):
         target_energy = energy * settings.LISTEN_ADJUSTSILENCE_DYNAMIC_ENERGY_RATIO
         self.energy_threshold = self.energy_threshold * damping + target_energy * (1.0 - damping) #y(n) = damping*y(n-1) + (1-damping)*x(n)
         
-    def storeWav(self, fileName = None, maxDuration = None, useCycleBufferLen = 0):
+    def storeWav(self, fileName = None, maxDuration = None, useCycleBufferLen = 0, response = None):
         
         if maxDuration is not None:
             maxBufferLen = round(maxDuration/self.seconds_per_buffer)
@@ -251,9 +251,9 @@ class HotwordDetector(object):
         audio = sr.AudioData(frame_data, self.sample_rate, self.sample_width)
         
         if useCycleBufferLen > 0:
-            pluginEcho.echoStoreWavCycleBuffer(audio, fileName, "./", useCycleBufferLen)
+            pluginEcho.echoStoreWavCycleBuffer(audio, fileName, "./", useCycleBufferLen, response)
         else:
-            pluginEcho.echoStoreWav(audio, fileName) 
+            pluginEcho.echoStoreWav(audio, fileName, response) 
         
     def recognize(self):
         frame_data = getByteArray(self.frames)

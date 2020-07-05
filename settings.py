@@ -29,7 +29,7 @@ LISTEN_WRITEWAV = "speech.wav"
 LISTEN_TRAINDATA_PATH = "../auto-train-data/"
 LISTEN_GOOGLEKEY = ""
 LISTEN_LANGUAGE= 'de-DE' #["en-US",'de']
-LISTEN_HOTWORD = ["termin", "hermine", "termine", "vde", "kodi", "jarvis", "corrin", "gaudi", "audi", "tony", "rowdy", "godi", "tonie", "toni", "gorie", "gori","curry", "(k|g|p|h|c)(au|o|ow)(l|d|r|rr|n)(i|y|ie|ey)", "pauli", "howdy", "corny"]
+LISTEN_HOTWORD = ["termin", "conny", "hermine", "termine", "vde", "kodi", "jarvis", "corrin", "gaudi", "audi", "tony", "rowdy", "godi", "tonie", "toni", "gorie", "gori","curry", "(k|g|p|h|c)(au|o|ow)(l|d|r|rr|n)(i|y|ie|ey)", "pauli", "howdy", "corny"]
 
 
 #------------HOTWORD-ENGINES-------------

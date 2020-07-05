@@ -1,7 +1,10 @@
 import settings
-from pydub import AudioSegment
-import pydub.playback 
-import playsound
+try:
+    from pydub import AudioSegment
+    import pydub.playback 
+    import playsound
+except:
+    pass
 import time
 import os
 
@@ -30,15 +33,15 @@ def removeOldFiles(fileNamePart, path, maxLen):
         print("Error in CycleWav: Remove Old Files ", e)
     
 
-def echoStoreWavCycleBuffer(audio=None, fileNamePart="cycle_", path = "./", maxLen = 20):
+def echoStoreWavCycleBuffer(audio=None, fileNamePart="cycle_", path = "./", maxLen = 20, response=None):
     removeOldFiles(fileNamePart, path, maxLen)
     fileName = os.path.join(path , fileNamePart+time.strftime("%Y_%m_%d-%H_%M_%S")+".wav")
     
-    result = echoStoreWav(audio, fileName)        
+    result = echoStoreWav(audio, fileName, response)        
     print(result)
     return result
 
-def echoStoreWav(audio=None, fileName = None):
+def echoStoreWav(audio=None, fileName = None, response = None):
     try:
         if fileName is None: 
             fileName = settings.LISTEN_WRITEWAV
@@ -55,6 +58,13 @@ def echoStoreWav(audio=None, fileName = None):
                 raise Exception("Keine Audio Daten vorhanden")
         else:
             raise Exception("Keine wav-Datei zur Speicherung angegeben.")
+        
+        if response is not None:
+            filenameTxt = fileName.replace(".wav",".txt") 
+            text_file = open(filenameTxt, "w")
+            text_file.write(str(response))
+            text_file.close()
+            
     except Exception as e:
         print("Exception in echoStoreWav", e)
         return {'result': False, 'message': 'Kann echo nicht speichern. Grund: '+ str(e)}

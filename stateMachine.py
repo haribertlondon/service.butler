@@ -110,11 +110,15 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
 
 
     def state_phrase(self):
+        
+        if (3 in settings.LISTEN_HOTWORD_METHODS and not settings.isDebug()):
+            self.hotword_precise() #update buffer also during phase detection
 
         if self.tracker.elapsed_time > settings.LISTEN_PHRASE_TOTALTIMEOUT: #reached max time
-                print("MaxTimeLimit reached", self.tracker.elapsed_time, 'Phrase', self.tracker.high_energy_time, 'Pause: ', self.tracker.pause_time_after_phrase)
-                return "init"
-        elif self.tracker.pause_time_after_phrase > settings.LISTEN_PAUSE_TIME_AFTER_PHRASE_THRESHOLD:
+            print("MaxTimeLimit reached", self.tracker.elapsed_time, 'Phrase', self.tracker.high_energy_time, 'Pause: ', self.tracker.pause_time_after_phrase)
+        #    return "init"
+        
+        if self.tracker.elapsed_time > settings.LISTEN_PHRASE_TOTALTIMEOUT or self.tracker.pause_time_after_phrase > settings.LISTEN_PAUSE_TIME_AFTER_PHRASE_THRESHOLD:
             
             self.tracker.energy_percentage = max(0, (self.tracker.high_energy_time_since_hotword+1e-50) / (self.tracker.time_since_hotword-settings.LISTEN_PAUSE_TIME_AFTER_PHRASE_THRESHOLD+1e-40) )
              
@@ -168,14 +172,14 @@ class HotwordDetectorStateMachine(speech.HotwordDetector):
             
             if True:#foundMatch and settings.isDebug():
                 if foundMatch:
-                    self.storeWav(settings.LISTEN_TRAINDATA_PATH+'wake-word/wake-word_', self.tracker.time_hotword_detected + 0.5, 3000) #store 
+                    self.storeWav(settings.LISTEN_TRAINDATA_PATH+'wake-word/wake-word_', self.tracker.time_hotword_detected + 0.5, 3000, response) #store 
                 else:
-                    self.storeWav(settings.LISTEN_TRAINDATA_PATH+'not-wake-word/not-wake-word_', self.tracker.time_hotword_detected + 0.5, 3000) #store
+                    self.storeWav(settings.LISTEN_TRAINDATA_PATH+'not-wake-word/not-wake-word_', self.tracker.time_hotword_detected + 0.5, 3000, response) #store
                     
                 if foundMatch:
-                    self.storeWav(settings.LISTEN_TRAINDATA_PATH+'full-phrase-good/full-phrase-good_', None, 3000) #store  
+                    self.storeWav(settings.LISTEN_TRAINDATA_PATH+'full-phrase-good/full-phrase-good_', None, 3000, response) #store  
                 else:
-                    self.storeWav(settings.LISTEN_TRAINDATA_PATH+'full-phrase-fail/full-phrase-fail_', None, 3000) #store
+                    self.storeWav(settings.LISTEN_TRAINDATA_PATH+'full-phrase-fail/full-phrase-fail_', None, 3000, response) #store
 
         return "end"
  

@@ -22,16 +22,19 @@ LED_ON = True
 leds = []
 
 def setLedState(ledID, state, setAllOthersToFalse = False):
-    if not hasGPIO:
-        return
-    global leds
-    if setAllOthersToFalse:
-        setMultipleLed(-1, False)
-        
-    if state:
-        leds[ledID].on()
-    else:
-        leds[ledID].off()
+    try:
+        if not hasGPIO:
+            return
+        global leds
+        if setAllOthersToFalse:
+            setMultipleLed(-1, False)
+            
+        if state:
+            leds[ledID].on()
+        else:
+            leds[ledID].off()
+    except Exception as e:
+        print(e)
             
 def setMultipleLed(ledID, state):
     if not hasGPIO:

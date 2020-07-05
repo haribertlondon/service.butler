@@ -1,41 +1,61 @@
 #------TODO-------
-Spiele Hans Zimmer (Music videos)
+
+ echo 'scan' | cec-client -s -d 1 und echo 'on 5' | cec-client -s -d 1
+
+Spiele Terra X über ZDF
 #bessere Filmsuche IV = 4 = vier = Four
-Spiele einen schwedischen/Deutschen Film
-Sprachausgabe nicht so verzögern
-"Spiele Come fly with me" findet keine Folge wenn schon alle Folgen geschaut
-Sag was nettes erweitern 
-Play random unwatched episode of TV show
+Den ersten Teil in ai.py mit den Hotword Alternativen weg?
+"Spul vor" funktioniert nicht
+Play random unwatched movie 
+Sag was nettes erweitern
 Filme-Liste cachen, dass man nicht so lange warten muss
+Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man das in Thread auslagern? 
+"Spiele Come fly with me" findet keine Folge wenn schon alle Folgen geschaut
+Spiele Hans Zimmer (Music videos)
+Spiele einen schwedischen/Deutschen Film
+Sprachausgabe geht nicht
+Play random unwatched episode of TV show
 Toleranz für Serien/Film-Suche optimieren (standard ist 0.6)
 Wecker in x Minuten
 Sleeper in 40 Minuten
-Es scheint etwas zu hängen, mit Kodi Notification wegen HTML request. Kann man das in Thread auslagern?
-als kodi plugin laufen lassen (dann kann man besser beenden, starten)
 kochbuch
 geschichte erzählen
-"Spul vor" funktioniert nicht
-#--------TEST---------------
-Spiele einen Podcast
-Spiele den Podcast Dick und Doof
-Youtube: Spiegel TV
-"Starte den Tag": Tagesschau+Markus Lanz 
-Spiele eine Talkshow
-Youtube Api Key Fix
-Entpacke C:\Users\-..\AppData\Roaming\Kodi\addons\service.butler\resources\lib\precise-engine\tensorflow\python automatisch beim service-Start (z.B nach Update)
-Überasch mich/Spiele etwas: Spiele Maybrit, eine Doku, Daily Show,... => Mixed Playlist
-#screensaver "Schlaf gut" does not work properly?
-Spiele Live Concert aus Kodi heraus (Filme Live)
-"spiele action trailer"
-Spiele eine Dokumentation
-Markus Lanz
-"Spiele den Film Identität" vertägt keine Umlaute
 "Spiele Come fly with me" wirft einen error
-Play random unwatched movie
+ 
+
+#--------TEST---------------
+Max Limit 5sec weg, da jetzt detection besser ist
+Entpacke C:\Users\-..\AppData\Roaming\Kodi\addons\service.butler\resources\lib\precise-engine\tensorflow\python automatisch beim service-Start (z.B nach Update)
+
+
+
+
+#--------DONE---------------
+Markus Lanz
+Spiele Live Concert aus Kodi heraus (Filme Live)
 Spiele eine Doku
 Spiele eine Liebesfilm
 Spiele aktuelle Trailer
-#--------DONE---------------
+"Spiele den Film Identität" vertägt keine Umlaute
+Spiele eine Dokumentation
+Spiele eine Dokumentation
+"spiele action trailer"
+#screensaver "Schlaf gut" does not work properly?
+Überasch mich/Spiele etwas: Spiele Maybrit, eine Doku, Daily Show,... => Mixed Playlist
+#Youtube Api Key Fix
+#Spiele eine Talkshow
+Youtube: Spiegel TV
+Spiele den Podcast Dick und Doof
+Spiele einen Podcast
+Nach hotword detection wurde bisher buffer nicht geleert
+V geht nicht an, wenn Tagesschau gestartet wird
+Tagesschau vs Tagesthemen?
+#Manchmal wird das Hotword nicht von Google miterkannt. Wird das nicht mitgeschickt? Ja wird geschickt, aber nicht erkannt
+#Eigener Thread für Spracherkennung
+#Starte den Tag": Tagesschau+Tagesthemen : Test: startet nur Tagesschau
+#Tagesthemen + Tagesschau
+#Schreibe alle erkannten Texte in eine Datei um später Bugs zu erkennen. Am besten mit Uhrzeit, dass auch Audio-Datei gefunden werden kann
+
 TV: Sound-Probleme
 Snowboy Sensitivität weiter optimieren
 Sprachausgabe: gtts ist sehr schlecht
@@ -136,3 +156,4 @@ Google-Bilder-Suche ->Browser anzeigen
 "Sende Bug"
 #mehrere keywords fuer kodi, tannenbaum, chefkoch
 Heute Show per zdf plugin
+Als kodi plugin laufen lassen (dann kann man besser beenden, starten)

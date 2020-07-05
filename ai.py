@@ -8,6 +8,7 @@ import pluginUpdate
 import pluginJokes
 import gpio
 import pluginBrowser
+import pluginSystem
 
 def checkMatch(match):    
     global matchCounter
@@ -68,7 +69,7 @@ def speechInterprete(guess):
 
 
     if not hotword_found:
-        matches = re.findall(u"^(Erz.{0,10}hl[a-z]*|Stell|Gut[a-z]*|Zufallswiedergabe|Unterhalte|Zeig|Überasch|Schlaf|Klappe|Halts|Auf|Tschüss|Führ|Schick|Google|Spring|Geh|Geschlafen|Sag|Tages|Extra|Daily|Pause|Stop|Halt|Stop|Spiel|Start|Öffne|Play|Radio|Was|Spule|Mach|Was|Gute)", command, flags = re.IGNORECASE) 
+        matches = re.findall(u"^(Erz.{0,10}hl[a-z]*|Stell|Gut[a-z]*|Zufallswiedergabe|Unterhalte|Zeig|[Üü]berrasch|Schlaf|Klappe|Halts|Auf|Tschüss|Führ|Schick|Google|Spring|Geh|Geschlafen|Sag|Tages|Extra|Daily|Pause|Stop|Halt|Stop|Spiel|Start|Öffne|Play|Radio|Was|Spule|Mach|Was|Gute)", command, flags = re.IGNORECASE) 
         if not matches:
             print("No hotwords found and also no keywords")
             return {'result': False, 'message': 'Silence!'}
@@ -103,7 +104,7 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginUpdate.restartRaspi()
         
-    matches = re.findall(u"^(Überasch[a-z]* mich|Spiel[a-z]* etwas|Spiel[a-z]* was|Zeig[a-z]* mir [a-z]*was|Spiel[a-z]* irgendetwas|Spiel[a-z]* irgendwas|Zufallswiedergabe|Unterhalt[a-z]* mich)$", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^([Üü]berrasch[a-z]* mich|Spiel[a-z]* etwas|Spiel[a-z]* was|Zeig[a-z]* mir [a-z]*was|Spiel[a-z]* irgendetwas|Spiel[a-z]* irgendwas|Zufallswiedergabe|Unterhalt[a-z]* mich)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiSurprise()
 
@@ -119,7 +120,7 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube("Extra 3")
         
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Spiegel TV", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?Spiegel.*TV", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube("Spiegel TV")
         
@@ -135,7 +136,7 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPlayYoutube("Maybrit Illner")
         
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(ein[en]* )?(Live )?(Konzert|Concert)", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(ein[en]* )?(.{0,2}Live )?(Konzert|Concert)", command, flags = re.IGNORECASE)
     if checkMatch(matches):
         result = pluginKodi.kodiPlayFavorites("Concerts")
         
@@ -242,7 +243,8 @@ def speechInterprete(guess):
     matches = re.findall(u"^(Gut[a-z]* Nacht|Schlaf[a-z]* gut|Geschlafen|Geh[a-z]* schlafen|Auf wiedersehen|Tschüss|Ruhe|Halts maul|Klappe)$", command, flags = re.IGNORECASE)
     if checkMatch(matches): 
         pluginKodi.kodiStop() #ignore result: If already stopped, the result is invalid
-        result = pluginUpdate.turnTVOnOff(False)
+        result = pluginSystem.switchTvCec(False)
+        result['result']  = False #overwrite result to avoid turn on tv at the end of this function
         
     matches = re.findall(u"^(?:Stell[a-z]* |Setz[a-z]* )Empfindlichkeit auf (.*)$", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -272,6 +274,12 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiVolumeUp()
 
+
+    if checkResult(result):
+        pluginSystem.switchTvCec(True)
+    else:
+        print("Do not turn on TV since result was not OK", 'result' in result , str(result))
+
     return result 
 
 if __name__ == "__main__":
@@ -287,6 +295,6 @@ if __name__ == "__main__":
     #guess =  {"error": None, "transcription": "Kodi Leiser" }
     #guess =  {"error": None, "transcription": "Termine Stoppe" }
     #guess =  {"error": None, "transcription": u"Kodi Überasch mich" }
-    guess =  {"error": None, "transcription": u"Überasch mich" }
+    guess =  {"error": None, "transcription": u"Conny überrasch mich" }
     a = speechInterprete(guess)
     print(a)
