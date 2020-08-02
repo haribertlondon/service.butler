@@ -457,7 +457,7 @@ def kodiPlayPodcastUrl(url):
         
     
  
-def kodiPlayYoutube(searchStr):
+def kodiPlayYoutube(searchStr, randomOrder = False):
     print("Kodi: Play Youtube"+str(searchStr))
     searchStr = searchStr.replace(" ","+")
     try:
@@ -470,7 +470,10 @@ def kodiPlayYoutube(searchStr):
         for item in js['items']:
             if 'videoId' in item['id']:
                 lst.append( { 'file' : 'plugin://plugin.video.youtube/play/?video_id='+item['id']['videoId']  } )
-
+                
+        if randomOrder:
+            random.shuffle(lst)
+            
         if len(lst) > 0:
             result = kodiPlayItemsAsPlaylist(lst, "file")
         else:
@@ -616,7 +619,7 @@ def kodiTrySurprise(selection):
     if a == 0:        
         return kodiPlayYoutube("The Daily Show")
     elif a == 1:
-        return kodiPlayYoutube("Neue KINO TRAILER")
+        return kodiPlayYoutube("Neue KINO TRAILER", True)
     elif a == 2:
         return kodiPlayYoutube("Maybrit Illner")
     elif a == 3:
@@ -626,7 +629,7 @@ def kodiTrySurprise(selection):
     elif a == 5:
         return kodiPlayYoutube("Extra 3")
     elif a == 6:
-        return kodiPlayYoutube("Dokumentation deutsch")
+        return kodiPlayYoutube("Dokumentation deutsch", True)
     elif a == 7:
         return kodiPlayTagesschau('tagesthemen')
     elif a == 8:
