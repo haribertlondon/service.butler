@@ -7,6 +7,7 @@ import json
 import time
 import random
 import re
+import urllib
         
 
 def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
@@ -460,9 +461,11 @@ def kodiPlayPodcastUrl(url):
 def kodiPlayYoutube(searchStr, randomOrder = False):
     print("Kodi: Play Youtube"+str(searchStr))
     searchStr = searchStr.replace(" ","+")
+    js = {'result': False, 'message' : 'Kein Youtube Video gefunden'}
     try:
-        url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&order=relevance&q='+searchStr+'&key=AIzaSyCWRdUIzgMLnhoyX1BcRbm9iwiBRKmqM1A'
+        url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&order=relevance&q='+urllib.request.quote(searchStr)+'&key=AIzaSyCWRdUIzgMLnhoyX1BcRbm9iwiBRKmqM1A'
         url = re.sub("A$","0", url)
+        print(url)
         js = htmlrequests.downloadJsonDic(url,None)
         print(js)
         #videoId = None
