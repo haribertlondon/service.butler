@@ -299,6 +299,6 @@ if __name__ == "__main__":
     #guess =  {"error": None, "transcription": "Kodi Leiser" }
     #guess =  {"error": None, "transcription": "Termine Stoppe" }
     #guess =  {"error": None, "transcription": u"Kodi Überasch mich" }
-    guess =  {"error": None, "transcription": u"Conny überrasch mich" }
+    guess =  {"error": None, "transcription": u"Kodi Spiel die Tagesschau" }
     a = speechInterprete(guess)
     print(a)

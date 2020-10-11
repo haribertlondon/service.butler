@@ -517,6 +517,12 @@ def kodiPlayTagesschau(showStr):
         baseUrl = "plugin://plugin.video.tagesschau/?action=play_video&feed=latest_broadcasts&tsid="
         tsTagesschau = baseUrl + js['latestBroadcast']['sophoraId']
         tsTagesthemen = baseUrl + str([x for x in js['latestBroadcastsPerType'] if "tagesthemen" in x['title'] ][0]['sophoraId'])
+        
+        #sometimes, the latest broadcast is "Tagesthemen", in this case, use the newest Tagesschau at 20:00
+        if tsTagesschau == tsTagesthemen: 
+            tsTagesschau = baseUrl + str([x for x in js['latestBroadcastsPerType'] if "tagesschau" in x['title'] ][0]['sophoraId'])
+            
+        
         if "schau" in showStr : #show latest tagesschau
             lst = [{'file': tsTagesschau}, {'file': tsTagesthemen}]
         else:
