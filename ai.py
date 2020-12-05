@@ -130,7 +130,7 @@ def speechInterprete(guess):
         
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(ein[a-z]* )?Doku(mentation)?", command, flags = re.IGNORECASE)
     if checkMatch(matches):
-        result = pluginKodi.kodiPlayYoutube("Dokumentation deutsch", True)
+        result = pluginKodi.kodiPlayDocumentation() 
         
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(ein[a-z]* )?zufällig[a-z]* Film?", command, flags = re.IGNORECASE)
     if checkMatch(matches):
@@ -299,6 +299,6 @@ if __name__ == "__main__":
     #guess =  {"error": None, "transcription": "Kodi Leiser" }
     #guess =  {"error": None, "transcription": "Termine Stoppe" }
     #guess =  {"error": None, "transcription": u"Kodi Überasch mich" }
-    guess =  {"error": None, "transcription": u"Kodi Spiel die Tagesschau" }
+    guess =  {"error": None, "transcription": u"Kodi Spiel eine Dokumentation" }
     a = speechInterprete(guess)
     print(a)

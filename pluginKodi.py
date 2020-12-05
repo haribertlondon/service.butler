@@ -8,6 +8,7 @@ import time
 import random
 import re
 import urllib
+import datetime
         
 
 def getKodiUrl(command, typeStr, searchStr, playerID= None, playlistID = None):
@@ -458,12 +459,12 @@ def kodiPlayPodcastUrl(url):
         
     
  
-def kodiPlayYoutube(searchStr, randomOrder = False):
+def kodiPlayYoutube(searchStr, randomOrder = False, maxItems = 20):
     print("Kodi: Play Youtube"+str(searchStr))
     searchStr = searchStr.replace(" ","+")
     js = {'result': False, 'message' : 'Kein Youtube Video gefunden'}
     try:
-        url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&order=relevance&q='+urllib.request.quote(searchStr)+'&key=AIzaSyCWRdUIzgMLnhoyX1BcRbm9iwiBRKmqM1A'
+        url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&order=relevance&q='+urllib.request.quote(searchStr)+'&key=AIzaSyCWRdUIzgMLnhoyX1BcRbm9iwiBRKmqM1A'
         url = re.sub("A$","0", url)
         print(url)
         js = htmlrequests.downloadJsonDic(url,None)
@@ -475,7 +476,11 @@ def kodiPlayYoutube(searchStr, randomOrder = False):
                 lst.append( { 'file' : 'plugin://plugin.video.youtube/play/?video_id='+item['id']['videoId']  } )
                 
         if randomOrder:
+            random.seed(datetime.datetime.now()) 
             random.shuffle(lst)
+            
+        if maxItems < len(lst):
+            lst = lst[:maxItems]
             
         if len(lst) > 0:
             result = kodiPlayItemsAsPlaylist(lst, "file")
@@ -623,6 +628,13 @@ def kodiSurpriseTalk():
             return result
     return { 'result': False,  'message' : u"Konnte keine zufällige Medien starten"}
 
+def kodiPlayDocumentation():
+    
+    appendix = ['', 'ARTE', 'zdfinfo', '4K', 'Doku Junkie', 'DW', 'WDR', 'SWR', 'docunet', 'lexikon des wissens', 'Doku1080P']
+     
+    
+    return kodiPlayYoutube("Dokumentation deutsch"+' '+ random.choice(appendix), True)
+
 def kodiTrySurprise(selection):
     a = selection[random.randint(0, len(selection))]
     if a == 0:        
@@ -638,7 +650,7 @@ def kodiTrySurprise(selection):
     elif a == 5:
         return kodiPlayYoutube("Extra 3")
     elif a == 6:
-        return kodiPlayYoutube("Dokumentation deutsch", True)
+        return kodiPlayDocumentation()
     elif a == 7:
         return kodiPlayTagesschau('tagesthemen')
     elif a == 8:
@@ -669,7 +681,8 @@ if __name__ == "__main__":
     #playerID = getActivePlayerID()
     #a = kodiGetActivePlaylistID(playerID)
     #print(a)
-    a = kodiPlayTagesschau("Tagesschau")
+    #a = kodiPlayTagesschau("Tagesschau")
+    a = kodiPlay
     #a = kodiPlayPodcast("Doof2")
     #a = kodiPlayFavorites("Concerts")
     #a = kodiPlayFavorites("SWR2")
