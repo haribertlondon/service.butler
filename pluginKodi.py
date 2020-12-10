@@ -457,7 +457,9 @@ def kodiPlayPodcastUrl(url):
         #raise Exception("Kein Podcast gefunden")
     return js
         
-    
+def kodiPlayZoo():
+    return kodiPlayYoutube("zoo und co")
+     
  
 def kodiPlayYoutube(searchStr, randomOrder = False, maxItems = 20):
     print("Kodi: Play Youtube"+str(searchStr))
@@ -616,7 +618,7 @@ def kodiPlayFavorites(favTitle):
 
 def kodiSurprise():
     for _ in range(1,10):
-        result = kodiTrySurprise([0,1,2,3,4,5,6,7,8,9,10,11,12])
+        result = kodiTrySurprise([0,1,2,3,4,5,6,7,8,9,10,11,12,13])
         if result.get('result', True):
             return result
     return { 'result': False,  'message' : u"Konnte keine zufällige Medien starten"}
@@ -663,6 +665,8 @@ def kodiTrySurprise(selection):
         return kodiPlayYoutube("Spiegel tv")
     elif a == 12:
         return kodiPlayYoutube("Red Bull TV")
+    elif a == 13:
+        return kodiPlayZoo()
         
     return { 'result': False,  'message' : u"Konnte keine zufällige Medien starten"}
  
