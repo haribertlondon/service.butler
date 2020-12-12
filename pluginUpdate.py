@@ -31,6 +31,10 @@ def gitupdate():
     print(msg5) 
     print(msg6)
     
+    print("Setting chmod...")
+    a=os.system('chmod 777 *')
+    print(a)
+    
     print("Updated")
     
 def restartScript():
