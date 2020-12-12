@@ -458,7 +458,7 @@ def kodiPlayPodcastUrl(url):
     return js
         
 def kodiPlayZoo():
-    return kodiPlayYoutube("zoo und co")
+    return kodiPlayYoutube("zoo und co", True)
      
  
 def kodiPlayYoutube(searchStr, randomOrder = False, maxItems = 20):
