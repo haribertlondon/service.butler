@@ -462,7 +462,7 @@ def kodiPlayZoo():
      
  
 def kodiPlayYoutube(searchStr, randomOrder = False, maxItems = 20):
-    print("Kodi: Play Youtube"+str(searchStr))
+    print("Kodi: Play Youtube: "+str(searchStr))
     searchStr = searchStr.replace(" ","+")
     js = {'result': False, 'message' : 'Kein Youtube Video gefunden'}
     try:
