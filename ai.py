@@ -140,7 +140,7 @@ def speechInterprete(guess):
     if checkMatch(matches): 
         result = pluginKodi.kodiPlayYoutube("Yoga Mady Morrison", True)
 
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(ein[a-z]* )?(Workout|Fitnesstraining|Fitness training)?", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(ein[a-z]* )?(Workout|Fitnesstraining|Fitness training|Fitness programm|Fitnessprogramm)?", command, flags = re.IGNORECASE)
     if checkMatch(matches): 
         result = pluginKodi.kodiPlayYoutube("Mady Morrison workout", True) 
                 
