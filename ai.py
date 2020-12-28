@@ -134,7 +134,15 @@ def speechInterprete(guess):
         
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(ein[a-z]* )?(Zu|Zoo|Tier).*(Sendung|Doku|Dokumentation)?", command, flags = re.IGNORECASE)
     if checkMatch(matches): 
-        result = pluginKodi.kodiPlayZoo() 
+        result = pluginKodi.kodiPlayZoo()
+
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(ein[a-z]* )?Yoga.*(Sendung)?", command, flags = re.IGNORECASE)
+    if checkMatch(matches): 
+        result = pluginKodi.kodiPlayYoutube("Yoga Mady Morrison", True)
+
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(ein[a-z]* )?(Workout|Fitnesstraining|Fitness training)?", command, flags = re.IGNORECASE)
+    if checkMatch(matches): 
+        result = pluginKodi.kodiPlayYoutube("Mady Morrison workout", True) 
                 
     matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(ein[a-z]* )?zufällig[a-z]* Film?", command, flags = re.IGNORECASE)
     if checkMatch(matches):
