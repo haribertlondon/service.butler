@@ -140,7 +140,7 @@ def speechInterprete(guess):
     if checkMatch(matches): 
         result = pluginKodi.kodiPlayYoutube("Yoga Mady Morrison", True)
 
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(ein[a-z]* )?(Workout|Fitnesstraining|Fitness training|Fitness programm|Fitnessprogramm)?", command, flags = re.IGNORECASE)
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )(ein[a-z]* )?(Workout|Fitnesstraining|Fitness training|Fitness programm|Fitnessprogramm)", command, flags = re.IGNORECASE)
     if checkMatch(matches): 
         result = pluginKodi.kodiPlayYoutube("Mady Morrison workout", True) 
                 
@@ -204,7 +204,7 @@ def speechInterprete(guess):
     if checkMatch(matches):
         result = pluginKodi.kodiPlayTagesschau('tagesthemen')
 
-    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(?:Radio |Radiosender )?(?:mit )?(SWR[ 0-9]+|RPR[ 0-9]+|Big[ ]*FM|Antenne[ ]*K.*|Deutschland[ ]*funk)", command, flags = re.IGNORECASE)    
+    matches = re.findall(u"^(?:Play |[a-z]*Spiel[a-z]* |Start[a-z]* |Öffne[a-z]* )?(?:Radio |Radiosender )?(?:mit )?(Absolut.*relax|relax|SWR[ 0-9]+|RPR[ 0-9]+|Big[ ]*FM|Antenne[ ]*K.*|Deutschland[ ]*funk)", command, flags = re.IGNORECASE)    
     if checkMatch(matches):
         result = pluginKodi.kodiPlayRadio(matches[0])
 
@@ -311,6 +311,6 @@ if __name__ == "__main__":
     #guess =  {"error": None, "transcription": "Kodi Leiser" }
     #guess =  {"error": None, "transcription": "Termine Stoppe" }
     #guess =  {"error": None, "transcription": u"Kodi Überasch mich" }
-    guess =  {"error": None, "transcription": u"Kodi Spiel eine Zoosendung" }
+    guess =  {"error": None, "transcription": u"Kodi Spiel Radio mit Absolut relax" }
     a = speechInterprete(guess)
     print(a)

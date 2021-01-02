@@ -512,6 +512,8 @@ def kodiPlayRadio(channel):
         return postKodiRequest("radio", None, '2414')
     elif channel == 'swr3' or channel == 'swr 3':
         return postKodiRequest("radio", None, '2275')
+    elif channel.endswith('relax'): #channel == 'absoluterelax':
+        return postKodiRequest("radio", None, '11593')
     else:
         return {'result': False, 'message': 'Channel nicht gefunden'}
     
